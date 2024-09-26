@@ -16,9 +16,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+
     }
 }
-
 rootProject.name = "Project App QLCT"
 include(":app")
  
