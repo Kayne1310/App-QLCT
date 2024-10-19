@@ -1,7 +1,10 @@
 package com.example.projectappqlct;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -88,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 } else if (id == R.id.menu_create) {
                     viewPager.setCurrentItem(2);
+                    showCreateDialog();
                     return true;
                 } else if (id == R.id.menu_notificant) {
                     viewPager.setCurrentItem(3);
@@ -98,7 +102,24 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return false;
 
+            }
 
+            private void showCreateDialog() {
+                // Tạo dialog
+                final Dialog dialog = new Dialog(MainActivity.this);
+                dialog.setContentView(R.layout.dialog_create_expenses); // Layout của dialog
+
+                // Điều chỉnh kích thước dialog
+                Window window = dialog.getWindow();
+                if (window != null) {
+                    WindowManager.LayoutParams params = window.getAttributes();
+                    params.width = (int) (getResources().getDisplayMetrics().widthPixels * 0.9); // 90% chiều rộng
+                    params.height = (int) (getResources().getDisplayMetrics().heightPixels * 0.8); // 80% chiều cao
+                    window.setAttributes(params);
+                }
+
+                // Hiển thị dialog
+                dialog.show();
             }
         });
 
