@@ -44,6 +44,7 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
 //    implementation("com.github.TutorialsAndroid:GButton:v1.0.19")
     implementation("com.google.android.gms:play-services-auth:20.4.0")
+    implementation ("com.github.AnyChart:AnyChart-Android:1.1.5")
 
 
 }

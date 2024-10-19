@@ -2,6 +2,7 @@ package com.example.projectappqlct;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+
 
         viewPager=findViewById(R.id.view_pager);
         bottomNavigationView=findViewById(R.id.bottomNavigationView);
@@ -109,4 +112,5 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
 }
