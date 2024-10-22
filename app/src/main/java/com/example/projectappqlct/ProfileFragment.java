@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.example.projectappqlct.Login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,10 +30,11 @@ public class ProfileFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private TextView email;
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -69,6 +71,15 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
+        if(user!=null){
+            String getEmailUser=user.getEmail();
+             email=view.findViewById(R.id.textEmail);
+            email.setText(getEmailUser);
+
+        }
+
+
         LinearLayout notificant=view.findViewById(R.id.notificant);
         notificant.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +109,18 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(getActivity(), EditProfile.class);
+                startActivity(intent);
+            }
+        });
+
+
+
+        LinearLayout changepwd=view.findViewById(R.id.changepassword);
+
+        changepwd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getActivity(), ChangePassword.class);
                 startActivity(intent);
             }
         });

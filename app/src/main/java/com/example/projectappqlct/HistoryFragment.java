@@ -87,8 +87,7 @@ public class HistoryFragment extends Fragment {
         List<DataEntry> data = new ArrayList<>();
         data.add(new ValueDataEntry("Category A", 40));
         data.add(new ValueDataEntry("Category B", 30));
-        data.add(new ValueDataEntry("Category C", 20));
-        data.add(new ValueDataEntry("Category D", 10));
+
 
         pie.data(data);
         anyChartView.setChart(pie);

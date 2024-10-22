@@ -44,10 +44,20 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Kiểm tra Intent để xác định Fragment cần hiển thị
+        // route tu activity editprofile ve main acitivty ra route sang fragment profile
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra("showFragment")) {
             String fragmentToShow = intent.getStringExtra("showFragment");
             if ("profile".equals(fragmentToShow)) {
+                viewPager.setCurrentItem(4); // 4 là chỉ số của ProfileFragment
+            }
+        }
+
+
+        //route tu activity changepassword ve main acitivy roi route sang fragment profile
+        if (intent != null && intent.hasExtra("ChangePassword")) {
+            String fragmentToShow = intent.getStringExtra("ChangePassword");
+            if ("ChangePassword".equals(fragmentToShow)) {
                 viewPager.setCurrentItem(4); // 4 là chỉ số của ProfileFragment
             }
         }

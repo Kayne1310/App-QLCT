@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -18,15 +19,22 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.projectappqlct.Helper.FragmentHelper;
 import com.example.projectappqlct.Model.User;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class EditProfile extends AppCompatActivity {
-    private EditText  etPassword, etName, etAge, etAddress, etSex;
+    private EditText etName, etAge, etAddress, etSex;
     private TextView etUsername;
     private Button btnSave;
     private FirebaseFirestore db;
+    private FirebaseUser userid = FirebaseAuth.getInstance().getCurrentUser();
+    private String useridString = userid.getUid();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,18 +50,54 @@ public class EditProfile extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 
-        etUsername=findViewById(R.id.username);
-        etPassword = findViewById(R.id.etPassword);
+        etUsername = findViewById(R.id.username);
+
         etName = findViewById(R.id.name);
         etAge = findViewById(R.id.age);
         etAddress = findViewById(R.id.address);
         etSex = findViewById(R.id.sex);
         btnSave = findViewById(R.id.saveprofile);
 
+
+        //Get UserId
+
+
+        if (userid != null) {
+
+
+            db.collection("users").document(useridString).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+
+
+                            long age = document.getLong("age");
+                            String ageString = String.valueOf(age);
+
+                            etName.setHint(document.getString("name"));
+                            etSex.setHint(document.getString("sex"));
+                            etUsername.setHint(document.getString("username"));
+                            etAge.setHint(ageString);
+                            etAddress.setHint(document.getString("address"));
+
+                        } else {
+                            Toast.makeText(EditProfile.this, "No Data", Toast.LENGTH_SHORT).show();
+                        }
+
+                    } else {
+                        Toast.makeText(EditProfile.this, "Error" + task.getException(), Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            });
+        }
         // Kiểm tra nếu Intent có dữ liệu để hiển thị fragment nào
 
 
-        LinearLayout back=findViewById(R.id.back);
+        LinearLayout back = findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,33 +112,50 @@ public class EditProfile extends AppCompatActivity {
         });
 
 
-
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = etUsername.getHint().toString().trim();
-                String password = etPassword.getText().toString().trim();
-                String name = etName.getText().toString().trim();
-                String age = etAge.getText().toString().trim();
-                String address = etAddress.getText().toString().trim();
-                String sex = etSex.getText().toString().trim();
+                // Kiểm tra nếu các EditText có giá trị, nếu không thì lấy từ Hint
+                String username = etUsername.getText().toString().trim().isEmpty()
+                        ? etUsername.getHint().toString().trim()
+                        : etUsername.getText().toString().trim();
+
+
+                String name = etName.getText().toString().trim().isEmpty()
+                        ? etName.getHint().toString().trim()
+                        : etName.getText().toString().trim();
+
+                String age = etAge.getText().toString().trim().isEmpty()
+                        ? etAge.getHint().toString().trim()
+                        : etAge.getText().toString().trim();
+                int ageParsed = Integer.parseInt(age);
+
+                String address = etAddress.getText().toString().trim().isEmpty()
+                        ? etAddress.getHint().toString().trim()
+                        : etAddress.getText().toString().trim();
+
+                String sex = etSex.getText().toString().trim().isEmpty()
+                        ? etSex.getHint().toString().trim()
+                        : etSex.getText().toString().trim();
 
                 // Tạo một HashMap để lưu trữ dữ liệu
-                User user = new User(username, password, name, age, address, sex);
+                User user = new User(username, name, ageParsed, address, sex);
 
                 // Lưu dữ liệu vào Firestore
-                db.collection("users") // Tên collection là "users"
-                        .add(user) // Thêm tài liệu mới
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                db.collection("users").document(useridString)// Tên collection là "users"12
+                        .set(user)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Toast.makeText(EditProfile.this, "Data saved successfully: " + documentReference.getId(), Toast.LENGTH_SHORT).show();
+                            public void onSuccess(Void unused) {
+
+                                Toast.makeText(EditProfile.this,   "Update Sucessful !", Toast.LENGTH_SHORT).show();
                             }
                         })
-                        .addOnFailureListener(e -> {
-                            Log.i("check",e.getMessage());
-                            Toast.makeText(EditProfile.this, "Failed to save data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        .addOnFailureListener(e->{
+                            Toast.makeText(EditProfile.this, "Failed Update"+e.getMessage(), Toast.LENGTH_SHORT).show();
                         });
+                        // Thêm tài liệu mới
+
             }
         });
 
