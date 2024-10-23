@@ -6,14 +6,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context=".NotificantFragment">
+    tools:context=".BudgetFragment">
 
-    <com.anychart.AnyChartView
-        android:id="@+id/any_chart_view"
-        android:layout_width="339dp"
-        android:layout_height="318dp"
-        android:layout_marginBottom="20dp"
-        android:textAlignment="center" />
+    <com.ekn.gruzer.gaugelibrary.ArcGauge
+        android:id="@+id/arcGauge"
+        android:layout_width="200dp"
+        android:layout_height="200dp" />
+
 
     <Button
         android:id="@+id/btnBG"
@@ -24,5 +23,13 @@
         android:backgroundTint="@color/design_default_color_error"
         android:text="Create Budget"
         android:textAlignment="center"/>
+
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewBudgets"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 
 </LinearLayout>

@@ -71,7 +71,7 @@
                     android:textSize="18dp" />
 
                 <TextView
-                    android:id="@+id/textView4"
+                    android:id="@+id/textViewabcxyz"
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
                     android:background="#D3D0D0" />
