@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="preloaded_fonts" translatable="false">
+        <item>@font/abyssinica_sil</item>
+        <item>@font/acme</item>
+        <item>@font/adlam_display</item>
+        <item>@font/advent_pro_thin</item>
+        <item>@font/akaya_telivigala</item>
+        <item>@font/alata</item>
+        <item>@font/alkalami</item>
+        <item>@font/belleza</item>
+        <item>@font/cambay</item>
+    </array>
+</resources>

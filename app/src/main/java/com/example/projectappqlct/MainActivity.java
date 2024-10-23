@@ -1,5 +1,6 @@
 package com.example.projectappqlct;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -9,9 +10,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.projectappqlct.Helper.FragmentHelper;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // EdgeToEdge.enable(this);
+//        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -31,11 +34,33 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+
+
+
         viewPager=findViewById(R.id.view_pager);
         bottomNavigationView=findViewById(R.id.bottomNavigationView);
         ViewPagerAdapter adapter=new ViewPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-
         viewPager.setAdapter(adapter);
+
+
+        // Kiểm tra Intent để xác định Fragment cần hiển thị
+        // route tu activity editprofile ve main acitivty ra route sang fragment profile
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("showFragment")) {
+            String fragmentToShow = intent.getStringExtra("showFragment");
+            if ("profile".equals(fragmentToShow)) {
+                viewPager.setCurrentItem(4); // 4 là chỉ số của ProfileFragment
+            }
+        }
+
+
+        //route tu activity changepassword ve main acitivy roi route sang fragment profile
+        if (intent != null && intent.hasExtra("ChangePassword")) {
+            String fragmentToShow = intent.getStringExtra("ChangePassword");
+            if ("ChangePassword".equals(fragmentToShow)) {
+                viewPager.setCurrentItem(4); // 4 là chỉ số của ProfileFragment
+            }
+        }
 
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -81,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.menu_home) {
+
                     viewPager.setCurrentItem(0);
                     return true;
                 } else if (id == R.id.menu_history) {
