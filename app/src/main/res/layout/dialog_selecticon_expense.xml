@@ -60,7 +60,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/coffee"
-            android:tag="@drawable/coffee"/>
+            android:tag="coffee"/>
 
         <ImageView
             android:id="@+id/imageView2"
@@ -68,7 +68,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/car"
-            android:tag="@drawable/car"/>
+            android:tag="car"/>
 
         <ImageView
             android:id="@+id/imageView3"
@@ -76,7 +76,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:srcCompat="@drawable/video"
-            android:tag="@drawable/video"/>
+            android:tag="video"/>
 
         <ImageView
             android:id="@+id/imageView4"
@@ -84,7 +84,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/smartphone"
-            android:tag="@drawable/smartphone"/>
+            android:tag="smartphone"/>
     </LinearLayout>
 
     <LinearLayout
@@ -99,7 +99,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/airplane"
-            android:tag="@drawable/airplane"/>
+            android:tag="airplane"/>
 
         <ImageView
             android:id="@+id/imageView6"
@@ -107,7 +107,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/football"
-            android:tag="@drawable/football"/>
+            android:tag="football"/>
 
         <ImageView
             android:id="@+id/imageView7"
@@ -115,7 +115,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/girl"
-            android:tag=""/>
+            android:tag="girl"/>
 
         <ImageView
             android:id="@+id/imageView8"
@@ -123,7 +123,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/lock"
-            android:tag=""/>
+            android:tag="lock"/>
     </LinearLayout>
 
     <LinearLayout
@@ -138,7 +138,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/bar"
-            android:tag="@drawable/bar"/>
+            android:tag="bar"/>
 
         <ImageView
             android:id="@+id/imageView10"
@@ -146,7 +146,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/post"
-            android:tag="@drawable/post"/>
+            android:tag="post"/>
 
         <ImageView
             android:id="@+id/imageView11"
@@ -154,7 +154,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/monitor"
-            android:tag="@drawable/monitor"/>
+            android:tag="monitor"/>
 
         <ImageView
             android:id="@+id/imageView12"
@@ -162,7 +162,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/medical"
-            android:tag="@drawable/medical"/>
+            android:tag="medical"/>
     </LinearLayout>
 
     <LinearLayout
@@ -177,7 +177,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/park"
-            android:tag="@drawable/park"/>
+            android:tag="park"/>
 
         <ImageView
             android:id="@+id/imageView14"
@@ -185,7 +185,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/palette"
-            android:tag="@drawable/palette"/>
+            android:tag="palette"/>
 
         <ImageView
             android:id="@+id/imageView15"
@@ -193,7 +193,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/run"
-            android:tag="@drawable/run"/>
+            android:tag="run"/>
 
         <ImageView
             android:id="@+id/imageView16"
@@ -201,7 +201,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/savings"
-            android:tag="@drawable/savings"/>
+            android:tag="savings"/>
     </LinearLayout>
 
     <LinearLayout
@@ -216,7 +216,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/storefront"
-            android:tag="@drawable/storefront"/>
+            android:tag="storefront"/>
 
         <ImageView
             android:id="@+id/imageView18"
@@ -224,7 +224,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/motorsports"
-            android:tag="@drawable/motorsports"/>
+            android:tag="motorsports"/>
 
         <ImageView
             android:id="@+id/imageView19"
@@ -232,7 +232,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/wifi"
-            android:tag="@drawable/wifi"/>
+            android:tag="wifi"/>
 
         <ImageView
             android:id="@+id/imageView20"
@@ -240,7 +240,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/accessible"
-            android:tag="@drawable/accessible"/>
+            android:tag="accessible"/>
     </LinearLayout>
 
     <LinearLayout
@@ -255,7 +255,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/celebration"
-            android:tag="@drawable/celebration"/>
+            android:tag="celebration"/>
 
         <ImageView
             android:id="@+id/imageView22"
@@ -263,7 +263,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/church"
-            android:tag="@drawable/church"/>
+            android:tag="church"/>
 
         <ImageView
             android:id="@+id/imageView23"
@@ -271,7 +271,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/child"
-            android:tag="@drawable/child"/>
+            android:tag="child"/>
 
         <ImageView
             android:id="@+id/imageView24"
@@ -279,7 +279,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/call"
-            android:tag="@drawable/call"/>
+            android:tag="call"/>
     </LinearLayout>
 
 

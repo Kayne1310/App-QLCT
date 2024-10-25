@@ -1,9 +1,14 @@
 package com.example.projectappqlct;
 
+
+import static android.content.ContentValues.TAG;
+
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,116 +20,117 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.widget.Toast;
+
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.text.TextWatcher;
+
+import com.example.projectappqlct.Model.Expense;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.ktx.Firebase;
 
+import java.text.DecimalFormat;
 import java.util.Calendar;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
+
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import com.example.projectappqlct.Helper.FragmentHelper;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 
 public class MainActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     private BottomNavigationView bottomNavigationView;
-    private Dialog  dialog1, dialog2, dialog3, dialog4,dialog5;
-    private Button btnSelectedOption;
-    private Drawable selectedIconDrawable;
-    private ImageView imgiconclick, imageViewGr;
-    private Button btnSelectedNote;
-
-    public class User {
-        private String username;
-        private String name;
-        private int age;
-        private String phone;
-        private String address;
-
-        // Có thể thêm các thuộc tính khác sau này như budget, expenses...
-
-        // Constructor không tham số (cần cho Firebase)
-        public User() {}
-
-        // Constructor đầy đủ
-        public User(String username, String name, int age, String phone, String address) {
-            this.username = username;
-            this.name = name;
-            this.age = age;
-            this.phone = phone;
-            this.address = address;
-        }
-
-        // Getters và setters
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public int getAge() {
-            return age;
-        }
-
-        public void setAge(int age) {
-            this.age = age;
-        }
-
-        public String getPhone() {
-            return phone;
-        }
-
-        public void setPhone(String phone) {
-            this.phone = phone;
-        }
-
-        public String getAddress() {
-            return address;
-        }
-
-        public void setAddress(String address) {
-            this.address = address;
-        }
-    }
-
+    private EditText editTextAmount, editTextDate;
+    private Dialog dialog1, dialog2, dialog3, dialog4, dialog5;
+    private Button btnSelectedOption, buttonSelect, buttonSelectNote;
+    private Drawable selectedIconDrawable, icon;
+    private ImageView imgiconclick, imageViewGr, imgSelectedOption;
+    private String selectedIconTag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_main);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+
+
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
 
         viewPager = findViewById(R.id.view_pager);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         viewPager.setAdapter(adapter);
 
+
+        // Kiểm tra Intent để xác định Fragment cần hiển thị
+        // route tu activity editprofile ve main acitivty ra route sang fragment profile
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("showFragment")) {
+            String fragmentToShow = intent.getStringExtra("showFragment");
+            if ("profile".equals(fragmentToShow)) {
+                viewPager.setCurrentItem(4); // 4 là chỉ số của ProfileFragment
+            }
+        }
+
+
+        //route tu activity changepassword ve main acitivy roi route sang fragment profile
+        if (intent != null && intent.hasExtra("ChangePassword")) {
+            String fragmentToShow = intent.getStringExtra("ChangePassword");
+            if ("ChangePassword".equals(fragmentToShow)) {
+                viewPager.setCurrentItem(4); // 4 là chỉ số của ProfileFragment
+            }
+        }
+
+
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+
             }
 
             @Override
             public void onPageSelected(int position) {
+
                 switch (position) {
+
+
                     case 0:
                         bottomNavigationView.getMenu().findItem(R.id.menu_home).setChecked(true);
                         break;
@@ -139,13 +145,14 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 4:
                         bottomNavigationView.getMenu().findItem(R.id.menu_profile).setChecked(true);
-                        break;
                 }
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
+
             }
+
         });
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -160,11 +167,15 @@ public class MainActivity extends AppCompatActivity {
                     viewPager.setCurrentItem(1);
                     return true;
                 } else if (id == R.id.menu_create) {
+
                     showDialog1();
+
+
                     return true;
                 } else if (id == R.id.menu_notificant) {
                     viewPager.setCurrentItem(3);
                     return true;
+
                 } else if (id == R.id.menu_profile) {
                     viewPager.setCurrentItem(4);
                 }
@@ -189,16 +200,17 @@ public class MainActivity extends AppCompatActivity {
 
             // Hiển thị hộp thoại 1
             private void showDialog1() {
-
                 if (dialog1 == null) {  // Khởi tạo dialog1 nếu chưa khởi tạo
                     dialog1 = createDialog(R.layout.dialog_create_expense);
                 }
-                Button buttonSelect = dialog1.findViewById(R.id.btnSelectedOption);
+
+                buttonSelect = dialog1.findViewById(R.id.btnSelectedOption);
                 buttonSelect.setOnClickListener(v -> {
                     dialog1.dismiss();  // Đóng dialog 1
                     showDialog2();      // Mở dialog 2
                 });
-                Button buttonSelectNote = dialog1.findViewById(R.id.btnSelectedNote);
+
+                buttonSelectNote = dialog1.findViewById(R.id.btnSelectedNote);
                 buttonSelectNote.setOnClickListener(v -> {
                     dialog1.dismiss();  // Đóng dialog 1
                     showDialog5();      // Mở dialog 2
@@ -215,9 +227,58 @@ public class MainActivity extends AppCompatActivity {
 
                 // Tham chiếu đến các EditText
 
-                EditText editTextField1 = dialog1.findViewById(R.id.editTextAmount);
-                EditText editTextField2 = dialog1.findViewById(R.id.editTextDate);
-                ImageView imageViewGr = dialog1.findViewById(R.id.imageViewGr);
+                editTextAmount = dialog1.findViewById(R.id.editTextAmount);
+                editTextDate = dialog1.findViewById(R.id.editTextDate);
+                imageViewGr = dialog1.findViewById(R.id.imageViewGr);
+
+                editTextAmount.addTextChangedListener(new TextWatcher() {
+                    private String currentText = "";
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        if (!s.toString().equals(currentText)) {
+                            editTextAmount.removeTextChangedListener(this);
+
+                            // Xóa dấu phẩy và khoảng trắng khỏi chuỗi
+                            String cleanString = s.toString().replaceAll("[,]", "");
+                            if (cleanString.isEmpty()) {
+                                currentText = "";
+                                editTextAmount.setText("");
+                                editTextAmount.setSelection(0);  // Đảm bảo con trỏ về đầu
+                                editTextAmount.addTextChangedListener(this); // Thêm lại TextWatcher trước khi thoát
+                                return;
+                            }
+
+                            try {
+                                // Chuyển chuỗi thành số nguyên
+                                double parsed = Double.parseDouble(cleanString);
+                                // Định dạng số với dấu phẩy ngăn cách hàng nghìn
+                                DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
+                                symbols.setGroupingSeparator(',');
+                                DecimalFormat decimalFormat = new DecimalFormat("#,###", symbols);
+
+                                String formatted = decimalFormat.format(parsed);
+                                currentText = formatted;
+
+                                editTextAmount.setText(formatted);
+                                editTextAmount.setSelection(formatted.length());
+
+                            } catch (NumberFormatException e) {
+                                Log.e("TextWatcher", "Invalid number format", e);
+                            }
+
+                            editTextAmount.addTextChangedListener(this);
+                        }
+                    }
+                });
 
 
                 // Lấy ngày hiện tại
@@ -226,8 +287,8 @@ public class MainActivity extends AppCompatActivity {
                 int month = calendar.get(Calendar.MONTH);
                 int year = calendar.get(Calendar.YEAR);
                 // Đặt ngày hiện tại làm hint
-                editTextField2.setHint(String.format("%02d/%02d/%04d", day, month + 1, year));
-                editTextField2.setOnClickListener(new View.OnClickListener() {
+                editTextDate.setHint(String.format("%02d/%02d/%04d", day, month + 1, year));
+                editTextDate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         // Tạo DatePickerDialog
@@ -235,7 +296,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
                                 // Đặt ngày đã chọn vào EditText
-                                editTextField2.setText(String.format("%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear));
+                                editTextDate.setText(String.format("%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear));
                             }
                         }, year, month, day);
                         datePickerDialog.show();
@@ -243,15 +304,56 @@ public class MainActivity extends AppCompatActivity {
                 });
                 Button buttonSubmit = dialog1.findViewById(R.id.btnAdd); // Nút submit
                 buttonSubmit.setOnClickListener(v -> {
-                    String Amount = editTextField1.getText().toString().trim();
-                    int AmountInt = Integer.parseInt(Amount);
-                    String Calendar = editTextField2.getText().toString().trim();
-                    String Group=buttonSelect.getText().toString().trim();
-                    String Icon = imageViewGr.getResources().toString().trim();
+                    String Amount = editTextAmount.getText().toString().replaceAll("[,]", "").trim();
+                    if (Amount.isEmpty()) {
+                        Toast.makeText(MainActivity.this, "Please enter a valid amount", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
+                    int AmountInt = Integer.parseInt(Amount);
+                    String Calendar = editTextDate.getText().toString().trim().isEmpty() ? editTextDate.getHint().toString().trim() : editTextDate.getText().toString().trim();
+                    String Group = buttonSelect.getText().toString().trim();
+                    String Note = buttonSelectNote.getText().toString().trim();
+                    String Icon = null;
+                    if (btnSelectedOption.getTag() != null && !btnSelectedOption.getTag().toString().isEmpty()) {
+                        Icon = btnSelectedOption.getTag().toString(); // lấy tag icon từ button
+                    } else if (imageViewGr.getTag() != null) {
+                        Icon = imageViewGr.getTag().toString(); // lấy tag icon từ imageView
+                    } else {
+                        // Xử lý trường hợp cả hai tag đều null hoặc rỗng.
+                        Icon = "defaultIcon"; // Gán giá trị mặc định nếu cần.
+                    }
+                    // Lấy tên icon từ Tag;
+                    Expense expense = new Expense(AmountInt, Calendar, Group, Icon, Note); // Đổi tên từ budget thành expense
+
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    FirebaseAuth auth = FirebaseAuth.getInstance();
+                    FirebaseUser user = auth.getCurrentUser();
+                    String userString = user.getUid();
+
+                    // Thêm Expense vào Firestore
+                    db.collection("users").document(userString)
+                            .collection("Expenses")
+                            .add(expense)
+                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+                                    Log.i("check", "DocumentSnapshot added with ID: " + documentReference.getId());
+                                    dialog1.dismiss();
+                                    resetDialogFields();
+                                    Toast.makeText(MainActivity.this, "Add expense successful", Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.i("check", "Error adding document", e);
+                                }
+                            });
 
                 });
                 dialog1.show();
+
             }
 
 
@@ -271,14 +373,15 @@ public class MainActivity extends AppCompatActivity {
                 backToDialog1.setOnClickListener(v -> {
                     dialog2.dismiss();  // Đóng hộp thoại 2
                     showDialog1();
-              // Quay lại hộp thoại 1
+                    // Quay lại hộp thoại 1
                 });
 
                 // Listener chung cho tất cả các Button trong Dialog 2
                 View.OnClickListener optionClickListener = v -> {
                     handleOptionSelected((Button) v);   // Cập nhật text và mở lại Dialog 1
                 };
-                dialog2.findViewById(R.id.btnEat).setOnClickListener(optionClickListener);dialog2.findViewById(R.id.btnShopping).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.btnEat).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.btnShopping).setOnClickListener(optionClickListener);
                 dialog2.findViewById(R.id.btnFamily).setOnClickListener(optionClickListener);
                 dialog2.findViewById(R.id.btnHealthy).setOnClickListener(optionClickListener);
                 dialog2.findViewById(R.id.btnVehicle).setOnClickListener(optionClickListener);
@@ -315,9 +418,13 @@ public class MainActivity extends AppCompatActivity {
                     String selectedText = editTextGroup.getText().toString().trim();
 
                     // Cập nhật icon cho ImageView imageViewGr trong dialog 1
-                    ImageView imageViewGr = dialog1.findViewById(R.id.imageViewGr); // Giả sử bạn đã định nghĩa imageViewGr trong dialog 1
+                    ImageView imageViewGr = dialog1.findViewById(R.id.imageViewGr);
                     if (imageViewGr != null && selectedIconDrawable != null) {
-                        imageViewGr.setImageDrawable(selectedIconDrawable);  // Cập nhật icon
+                        imageViewGr.setImageDrawable(selectedIconDrawable); // Update icon
+                        // Set the tag to the imageViewGr using the selectedIconTag
+                        imageViewGr.setTag(selectedIconTag); // Assign the tag retrieved from dialog 4
+                    } else {
+                        Log.d("IconUpdate", "imageViewGr or selectedIconDrawable is null!"); // Log for debugging
                     }
 
                     // Cập nhật text cho buttonSelectOption trong dialog 1
@@ -381,6 +488,7 @@ public class MainActivity extends AppCompatActivity {
 
                 dialog4.show();
             }
+
             private void showDialog5() {
                 if (dialog5 == null) {  // Khởi tạo dialog5 nếu chưa khởi tạo
                     dialog5 = createDialog(R.layout.dialog_description);
@@ -416,41 +524,63 @@ public class MainActivity extends AppCompatActivity {
                 // Lấy text từ Button được nhấn
                 String selectedText = selectedButton.getText().toString();
                 if (btnSelectedOption != null) {
-                    btnSelectedOption.setText(selectedText);  // Cập nhật text trong Dialog 1
+                    btnSelectedOption.setText(selectedText);// Cập nhật text trong Dialog 1
+                    btnSelectedOption.setTag(removeSpacesAndToLower(selectedText));// Cập nhật tag trong Dialog 1
                 }
 
                 // Lấy icon từ Button được nhấn (compound drawable bên trái)
-                Drawable icon = selectedButton.getCompoundDrawables()[0];
-                ImageView imgSelectedOption = dialog1.findViewById(R.id.imageViewGr);
+                icon = selectedButton.getCompoundDrawables()[0];
+                imgSelectedOption = dialog1.findViewById(R.id.imageViewGr);
 
                 if (imgSelectedOption != null && icon != null) {
-                    imgSelectedOption.setImageDrawable(icon);  // Gán icon vào ImageView của Dialog 1s``````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````
+                    imgSelectedOption.setImageDrawable(icon);  // Gán icon vào ImageView của Dialog 1
                 }
 
                 if (dialog1 != null) {  // Mở lại Dialog 1
                     dialog1.show();
                 }
-
-
             }
-
 
             private void handleOptionSelectedIcon(ImageView selectedIcon) {
                 // Đóng dialog4 nếu nó đang mở
                 if (dialog4 != null && dialog4.isShowing()) {
                     dialog4.dismiss();
                 }
+
                 // Lấy icon từ ImageView được chọn
                 selectedIconDrawable = selectedIcon.getDrawable();  // Lưu lại Drawable của icon được chọn
 
                 // Cập nhật icon vào ImageView của Dialog 3
                 ImageView imgiconclick = dialog3.findViewById(R.id.imgicon);
                 if (imgiconclick != null && selectedIconDrawable != null) {
-                    imgiconclick.setImageDrawable(selectedIconDrawable);  // Cập nhật icon
+                    selectedIconTag = (String) selectedIcon.getTag();
+                    imgiconclick.setTag(selectedIconTag); // Cập nhật icon
+                    imgiconclick.setImageDrawable(selectedIconDrawable);
+
                 }
 
             }
 
+
+            public String removeSpacesAndToLower(String input) {
+                if (input == null) {
+                    return null; // Xử lý trường hợp chuỗi đầu vào là null
+                }
+                return input.replaceAll("\\s+", "").toLowerCase(); // Thay thế dấu cách và chuyển thành chữ thường
+            }
+
+
+            // Hàm để reset các trường trong dialog
+            private void resetDialogFields() {
+//                editTextAmount.setText("0"); // Reset số tiền
+                editTextAmount.getText().clear();
+                buttonSelect.setText("Select Group"); // Reset nhóm
+                buttonSelectNote.setText("Add Note"); // Reset ghi chú
+                btnSelectedOption.setTag(null); // Reset icon button
+                imageViewGr.setTag(null); // Reset tag của ImageView
+                imageViewGr.setImageResource(R.drawable.baseline_groups_2_24); // Hiển thị lại icon mặc định
+                imageViewGr = findViewById(R.id.imageViewGr);  // Nếu bạn cần khởi tạo lại imageViewGr, hãy đặt nó ở đầu phương thức
+            }
 
 
         });
