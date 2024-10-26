@@ -6,6 +6,7 @@
     tools:context=".HistoryFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
     <com.anychart.AnyChartView
         android:id="@+id/any_chart_view"
         android:layout_width="match_parent"
