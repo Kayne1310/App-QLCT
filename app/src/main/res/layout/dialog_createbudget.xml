@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="20dp"
+            android:id="@+id/textViewCancel"
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Cancel"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textStyle="normal" />
+        <TextView
+            android:layout_marginTop="10dp"
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="Budget"
+            android:textAlignment="center"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+        <TextView
+            android:layout_marginTop="10dp"
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#D3D0D0"
+        android:textSize="40sp" />
+
+    <Button
+        android:id="@+id/btnSelectedOption"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:backgroundTint="#00B00020"
+        android:drawableLeft="@drawable/baseline_groups_2_24"
+        android:paddingRight="170dp"
+        android:text="Select group"
+        android:textColor="#A8A8A8"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="10dp"
+            android:layout_height="34dp"
+            android:layout_marginLeft="-22dp"
+            android:layout_marginTop="17dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/baseline_attach_money_24" />
+
+        <EditText
+            android:id="@+id/editTextText3"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="Amount"
+            android:textColor="#8D8585"
+            android:inputType="number"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="10dp"
+            android:layout_height="34dp"
+            android:layout_marginLeft="-22dp"
+            android:layout_marginTop="17dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/baseline_calendar_month_24" />
+
+        <EditText
+            android:id="@+id/editTextDate"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="date"
+            android:hint="dd/mm/yyyy"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:background="#00FFFFFF"
+        android:textSize="300sp" />
+
+    <Button
+        android:id="@+id/btnFamily"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:backgroundTint="#22AC2B"
+        android:text="Add Budget" />
+</LinearLayout>
+
