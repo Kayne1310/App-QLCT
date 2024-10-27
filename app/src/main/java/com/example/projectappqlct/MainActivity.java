@@ -23,7 +23,11 @@ import android.widget.TextView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+
+import android.widget.Button;
+
 import android.widget.Toast;
+
 
 
 import androidx.annotation.NonNull;
@@ -90,9 +94,11 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        viewPager = findViewById(R.id.view_pager);
-        bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+
+
+        viewPager=findViewById(R.id.view_pager);
+        bottomNavigationView=findViewById(R.id.bottomNavigationView);
+        ViewPagerAdapter adapter=new ViewPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         viewPager.setAdapter(adapter);
 
 
@@ -103,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
             String fragmentToShow = intent.getStringExtra("showFragment");
             if ("profile".equals(fragmentToShow)) {
                 viewPager.setCurrentItem(4); // 4 là chỉ số của ProfileFragment
+                bottomNavigationView.getMenu().findItem(R.id.menu_profile).setChecked(true);
             }
         }
 
@@ -112,6 +119,15 @@ public class MainActivity extends AppCompatActivity {
             String fragmentToShow = intent.getStringExtra("ChangePassword");
             if ("ChangePassword".equals(fragmentToShow)) {
                 viewPager.setCurrentItem(4); // 4 là chỉ số của ProfileFragment
+                bottomNavigationView.getMenu().findItem(R.id.menu_profile).setChecked(true);
+            }
+        }
+        //route tu activity DetailActivity ve main acitivy roi route sang fragment budget
+        if (intent != null && intent.hasExtra("DetailActivity")) {
+            String fragmentToShow = intent.getStringExtra("DetailActivity");
+            if ("DetailActivity".equals(fragmentToShow)) {
+                viewPager.setCurrentItem(3); // 3 là chỉ số của BudgetFragment
+                bottomNavigationView.getMenu().findItem(R.id.menu_budget).setChecked(true);
             }
         }
 
@@ -133,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
                         bottomNavigationView.getMenu().findItem(R.id.menu_create).setChecked(true);
                         break;
                     case 3:
-                        bottomNavigationView.getMenu().findItem(R.id.menu_notificant).setChecked(true);
+                        bottomNavigationView.getMenu().findItem(R.id.menu_budget).setChecked(true);
                         break;
                     case 4:
                         bottomNavigationView.getMenu().findItem(R.id.menu_profile).setChecked(true);
@@ -160,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (id == R.id.menu_create) {
                     showDialog1();
                     return true;
-                } else if (id == R.id.menu_notificant) {
+                } else if (id == R.id.menu_budget) {
                     viewPager.setCurrentItem(3);
                     return true;
                 } else if (id == R.id.menu_profile) {
@@ -300,6 +316,11 @@ public class MainActivity extends AppCompatActivity {
                     int AmountInt = Integer.parseInt(Amount);
                     String Calendar = editTextDate.getText().toString().trim().isEmpty() ? editTextDate.getHint().toString().trim() : editTextDate.getText().toString().trim();
                     String Group = buttonSelect.getText().toString().trim();
+                    if (Group.isEmpty()){
+                        Toast.makeText(MainActivity.this, "Please enter a valid group", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     String Note = buttonSelectNote.getText().toString().trim();
                     String Icon = null;
                     if (btnSelectedOption.getTag() != null && !btnSelectedOption.getTag().toString().isEmpty()) {
@@ -411,7 +432,10 @@ public class MainActivity extends AppCompatActivity {
                         // Set the tag to the imageViewGr using the selectedIconTag
                         imageViewGr.setTag(selectedIconTag); // Assign the tag retrieved from dialog 4
                     } else {
-                        Log.d("IconUpdate", "imageViewGr or selectedIconDrawable is null!"); // Log for debugging
+                        // Nếu không có icon được chọn, đặt icon mặc định
+                        imageViewGr.setImageResource(R.drawable.baseline_drive_file_rename_outline_24);
+                        // Set tag mặc định nếu cần thiết
+                        imageViewGr.setTag("baseline_drive_file_rename_outline_24");
                     }
 
                     // Cập nhật text cho buttonSelectOption trong dialog 1
@@ -569,9 +593,16 @@ public class MainActivity extends AppCompatActivity {
                 imageViewGr = findViewById(R.id.imageViewGr);  // Nếu bạn cần khởi tạo lại imageViewGr, hãy đặt nó ở đầu phương thức
             }
 
-
         });
 
+    }
+
+    public void reloadBudgetFragment() {
+        // Kiểm tra nếu ViewPager đã được khởi tạo
+        if (viewPager != null) {
+            // Chuyển đến vị trí của fragment budget
+            viewPager.setCurrentItem(3); // 3 là chỉ số của fragment budget trong ViewPager
+        }
     }
 }
 

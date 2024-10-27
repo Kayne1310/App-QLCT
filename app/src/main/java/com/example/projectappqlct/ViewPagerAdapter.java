@@ -20,13 +20,12 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
             case 0:
                 return new HomeFragment();
-
             case 1:
                 return new HistoryFragment();
             case 2:
                 return new CreateFragment();
             case 3:
-                return new NotificantFragment();
+                return new BudgetFragment();
             case 4:
                 return  new ProfileFragment();
             default:

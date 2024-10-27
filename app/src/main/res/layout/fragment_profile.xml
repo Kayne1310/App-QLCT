@@ -15,7 +15,7 @@
             android:layout_height="116dp"
             android:elevation="8dp"
             android:layout_gravity="center"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="30dp"
             android:layout_marginBottom="10dp"
             app:srcCompat="@drawable/profile" />
         <TextView
