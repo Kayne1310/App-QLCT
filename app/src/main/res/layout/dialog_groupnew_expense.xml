@@ -57,30 +57,29 @@
 
         <ImageView
             android:id="@+id/imgicon"
-            android:layout_width="1dp"
+            android:layout_width="0dp"
             android:layout_height="30dp"
+            android:layout_marginLeft="-15dp"
             android:layout_marginTop="15dp"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/baseline_drive_file_rename_outline_24"
-            android:tag="baseline_drive_file_rename_outline_24"/>
+            android:layout_weight="12"
+            app:srcCompat="@drawable/baseline_drive_file_rename_outline_24" />
 
         <EditText
             android:id="@+id/editTextNameGr"
-            android:layout_width="310dp"
+            android:layout_width="wrap_content"
             android:layout_height="60dp"
+            android:layout_weight="12"
             android:ems="10"
-            android:inputType="text"
-            android:hint="Name group" />
+            android:hint="Name group"
+            android:inputType="text" />
     </LinearLayout>
-
 
     <TextView
         android:id="@+id/textView11"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-
-        android:background="#00D3D0D0"
+        android:background="#00FFFFFF"
         android:textSize="300sp" />
 
     <Button

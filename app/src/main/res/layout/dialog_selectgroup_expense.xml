@@ -54,10 +54,8 @@
                 <TextView
                     android:id="@+id/textView3"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#D3D0D0"
-                    android:textSize="40dp"/>
-
+                    android:layout_height="40dp"
+                    android:background="#D3D0D0" />
 
                 <Button
                     android:id="@+id/btnGrn"
@@ -68,15 +66,14 @@
                     android:paddingRight="210dp"
                     android:shadowRadius="1"
                     android:text="Group new"
-                    android:textColor="#34AB35"
+                    android:textColor="#44E245"
                     android:textColorLink="@color/design_default_color_on_primary"
                     android:textSize="18dp" />
 
                 <TextView
-
-                    android:id="@+id/textViewabcxyz"
+                    android:id="@+id/textView4"
                     android:layout_width="match_parent"
-                    android:layout_height="10dp"
+                    android:layout_height="20dp"
                     android:background="#D3D0D0" />
                 <Button
                     android:backgroundTint="#00B00020"
@@ -84,7 +81,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:textColor="#000000"
-                    android:drawableLeft="@drawable/eat"
+                    android:drawableLeft="@drawable/baseline_fastfood_24"
                     android:paddingRight="270dp"
                     android:textSize="18dp"
                     android:text="Eat" />
@@ -100,8 +97,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:textColor="#000000"
-
-                    android:drawableLeft="@drawable/shopping"
+                    android:drawableLeft="@drawable/baseline_shopping_cart_24"
                     android:paddingRight="220dp"
                     android:textSize="18dp"
                     android:text="Shopping" />
@@ -117,8 +113,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:textColor="#000000"
-
-                    android:drawableLeft="@drawable/family"
+                    android:drawableLeft="@drawable/baseline_family_restroom_24"
                     android:paddingRight="240dp"
                     android:textSize="18dp"
                     android:text="Family" />
@@ -134,7 +129,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:textColor="#000000"
-                    android:drawableLeft="@drawable/healthy"
+                    android:drawableLeft="@drawable/baseline_health_and_safety_24"
                     android:paddingRight="230dp"
                     android:textSize="18dp"
                     android:text="Healthy" />
@@ -150,7 +145,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:textColor="#000000"
-                    android:drawableLeft="@drawable/vehicle"
+                    android:drawableLeft="@drawable/baseline_drive_eta_24"
                     android:paddingRight="230dp"
                     android:textSize="18dp"
                     android:text="Vehicle" />
@@ -160,15 +155,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
                     android:background="#D3D0D0" />
-
                 <Button
                     android:backgroundTint="#00B00020"
                     android:id="@+id/btnSport"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:textColor="#000000"
-
-                    android:drawableLeft="@drawable/sport"
+                    android:drawableLeft="@drawable/baseline_sports_basketball_24"
                     android:paddingRight="240dp"
                     android:textSize="18dp"
                     android:text="Sport" />
@@ -184,7 +177,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:textColor="#000000"
-                    android:drawableLeft="@drawable/education"
+                    android:drawableLeft="@drawable/baseline_school_24"
                     android:paddingRight="200dp"
                     android:textSize="18dp"
                     android:text="Education" />
@@ -200,7 +193,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:textColor="#000000"
-                    android:drawableLeft="@drawable/entertainment"
+                    android:drawableLeft="@drawable/baseline_videogame_asset_24"
                     android:paddingRight="170dp"
                     android:textSize="18dp"
                     android:text="Entertainment" />
@@ -216,7 +209,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:textColor="#000000"
-                    android:drawableLeft="@drawable/gifts"
+                    android:drawableLeft="@drawable/baseline_card_giftcard_24"
                     android:paddingRight="250dp"
                     android:textSize="18dp"
                     android:text="Gifts" />
@@ -232,7 +225,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:textColor="#000000"
-                    android:drawableLeft="@drawable/invest"
+                    android:drawableLeft="@drawable/baseline_insert_chart_24"
                     android:paddingRight="240dp"
                     android:textSize="18dp"
                     android:text="Invest" />
@@ -248,7 +241,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:textColor="#000000"
-                    android:drawableLeft="@drawable/makeup"
+                    android:drawableLeft="@drawable/baseline_auto_awesome_24"
                     android:paddingRight="220dp"
                     android:textSize="18dp"
                     android:text="Make up" />
@@ -264,7 +257,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:textColor="#000000"
-                    android:drawableLeft="@drawable/donate"
+                    android:drawableLeft="@drawable/baseline_favorite_24"
                     android:paddingRight="230dp"
                     android:textSize="18dp"
                     android:text="Donate" />
@@ -280,10 +273,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:textColor="#000000"
-                    android:drawableLeft="@drawable/other"
-                    android:paddingRight="240dp"
+                    android:drawableLeft="@drawable/baseline_view_comfy_24"
+                    android:paddingRight="170dp"
                     android:textSize="18dp"
-                    android:text="Other" />
+                    android:text="Other expenses" />
+
 
             </LinearLayout>
         </ScrollView>

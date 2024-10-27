@@ -143,7 +143,6 @@ public class TabFragment1 extends Fragment {
         arcGauge.setValue(100);  // Đặt giá trị hiện tại là 0
 
 
-
         Button showDialogButton = view.findViewById(R.id.btnBG);
         showDialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -182,7 +181,7 @@ public class TabFragment1 extends Fragment {
                             budgetList.addAll(budgets);
 
                             // Thiết lập adapter với danh sách đã lấy
-                            budgetAdapter = new BudgetAdapter(getActivity(),budgetList);
+                            budgetAdapter = new BudgetAdapter(getActivity(), budgetList);
                             recyclerView.setAdapter(budgetAdapter);
                         }
                     })
@@ -232,12 +231,12 @@ public class TabFragment1 extends Fragment {
         btnSelectedOption = dialog1.findViewById(R.id.btnSelectedOption);
 
         // Tham chiếu đến các EditText
-        EditText editTextField1 = dialog1.findViewById(R.id.editTextAmount);
-        EditText editTextField2 = dialog1.findViewById(R.id.editTextCalendar);
+        EditText editTextAmount = dialog1.findViewById(R.id.editTextAmount);
+        EditText editTextDate = dialog1.findViewById(R.id.editTextCalendar);
         ImageView imageviewGr = dialog1.findViewById(R.id.imageViewGr);
 
-        // Thêm TextWatcher vào editTextField1
-        editTextField1.addTextChangedListener(new TextWatcher() {
+        // Thêm TextWatcher vào editTextAmount
+        editTextAmount.addTextChangedListener(new TextWatcher() {
             private String currentText = "";
 
             @Override
@@ -251,13 +250,13 @@ public class TabFragment1 extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 if (!s.toString().equals(currentText)) {
-                    editTextField1.removeTextChangedListener(this);
+                    editTextAmount.removeTextChangedListener(this);
 
                     // Xóa dấu phẩy và khoảng trắng khỏi chuỗi
                     String cleanString = s.toString().replaceAll("[,]", "");
                     if (cleanString.isEmpty()) {
                         currentText = "";
-                        editTextField1.setText("");
+                        editTextAmount.setText("");
                         return;
                     }
 
@@ -273,14 +272,14 @@ public class TabFragment1 extends Fragment {
                         String formatted = decimalFormat.format(parsed);
                         currentText = formatted;
 
-                        editTextField1.setText(formatted);
-                        editTextField1.setSelection(formatted.length());
+                        editTextAmount.setText(formatted);
+                        editTextAmount.setSelection(formatted.length());
 
                     } catch (NumberFormatException e) {
                         Log.e("TextWatcher", "Invalid number format", e);
                     }
 
-                    editTextField1.addTextChangedListener(this);
+                    editTextAmount.addTextChangedListener(this);
                 }
             }
         });
@@ -293,8 +292,8 @@ public class TabFragment1 extends Fragment {
 
 
         // Đặt ngày hiện tại làm hint
-        editTextField2.setHint(String.format("%02d/%02d/%04d", day, month + 1, year));
-        editTextField2.setOnClickListener(new View.OnClickListener() {
+        editTextDate.setHint(String.format("%02d/%02d/%04d", day, month + 1, year));
+        editTextDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Tạo DatePickerDialog
@@ -302,7 +301,7 @@ public class TabFragment1 extends Fragment {
                     @Override
                     public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
                         // Đặt ngày đã chọn vào EditText
-                        editTextField2.setText(String.format("%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear));
+                        editTextDate.setText(String.format("%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear));
                     }
                 }, year, month, day);
                 datePickerDialog.show();
@@ -311,7 +310,7 @@ public class TabFragment1 extends Fragment {
 
         Button buttonSubmit = dialog1.findViewById(R.id.btnAddBudget); // Nút submit
         buttonSubmit.setOnClickListener(v -> {
-            String Amount = editTextField1.getText().toString().replaceAll("[,]", "").trim();
+            String Amount = editTextAmount.getText().toString().replaceAll("[,]", "").trim();
             if (Amount.isEmpty()) {
                 Toast.makeText(getActivity(), "Please enter a valid amount", Toast.LENGTH_SHORT).show();
                 return;
@@ -319,17 +318,21 @@ public class TabFragment1 extends Fragment {
             int AmountInt = Integer.parseInt(Amount);
 
             // Lấy ngày từ EditText hoặc hint nếu chưa nhập
-            String Calendar = editTextField2.getText().toString().trim().isEmpty() ? editTextField2.getHint().toString().trim() : editTextField2.getText().toString().trim();
+            String Calendar = editTextDate.getText().toString().trim().isEmpty() ? editTextDate.getHint().toString().trim() : editTextDate.getText().toString().trim();
             String Group = btnSelectedOption.getText().toString().trim();
-            String Icon = null;
+            if (Group.isEmpty()) {
+                Toast.makeText(getActivity(), "Please enter a valid group", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
+            String Icon = null;
             if (btnSelectedOption.getTag() != null && !btnSelectedOption.getTag().toString().isEmpty()) {
                 Icon = btnSelectedOption.getTag().toString();
             } else if (imageviewGr.getTag() != null) {
                 Icon = imageviewGr.getTag().toString();
             } else {
                 // Xử lý trường hợp cả hai tag đều null hoặc rỗng.
-                Icon = "defaultIcon"; // Gán giá trị mặc định nếu cần.
+                Icon = "baseline_drive_file_rename_outline_24"; // Gán giá trị mặc định nếu cần.
             }
             // Lấy tên icon từ Tag;
 
@@ -354,8 +357,13 @@ public class TabFragment1 extends Fragment {
                             documentReference.set(budget) // Cập nhật Firestore với budget đã có ID
                                     .addOnSuccessListener(aVoid -> {
                                         Log.i("check", "Budget successfully updated with ID.");
+                                        // Đóng dialog1 và reload lại fragment budget
                                         dialog1.dismiss();
                                         Toast.makeText(getActivity(), "Add budget successful", Toast.LENGTH_SHORT).show();
+
+                                        // Gọi phương thức reload từ MainActivity
+                                        ((MainActivity) getActivity()).reloadBudgetFragment();
+
                                     })
                                     .addOnFailureListener(e -> {
                                         Log.i("check", "Error updating budget ID", e);
@@ -545,7 +553,7 @@ public class TabFragment1 extends Fragment {
         // Cập nhật icon vào ImageView của Dialog 3
         ImageView imgiconclick = dialog3.findViewById(R.id.imgicon);
         if (imgiconclick != null && selectedIconDrawable != null) {
-            selectedIconTag = (String)  selectedIcon.getTag();
+            selectedIconTag = (String) selectedIcon.getTag();
             imgiconclick.setTag(selectedIconTag); // Cập nhật icon
             imgiconclick.setImageDrawable(selectedIconDrawable);
 

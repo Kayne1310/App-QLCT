@@ -31,10 +31,6 @@
         app:labelVisibilityMode="labeled"
         app:menu="@menu/menu_home" />
     </LinearLayout>
-
-
-
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
