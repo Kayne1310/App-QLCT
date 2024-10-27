@@ -59,28 +59,32 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/baseline_drive_file_rename_outline_24" />
+            app:srcCompat="@drawable/coffee"
+            android:tag="coffee"/>
 
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/baseline_account_balance_wallet_24" />
+            app:srcCompat="@drawable/car"
+            android:tag="car"/>
 
         <ImageView
             android:id="@+id/imageView3"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            app:srcCompat="@drawable/baseline_attach_money_24" />
+            app:srcCompat="@drawable/video"
+            android:tag="video"/>
 
         <ImageView
             android:id="@+id/imageView4"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/baseline_groups_2_24" />
+            app:srcCompat="@drawable/smartphone"
+            android:tag="smartphone"/>
     </LinearLayout>
 
     <LinearLayout
@@ -94,28 +98,32 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/baseline_drive_file_rename_outline_24" />
+            app:srcCompat="@drawable/airplane"
+            android:tag="airplane"/>
 
         <ImageView
             android:id="@+id/imageView6"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/baseline_account_balance_wallet_24" />
+            app:srcCompat="@drawable/football"
+            android:tag="football"/>
 
         <ImageView
             android:id="@+id/imageView7"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/baseline_attach_money_24" />
+            app:srcCompat="@drawable/girl"
+            android:tag="girl"/>
 
         <ImageView
             android:id="@+id/imageView8"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/baseline_groups_2_24" />
+            app:srcCompat="@drawable/lock"
+            android:tag="lock"/>
     </LinearLayout>
 
     <LinearLayout
@@ -129,28 +137,32 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/baseline_drive_file_rename_outline_24" />
+            app:srcCompat="@drawable/bar"
+            android:tag="bar"/>
 
         <ImageView
             android:id="@+id/imageView10"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/baseline_account_balance_wallet_24" />
+            app:srcCompat="@drawable/post"
+            android:tag="post"/>
 
         <ImageView
             android:id="@+id/imageView11"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/baseline_attach_money_24" />
+            app:srcCompat="@drawable/monitor"
+            android:tag="monitor"/>
 
         <ImageView
             android:id="@+id/imageView12"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/baseline_groups_2_24" />
+            app:srcCompat="@drawable/medical"
+            android:tag="medical"/>
     </LinearLayout>
 
     <LinearLayout
@@ -164,28 +176,32 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/baseline_drive_file_rename_outline_24" />
+            app:srcCompat="@drawable/park"
+            android:tag="park"/>
 
         <ImageView
             android:id="@+id/imageView14"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/baseline_account_balance_wallet_24" />
+            app:srcCompat="@drawable/palette"
+            android:tag="palette"/>
 
         <ImageView
             android:id="@+id/imageView15"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/baseline_attach_money_24" />
+            app:srcCompat="@drawable/run"
+            android:tag="run"/>
 
         <ImageView
             android:id="@+id/imageView16"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/baseline_groups_2_24" />
+            app:srcCompat="@drawable/savings"
+            android:tag="savings"/>
     </LinearLayout>
 
     <LinearLayout
@@ -199,28 +215,32 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/baseline_drive_file_rename_outline_24" />
+            app:srcCompat="@drawable/storefront"
+            android:tag="storefront"/>
 
         <ImageView
             android:id="@+id/imageView18"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/baseline_account_balance_wallet_24" />
+            app:srcCompat="@drawable/motorsports"
+            android:tag="motorsports"/>
 
         <ImageView
             android:id="@+id/imageView19"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/baseline_attach_money_24" />
+            app:srcCompat="@drawable/wifi"
+            android:tag="wifi"/>
 
         <ImageView
             android:id="@+id/imageView20"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/baseline_groups_2_24" />
+            app:srcCompat="@drawable/accessible"
+            android:tag="accessible"/>
     </LinearLayout>
 
     <LinearLayout
@@ -234,28 +254,32 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/baseline_drive_file_rename_outline_24" />
+            app:srcCompat="@drawable/celebration"
+            android:tag="celebration"/>
 
         <ImageView
             android:id="@+id/imageView22"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/baseline_account_balance_wallet_24" />
+            app:srcCompat="@drawable/church"
+            android:tag="church"/>
 
         <ImageView
             android:id="@+id/imageView23"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/baseline_attach_money_24" />
+            app:srcCompat="@drawable/child"
+            android:tag="child"/>
 
         <ImageView
             android:id="@+id/imageView24"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/baseline_groups_2_24" />
+            app:srcCompat="@drawable/call"
+            android:tag="call"/>
     </LinearLayout>
 
 

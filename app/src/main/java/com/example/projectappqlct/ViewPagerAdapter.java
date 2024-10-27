@@ -20,7 +20,6 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
             case 0:
                 return new HomeFragment();
-
             case 1:
                 return new HistoryFragment();
             case 2:

@@ -2,13 +2,17 @@ package com.example.projectappqlct.Model;
 
 import android.graphics.drawable.Drawable;
 
-public class Budget {
-    private String id;   // ID from Firestore document
+import java.io.Serializable;
+
+public class Budget implements Serializable {
+    private String id;
     private int amount;
     private String calendar;
     private String group;
     private String icon;
 
+
+    public Budget(){}
 
     // Constructor with parameters
     public Budget(int amount, String calendar, String group, String icon) {
@@ -18,7 +22,6 @@ public class Budget {
         this.icon = icon;
     }
 
-    // Getter and setter for ID
     public String getId() {
         return id;
     }
