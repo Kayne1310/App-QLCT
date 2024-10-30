@@ -51,7 +51,6 @@ dependencies {
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -66,5 +65,5 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
     implementation("com.google.android.gms:play-services-auth")
     implementation("com.google.firebase:firebase-firestore")
-
+    implementation("androidx.cardview:cardview:1.0.0")
 }

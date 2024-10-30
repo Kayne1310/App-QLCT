@@ -87,15 +87,16 @@ public class ProfileFragment extends Fragment {
         }
 
 
-        LinearLayout notificant=view.findViewById(R.id.notificant);
+        LinearLayout notificant = view.findViewById(R.id.notificant);
         notificant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("check","test");
-
-
+                Intent intent = new Intent(getActivity(), NotificationActivity.class);
+                startActivity(intent);
             }
         });
+
+
 
 
         LinearLayout logout=view.findViewById(R.id.logout);
@@ -110,6 +111,17 @@ public class ProfileFragment extends Fragment {
                 getActivity().finish();
             }
         });
+
+//        LinearLayout Notificant=view.findViewById(R.id.notificant);
+//
+//        Notificant.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent=new Intent(getActivity(), NotificationActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+
 
         LinearLayout editProfile = view.findViewById(R.id.editprofile);
         editProfile.setOnClickListener(new View.OnClickListener() {
