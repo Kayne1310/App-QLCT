@@ -11,6 +11,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.projectappqlct.Model.User;
+
+
+import com.example.projectappqlct.Model.User;
+
 import com.example.projectappqlct.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -23,6 +27,7 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText signupEmail, signupPassword, nameEditText, ageEditText, addressEditText, sexEditText; // Xóa phoneEditText
     private Button signupButton;
     private TextView loginRedirectText;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,4 +130,5 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
     }
+
 }

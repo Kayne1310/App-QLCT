@@ -5,9 +5,12 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
+
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 
 import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
@@ -17,6 +20,7 @@ import com.anychart.charts.Pie;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +34,7 @@ public class HistoryFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private AnyChartView anyChartView;
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -65,7 +70,6 @@ public class HistoryFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-
     }
 
     @Override
@@ -91,5 +95,6 @@ public class HistoryFragment extends Fragment {
 
         pie.data(data);
         anyChartView.setChart(pie);
+
     }
 }
