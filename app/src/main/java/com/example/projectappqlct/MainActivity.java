@@ -1,7 +1,5 @@
 package com.example.projectappqlct;
 
-import static android.content.ContentValues.TAG;
-
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.graphics.drawable.Drawable;
@@ -21,10 +19,6 @@ import android.widget.TextView;
 
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.view.MenuItem;
-
-import android.widget.Button;
 
 import android.widget.Toast;
 
@@ -32,42 +26,37 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.text.TextWatcher;
 
 import com.example.projectappqlct.Model.Expense;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.example.projectappqlct.Model.Option;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.ktx.Firebase;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.text.DecimalFormatSymbols;
+import java.util.List;
 import java.util.Locale;
-
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-
-import com.example.projectappqlct.Helper.FragmentHelper;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -81,6 +70,12 @@ public class MainActivity extends AppCompatActivity {
     private Drawable selectedIconDrawable, icon;
     private ImageView imgiconclick, imageViewGr, imgSelectedOption;
     private String selectedIconTag;
+    private BudgetViewPagerAdapter adapter;
+    private OptionAdapter optionAdapter;
+    private List<Option> optionList = new ArrayList<>();
+    private FirebaseAuth auth;
+    private FirebaseUser user;
+    private String userString;
 
 
     @Override
@@ -93,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
 
 
 
@@ -204,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
             // Hiển thị hộp thoại 1
             private void showDialog1() {
                 if (dialog1 == null) {  // Khởi tạo dialog1 nếu chưa khởi tạo
-                    dialog1 = createDialog(R.layout.dialog_create_expense);
+                    dialog1 = createDialog(R.layout.dialog_createexpense);
                 }
 
                 buttonSelect = dialog1.findViewById(R.id.btnSelectedOption);
@@ -368,7 +364,7 @@ public class MainActivity extends AppCompatActivity {
             // Hiển thị hộp thoại 2
             private void showDialog2() {
                 if (dialog2 == null) {  // Khởi tạo dialog2 nếu chưa khởi tạo
-                    dialog2 = createDialog(R.layout.dialog_selectgroup_expense);
+                    dialog2 = createDialog(R.layout.dialog_selectgroup);
                 }
 
                 Button buttonGrn = dialog2.findViewById(R.id.btnGrn);
@@ -383,6 +379,70 @@ public class MainActivity extends AppCompatActivity {
                     showDialog1();
                     // Quay lại hộp thoại 1
                 });
+
+                // Tìm RecyclerView
+                RecyclerView recyclerView = dialog2.findViewById(R.id.recyclerViewOption);
+                if (recyclerView == null) {
+                    Log.e("ShowDialog2", "RecyclerView is null! Check the layout file.");
+                    return; // Hoặc xử lý lỗi nếu cần
+                }
+
+                // Khởi tạo LayoutManager cho RecyclerView nếu chưa có
+                if (recyclerView.getLayoutManager() == null) {
+                    recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                }
+
+                // Khởi tạo Adapter nếu chưa có
+                if (optionAdapter == null) {
+                    optionAdapter = new OptionAdapter(optionList, v -> {
+                        int position = recyclerView.getChildAdapterPosition(v);
+                        Option selectedOption = optionList.get(position);
+                        handleRecyclerViewSelection(selectedOption);
+                    });
+                    recyclerView.setAdapter(optionAdapter);
+                }
+
+
+                // Tải dữ liệu từ Firestore và thiết lập Adapter sau khi dữ liệu đã tải xong
+                loadOptionsFromFirestore();
+
+                // Cài đặt sự kiện click cho item trong RecyclerView
+                View.OnClickListener itemClickListener = v -> {
+                    Option selectedOption = (Option) v.getTag(); // Lấy Option từ tag
+                    if (selectedOption != null) {
+                        // Cập nhật button select trong dialog1
+                        Button btnSelectedOption = dialog1.findViewById(R.id.btnSelectedOption);
+                        btnSelectedOption.setText(selectedOption.getName()); // Cập nhật tên
+
+                        // Cập nhật icon và gán tag cho ImageView
+                        ImageView imageViewGr = dialog1.findViewById(R.id.imageViewGr);
+                        int iconResId = MainActivity.this.getResources().getIdentifier(selectedOption.getIcon(), "drawable", MainActivity.this.getPackageName());
+                        imageViewGr.setTag(selectedOption.getIcon()); // Gán tag cho ImageView
+                        imageViewGr.setImageResource(iconResId);
+
+                        // Đóng dialog2
+                        if (dialog2 != null && dialog2.isShowing()) {
+                            dialog2.dismiss();
+                        }
+
+                        // Mở dialog1
+                        showDialog1();  // Hoặc gọi phương thức để mở dialog1
+                    }
+                };
+
+                // Tạo adapter và gán listener
+                optionAdapter = new OptionAdapter(optionList, itemClickListener);
+                recyclerView.setAdapter(optionAdapter);
+
+                // Thêm divider giữa các item
+                DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
+
+                // Nếu muốn sử dụng divider tùy chỉnh, hãy đặt drawable của bạn
+                dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.divider));
+
+                // Thêm divider vào RecyclerView
+                recyclerView.addItemDecoration(dividerItemDecoration);
+
 
                 // Listener chung cho tất cả các Button trong Dialog 2
                 View.OnClickListener optionClickListener = v -> {
@@ -408,7 +468,7 @@ public class MainActivity extends AppCompatActivity {
             // Hiển thị hộp thoại 2
             private void showDialog3() {
                 if (dialog3 == null) {  // Khởi tạo dialog3 nếu chưa khởi tạo
-                    dialog3 = createDialog(R.layout.dialog_groupnew_expense);
+                    dialog3 = createDialog(R.layout.dialog_newgroup);
                 }
 
                 // Chọn icon
@@ -418,32 +478,38 @@ public class MainActivity extends AppCompatActivity {
                 });
 
                 // Chọn text
-                EditText editTextGroup = dialog3.findViewById(R.id.editTextNameGr);
+                EditText editTextOption = dialog3.findViewById(R.id.editTextNameGr);
 
                 // Nút Lưu
                 Button buttonSave = dialog3.findViewById(R.id.btnSave);
                 buttonSave.setOnClickListener(v -> {
-                    String selectedText = editTextGroup.getText().toString().trim();
+                    String selectedText = editTextOption.getText().toString().trim();
 
-                    // Cập nhật icon cho ImageView imageViewGr trong dialog 1
-                    ImageView imageViewGr = dialog1.findViewById(R.id.imageViewGr);
-                    if (imageViewGr != null && selectedIconDrawable != null) {
-                        imageViewGr.setImageDrawable(selectedIconDrawable); // Update icon
-                        // Set the tag to the imageViewGr using the selectedIconTag
-                        imageViewGr.setTag(selectedIconTag); // Assign the tag retrieved from dialog 4
-                    } else {
-                        // Nếu không có icon được chọn, đặt icon mặc định
-                        imageViewGr.setImageResource(R.drawable.baseline_drive_file_rename_outline_24);
-                        // Set tag mặc định nếu cần thiết
-                        imageViewGr.setTag("baseline_drive_file_rename_outline_24");
+                    // Kiểm tra tên option không trống
+                    if (selectedText.isEmpty()) {
+                        Toast.makeText(dialog3.getContext(), "Tên option không được để trống!", Toast.LENGTH_SHORT).show();
+                        return;
                     }
 
-                    // Cập nhật text cho buttonSelectOption trong dialog 1
-                    btnSelectedOption.setText(selectedText); // Cập nhật text
+                    // Xác định icon (hoặc đặt mặc định nếu không chọn icon)
+                    String selectedIconTag;
+                    ImageView imageViewIcon = dialog3.findViewById(R.id.imgicon);
 
-                    // Đóng dialog 3 và mở lại dialog 1
+                    if (imageViewIcon != null && imageViewIcon.getTag() != null) {
+                        selectedIconTag = imageViewIcon.getTag().toString(); // Lấy tag icon
+                    } else {
+                        selectedIconTag = "baseline_drive_file_rename_outline_24"; // Icon mặc định
+                    }
+
+                    // Tạo option mới với icon (dưới dạng chuỗi) và tên
+                    Option newOption = new Option(selectedIconTag, selectedText);
+
+                    // Lưu option mới vào Firestore
+                    saveOptionToFirestore(newOption);
+
+                    // Đóng dialog3
                     dialog3.dismiss();
-                    showDialog1();
+                    showDialog2();
                 });
 
                 TextView backToDialog1 = dialog3.findViewById(R.id.textViewBack2);
@@ -455,11 +521,36 @@ public class MainActivity extends AppCompatActivity {
                 dialog3.show();
             }
 
+            private void saveOptionToFirestore(Option option) {
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                auth = FirebaseAuth.getInstance();
+                user = auth.getCurrentUser();
+
+                if (user != null) {
+                    String userString = user.getUid();
+
+                    // Lưu option mới vào Firestore trong collection "options"
+                    db.collection("users")
+                            .document(userString)
+                            .collection("Options")
+                            .add(option)
+                            .addOnSuccessListener(documentReference -> {
+                                Toast.makeText(MainActivity.this, "Option đã được lưu!", Toast.LENGTH_SHORT).show();
+
+                                // Sau khi lưu, tải lại danh sách options để cập nhật RecyclerView trong dialog2
+                                loadOptionsFromFirestore();
+                            })
+                            .addOnFailureListener(e ->
+                                    Toast.makeText(MainActivity.this, "Không thể lưu option.", Toast.LENGTH_SHORT).show()
+                            );
+                }
+            }
+
 
             // Hiển thị hộp thoại 4
             private void showDialog4() {
                 if (dialog4 == null) {  // Khởi tạo dialog4 nếu chưa khởi tạo
-                    dialog4 = createDialog(R.layout.dialog_selecticon_expense);
+                    dialog4 = createDialog(R.layout.dialog_selecticon);
                 }
 
                 TextView backToDialog1 = dialog4.findViewById(R.id.textViewBack3);
@@ -572,7 +663,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
-
             public String removeSpacesAndToLower(String input) {
                 if (input == null) {
                     return null; // Xử lý trường hợp chuỗi đầu vào là null
@@ -583,7 +673,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Hàm để reset các trường trong dialog
             private void resetDialogFields() {
-//                editTextAmount.setText("0"); // Reset số tiền
+            //  editTextAmount.setText("0"); // Reset số tiền
                 editTextAmount.getText().clear();
                 buttonSelect.setText("Select Group"); // Reset nhóm
                 buttonSelectNote.setText("Add Note"); // Reset ghi chú
@@ -593,16 +683,63 @@ public class MainActivity extends AppCompatActivity {
                 imageViewGr = findViewById(R.id.imageViewGr);  // Nếu bạn cần khởi tạo lại imageViewGr, hãy đặt nó ở đầu phương thức
             }
 
+
+
+            //     Tải dữ liệu từ Firestore và cập nhật RecyclerView
+            private void loadOptionsFromFirestore() {
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                auth = FirebaseAuth.getInstance();
+                user = auth.getCurrentUser();
+                userString = user.getUid();
+
+                db.collection("users").document(userString)
+                        .collection("Options").get()
+                        .addOnSuccessListener(queryDocumentSnapshots -> {
+                            optionList.clear();
+                            for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                                Option option = doc.toObject(Option.class);
+                                optionList.add(option);
+                            }
+
+                            // Thông báo Adapter cập nhật lại dữ liệu
+                            if (optionAdapter != null) {
+                                optionAdapter.notifyDataSetChanged();
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(MainActivity.this, "Failed to load options.", Toast.LENGTH_SHORT).show();
+                            Log.e("FirestoreError", "Error loading options", e);
+                        });
+            }
+
+
+
+            private void handleRecyclerViewSelection(Option selectedOption) {
+                if (dialog2 != null && dialog2.isShowing()) {
+                    dialog2.dismiss();  // Đóng Dialog 2
+                }
+
+                // Cập nhật tên nhóm vào Dialog 1
+                btnSelectedOption.setText(selectedOption.getName());
+                btnSelectedOption.setTag(selectedOption.getName());
+
+                // Cập nhật icon vào ImageView trong Dialog 1
+                ImageView imgSelectedOption = dialog1.findViewById(R.id.imageViewGr);
+                int iconResId = getResources().getIdentifier(
+                        selectedOption.getIcon(), "drawable", MainActivity.this.getPackageName()
+                );
+                imgSelectedOption.setImageResource(iconResId);
+
+                // Mở lại Dialog 1
+                if (dialog1 != null) {
+                    dialog1.show();
+                }
+            }
+
         });
 
     }
 
-    public void reloadBudgetFragment() {
-        // Kiểm tra nếu ViewPager đã được khởi tạo
-        if (viewPager != null) {
-            // Chuyển đến vị trí của fragment budget
-            viewPager.setCurrentItem(3); // 3 là chỉ số của fragment budget trong ViewPager
-        }
-    }
+
 }
 

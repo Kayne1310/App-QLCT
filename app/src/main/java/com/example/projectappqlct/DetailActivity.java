@@ -183,32 +183,6 @@ public class DetailActivity extends DemoBase {
 
     }
 
-//    private LineData generateLineData() {
-//
-//        LineData d = new LineData();
-//
-//        ArrayList<Entry> entries = new ArrayList<>();
-//
-//        for (int abc = 0; abc < count; abc++)
-//            entries.add(new Entry(abc + 0.5f, getRandom(15, 5)));
-//
-//        LineDataSet set = new LineDataSet(entries, "Line DataSet");
-//        set.setColor(Color.rgb(240, 238, 70));
-//        set.setLineWidth(2.5f);
-//        set.setCircleColor(Color.rgb(240, 238, 70));
-//        set.setCircleRadius(5f);
-//        set.setFillColor(Color.rgb(240, 238, 70));
-//        set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-//        set.setDrawValues(true);
-//        set.setValueTextSize(10f);
-//        set.setValueTextColor(Color.rgb(240, 238, 70));
-//
-//        set.setAxisDependency(YAxis.AxisDependency.LEFT);
-//        d.addDataSet(set);
-//
-//        return d;
-//    }
-
     private BarData generateBarData() {
 
         ArrayList<BarEntry> entries = new ArrayList<>();
@@ -232,9 +206,6 @@ public class DetailActivity extends DemoBase {
 
         return d;
     }
-
-
-
 
 
 
@@ -319,7 +290,10 @@ public class DetailActivity extends DemoBase {
                     .set(budget)
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(DetailActivity.this, "Budget updated successfully!", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();  // Đóng dialog sau khi cập nhật thành công
+//                        dialog.dismiss();  // Đóng dialog sau khi cập nhật thành công
+                        Intent intent = getIntent();
+                        finish();
+                        startActivity(intent);
                     })
                     .addOnFailureListener(e -> Log.e("TAG", "Error updating document", e));
         });
@@ -339,15 +313,16 @@ public class DetailActivity extends DemoBase {
 
                 .delete()
                 .addOnSuccessListener(aVoid -> {
+                    // Truyền kết quả về BudgetFragment
+                    // Chuyển sang màn hình chi tiết item
+                    Intent intent = new Intent(DetailActivity.this, MainActivity.class);
+                    intent.putExtra("DetailActivity","DetailActivity");
+                    startActivity(intent);
                     Toast.makeText(DetailActivity.this, "Budget deleted successfully!", Toast.LENGTH_SHORT).show();
-                    Log.i("check delte","delete co chay k");
                     finish(); // Đóng activity sau khi xóa thành công
                 })
                 .addOnFailureListener(e -> Log.e("TAG", "Error deleting document", e));
     }
-
-
-
 
 
 }

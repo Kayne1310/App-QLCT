@@ -78,6 +78,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
                     android:background="#D3D0D0" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewOption"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+<!--                <TextView-->
+
+<!--                    android:id="@+id/textViewabcqwe"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="10dp"-->
+<!--                    android:background="#D3D0D0" />-->
                 <Button
                     android:backgroundTint="#00B00020"
                     android:id="@+id/btnEat"

@@ -9,14 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projectappqlct.Model.Budget;
+import com.example.projectappqlct.Model.Expense;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -25,10 +28,10 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.BudgetView
     private Context mContext;
 
     public BudgetAdapter(Context context, List<Budget> listBudget) {
-        this.ListBudget = listBudget;
         this.mContext = context;
+        // Khởi tạo ListBudget nếu nó null
+        this.ListBudget = listBudget != null ? listBudget : new ArrayList<>();
     }
-
 
     @NonNull
     @Override
@@ -41,7 +44,7 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.BudgetView
     public void onBindViewHolder(@NonNull BudgetViewHolder holder, int position) {
         final Budget budget = ListBudget.get(position);
         if (budget == null) {
-            return;
+            return; // Tránh NullPointerException
         }
 
         // Lấy ID của icon từ tên chuỗi
@@ -81,6 +84,15 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.BudgetView
         return ListBudget != null ? ListBudget.size() : 0;
     }
 
+    // Phương thức cập nhật dữ liệu
+//    public void updateData(List<Budget> newBudgetList) {
+//        ListBudget.clear(); // Xóa dữ liệu cũ
+//        if (newBudgetList != null) {
+//            ListBudget.addAll(newBudgetList); // Thêm dữ liệu mới
+//        }
+//        notifyDataSetChanged(); // Cập nhật RecyclerView
+//    }
+
     public class BudgetViewHolder extends RecyclerView.ViewHolder {
         private ImageView imgviewIcon;
         private TextView textviewGroup, textviewAmount;
@@ -95,4 +107,3 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.BudgetView
         }
     }
 }
-

@@ -2,17 +2,15 @@ package com.example.projectappqlct;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -27,34 +25,41 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ekn.gruzer.gaugelibrary.ArcGauge;
-import com.ekn.gruzer.gaugelibrary.Range;
+import com.example.projectappqlct.Helper.BudgetCallback;
 import com.example.projectappqlct.Model.Budget;
+import com.example.projectappqlct.Model.Expense;
+import com.example.projectappqlct.Model.Option;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
+
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link TabFragment1#newInstance} factory method to
+ * Use the {@link TabFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TabFragment1 extends Fragment {
+public class TabFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -65,20 +70,34 @@ public class TabFragment1 extends Fragment {
     private String mParam1;
     private String mParam2;
     private FirebaseAuth auth;
+    private FirebaseUser user;
+    private String userString;
 
     private Dialog dialog1, dialog2, dialog3, dialog4;
-    private Button btnSelectedOption, btnSelectedOption2;
+    private Button btnSelectedOption, buttonSelect;
     private ImageView imgiconclick, imageviewGr;
     private Drawable selectedIconDrawable, icon;
     private FirebaseFirestore db;
     private BudgetAdapter budgetAdapter;
     private List<Budget> budgetList;
     private RecyclerView recyclerView;
-    private FirebaseUser user;
-    private String userString;
     private String selectedIconTag;
+    private ProgressBar progressBar;
+    private static final String ARG_BUDGETS = "Budgets";
+    private OptionAdapter optionAdapter;
+    private List<Option> optionList = new ArrayList<>();
+    private EditText editTextAmount, editTextDate;
+    private ImageView imageViewGr;
 
-    public TabFragment1() {
+    public static TabFragment newInstance(List<Budget> budgets) {
+        TabFragment fragment = new TabFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_BUDGETS, new ArrayList<>(budgets));
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public TabFragment() {
         // Required empty public constructor
     }
 
@@ -91,8 +110,8 @@ public class TabFragment1 extends Fragment {
      * @return A new instance of fragment TabFragment1.
      */
     // TODO: Rename and change types and number of parameters
-    public static TabFragment1 newInstance(String param1, String param2) {
-        TabFragment1 fragment = new TabFragment1();
+    public static TabFragment newInstance(String param1, String param2) {
+        TabFragment fragment = new TabFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -107,40 +126,16 @@ public class TabFragment1 extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        if (getArguments() != null) {
+            budgetList = (List<Budget>) getArguments().getSerializable(ARG_BUDGETS);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_tab1, container, false);
-
-        ArcGauge arcGauge = view.findViewById(R.id.arcGauge);
-
-        // Tạo các Range (khoảng màu)
-        Range range = new Range();
-        range.setColor(Color.parseColor("#ce0000"));
-        range.setFrom(0);
-        range.setTo(50);
-
-        Range range2 = new Range();
-        range2.setColor(Color.parseColor("#E3E500"));
-        range2.setFrom(50);
-        range2.setTo(100);
-
-        Range range3 = new Range();
-        range3.setColor(Color.parseColor("#00b20b"));
-        range3.setFrom(100);
-        range3.setTo(150);
-
-        // Thêm Range vào ArcGauge
-        arcGauge.addRange(range);
-        arcGauge.addRange(range2);
-        arcGauge.addRange(range3);
-
-        // Thiết lập giá trị min, max, và giá trị hiện tại
-        arcGauge.setMinValue(20);
-        arcGauge.setMaxValue(150);
-        arcGauge.setValue(100);  // Đặt giá trị hiện tại là 0
+        View view = inflater.inflate(R.layout.fragment_tab, container, false);
 
 
         Button showDialogButton = view.findViewById(R.id.btnBG);
@@ -151,46 +146,15 @@ public class TabFragment1 extends Fragment {
             }
         });
 
-        // Cài đặt RecyclerView cho danh sách Budgets
-        recyclerView = view.findViewById(R.id.recyclerViewBudgets);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(linearLayoutManager);
+        // recycleview budget
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewBudgets);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(new BudgetAdapter(getActivity(), budgetList));
 
-        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
-        recyclerView.addItemDecoration(itemDecoration);
-
-        budgetAdapter = new BudgetAdapter(getActivity(), getListBudget());
 
         return view;
     }
 
-    private List<Budget> getListBudget() {
-        this.budgetList = new ArrayList<>();
-        this.db = FirebaseFirestore.getInstance();
-        auth = FirebaseAuth.getInstance();
-        user = auth.getCurrentUser();
-
-        if (user != null) {
-            String userString = user.getUid();
-            db.collection("users").document(userString)
-                    .collection("Budgets")
-                    .get()
-                    .addOnSuccessListener(queryDocumentSnapshots -> {
-                        if (!queryDocumentSnapshots.isEmpty()) {
-                            List<Budget> budgets = queryDocumentSnapshots.toObjects(Budget.class);
-                            budgetList.addAll(budgets);
-
-                            // Thiết lập adapter với danh sách đã lấy
-                            budgetAdapter = new BudgetAdapter(getActivity(), budgetList);
-                            recyclerView.setAdapter(budgetAdapter);
-                        }
-                    })
-                    .addOnFailureListener(e -> Log.e("FirestoreError", e.getMessage()));
-        } else {
-            Log.e("AuthError", "User is not authenticated.");
-        }
-        return java.util.Collections.emptyList();
-    }
 
     // Phương thức tạo dialog với layout và kích thước tùy chỉnh
     private Dialog createDialog(int layoutResId) {
@@ -216,7 +180,7 @@ public class TabFragment1 extends Fragment {
             dialog1 = createDialog(R.layout.dialog_createbudget);
         }
 
-        Button buttonSelect = dialog1.findViewById(R.id.btnSelectedOption);
+        buttonSelect = dialog1.findViewById(R.id.btnSelectedOption);
         buttonSelect.setOnClickListener(v -> {
             dialog1.dismiss();  // Đóng dialog 1
             showDialog2();      // Mở dialog 2
@@ -231,9 +195,9 @@ public class TabFragment1 extends Fragment {
         btnSelectedOption = dialog1.findViewById(R.id.btnSelectedOption);
 
         // Tham chiếu đến các EditText
-        EditText editTextAmount = dialog1.findViewById(R.id.editTextAmount);
-        EditText editTextDate = dialog1.findViewById(R.id.editTextCalendar);
-        ImageView imageviewGr = dialog1.findViewById(R.id.imageViewGr);
+        editTextAmount = dialog1.findViewById(R.id.editTextAmount);
+        editTextDate = dialog1.findViewById(R.id.editTextCalendar);
+        imageviewGr = dialog1.findViewById(R.id.imageViewGr);
 
         // Thêm TextWatcher vào editTextAmount
         editTextAmount.addTextChangedListener(new TextWatcher() {
@@ -339,7 +303,6 @@ public class TabFragment1 extends Fragment {
 
             Budget budget = new Budget(AmountInt, Calendar, Group, Icon);
 
-
             auth = FirebaseAuth.getInstance();
             user = auth.getCurrentUser();
             userString = user.getUid();
@@ -356,13 +319,30 @@ public class TabFragment1 extends Fragment {
                             // Lưu budget với ID vào Firestore
                             documentReference.set(budget) // Cập nhật Firestore với budget đã có ID
                                     .addOnSuccessListener(aVoid -> {
-                                        Log.i("check", "Budget successfully updated with ID.");
+
                                         // Đóng dialog1 và reload lại fragment budget
-                                        dialog1.dismiss();
                                         Toast.makeText(getActivity(), "Add budget successful", Toast.LENGTH_SHORT).show();
 
                                         // Gọi phương thức reload từ MainActivity
-                                        ((MainActivity) getActivity()).reloadBudgetFragment();
+                                        if (dialog1 != null && dialog1.isShowing()) {
+                                            dialog1.dismiss();
+                                        }
+
+
+//                                        // Gọi lại phương thức để load lại dữ liệu
+//                                        BudgetFragment parentFragment = (BudgetFragment) getParentFragment();
+//                                        if (parentFragment != null) {
+//                                            parentFragment.loadBudgetsAndSetupTabs();
+//                                        }
+
+                                        BudgetFragment parentFragment = (BudgetFragment) getParentFragment();
+                                        if (parentFragment != null) {
+                                            parentFragment.addBudgetData(budget);
+                                            parentFragment.loadBudgetsAndSetupTabs();// Thêm dữ liệu mới vào ViewPager và TabLayout
+                                        }
+
+
+
 
                                     })
                                     .addOnFailureListener(e -> {
@@ -376,11 +356,11 @@ public class TabFragment1 extends Fragment {
                             Log.i("check", "Error adding document", e);
                         }
                     });
-
-
         });
         dialog1.show();
     }
+
+
 
     // Hiển thị hộp thoại 2
     public void showDialog2() {
@@ -399,6 +379,70 @@ public class TabFragment1 extends Fragment {
             dialog2.dismiss();  // Đóng hộp thoại 2
             showDialog1();      // Quay lại hộp thoại 1
         });
+
+        // Tìm RecyclerView
+        RecyclerView recyclerView = dialog2.findViewById(R.id.recyclerViewOption);
+        if (recyclerView == null) {
+            Log.e("ShowDialog2", "RecyclerView is null! Check the layout file.");
+            return; // Hoặc xử lý lỗi nếu cần
+        }
+
+        // Khởi tạo LayoutManager cho RecyclerView nếu chưa có
+        if (recyclerView.getLayoutManager() == null) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        }
+
+        // Khởi tạo Adapter nếu chưa có
+        if (optionAdapter == null) {
+            optionAdapter = new OptionAdapter(optionList, v -> {
+                int position = recyclerView.getChildAdapterPosition(v);
+                Option selectedOption = optionList.get(position);
+                handleRecyclerViewSelection(selectedOption);
+            });
+            recyclerView.setAdapter(optionAdapter);
+        }
+
+
+        // Tải dữ liệu từ Firestore và thiết lập Adapter sau khi dữ liệu đã tải xong
+        loadOptionsFromFirestore();
+
+        // Cài đặt sự kiện click cho item trong RecyclerView
+        View.OnClickListener itemClickListener = v -> {
+            Option selectedOption = (Option) v.getTag(); // Lấy Option từ tag
+            if (selectedOption != null) {
+                // Cập nhật button select trong dialog1
+                Button btnSelectedOption = dialog1.findViewById(R.id.btnSelectedOption);
+                btnSelectedOption.setText(selectedOption.getName()); // Cập nhật tên
+
+                // Cập nhật icon và gán tag cho ImageView
+                ImageView imageViewGr = dialog1.findViewById(R.id.imageViewGr);
+                int iconResId = getActivity().getResources().getIdentifier(selectedOption.getIcon(), "drawable", getActivity().getPackageName());
+                imageViewGr.setTag(selectedOption.getIcon()); // Gán tag cho ImageView
+                imageViewGr.setImageResource(iconResId);
+
+                // Đóng dialog2
+                if (dialog2 != null && dialog2.isShowing()) {
+                    dialog2.dismiss();
+                }
+
+                // Mở dialog1
+                showDialog1();  // Hoặc gọi phương thức để mở dialog1
+            }
+        };
+
+        // Tạo adapter và gán listener
+        optionAdapter = new OptionAdapter(optionList, itemClickListener);
+        recyclerView.setAdapter(optionAdapter);
+
+        // Thêm divider giữa các item
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
+
+        // Nếu muốn sử dụng divider tùy chỉnh, hãy đặt drawable của bạn
+        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.divider));
+
+        // Thêm divider vào RecyclerView
+        recyclerView.addItemDecoration(dividerItemDecoration);
+
 
         // Listener chung cho tất cả các Button trong Dialog 2
         View.OnClickListener optionClickListener = v -> {
@@ -422,55 +466,137 @@ public class TabFragment1 extends Fragment {
     }
 
 
-    // Hiển thị hộp thoại 3
+//    // Hiển thị hộp thoại 3
+//    private void showDialog3() {
+//        if (dialog3 == null) {  // Khởi tạo dialog3 nếu chưa khởi tạo
+//            dialog3 = createDialog(R.layout.dialog_newgroup);
+//        }
+//
+//        // Chọn icon
+//        imgiconclick = dialog3.findViewById(R.id.imgicon);
+//        imgiconclick.setOnClickListener(v -> {
+//            showDialog4();  // Mở dialog 4
+//        });
+//
+//        // Chọn text
+//        EditText editTextGroup = dialog3.findViewById(R.id.editTextNameGr);
+//
+//        // Nút Lưu
+//
+//        Button buttonSave = dialog3.findViewById(R.id.btnSave);
+//        buttonSave.setOnClickListener(v -> {
+//            String selectedText = editTextGroup.getText().toString().trim();
+//
+//            // Cập nhật icon cho ImageView imageViewGr trong dialog 1
+//            ImageView imageViewGr = dialog1.findViewById(R.id.imageViewGr);
+//            if (imageViewGr != null && selectedIconDrawable != null) {
+//                imageViewGr.setImageDrawable(selectedIconDrawable); // Update icon
+//                // Set the tag to the imageViewGr using the selectedIconTag
+//                imageViewGr.setTag(selectedIconTag); // Assign the tag retrieved from dialog 4
+//            } else {
+//                // Nếu không có icon được chọn, đặt icon mặc định
+//                imageViewGr.setImageResource(R.drawable.baseline_drive_file_rename_outline_24);
+//                // Set tag mặc định nếu cần thiết
+//                imageViewGr.setTag("baseline_drive_file_rename_outline_24");
+//            }
+//
+//            // Cập nhật text cho buttonSelectOption trong dialog 1
+//            btnSelectedOption.setText(selectedText); // Cập nhật text
+//
+//            // Đóng dialog 3 và mở lại dialog 1
+//            dialog3.dismiss();
+//            showDialog1();
+//        });
+//
+//        TextView backToDialog1 = dialog3.findViewById(R.id.textViewBack2);
+//        backToDialog1.setOnClickListener(v -> {
+//            dialog3.dismiss();  // Đóng hộp thoại 3
+//            showDialog2();      // Quay lại hộp thoại 2
+//        });
+//
+//        dialog3.show();
+//    }
+
     private void showDialog3() {
         if (dialog3 == null) {  // Khởi tạo dialog3 nếu chưa khởi tạo
             dialog3 = createDialog(R.layout.dialog_newgroup);
         }
 
         // Chọn icon
-        imgiconclick = dialog3.findViewById(R.id.imgicon);
-        imgiconclick.setOnClickListener(v -> {
-            showDialog4();  // Mở dialog 4
+        ImageView imgIconClick = dialog3.findViewById(R.id.imgicon);
+        imgIconClick.setOnClickListener(v -> {
+            showDialog4();  // Mở dialog 4 để chọn icon
         });
 
         // Chọn text
-        EditText editTextGroup = dialog3.findViewById(R.id.editTextNameGr);
+        EditText editTextOption = dialog3.findViewById(R.id.editTextNameGr);
 
         // Nút Lưu
-
         Button buttonSave = dialog3.findViewById(R.id.btnSave);
         buttonSave.setOnClickListener(v -> {
-            String selectedText = editTextGroup.getText().toString().trim();
+            String selectedText = editTextOption.getText().toString().trim();
 
-            // Cập nhật icon cho ImageView imageViewGr trong dialog 1
-            ImageView imageViewGr = dialog1.findViewById(R.id.imageViewGr);
-            if (imageViewGr != null && selectedIconDrawable != null) {
-                imageViewGr.setImageDrawable(selectedIconDrawable); // Update icon
-                // Set the tag to the imageViewGr using the selectedIconTag
-                imageViewGr.setTag(selectedIconTag); // Assign the tag retrieved from dialog 4
-            } else {
-                // Nếu không có icon được chọn, đặt icon mặc định
-                imageViewGr.setImageResource(R.drawable.baseline_drive_file_rename_outline_24);
-                // Set tag mặc định nếu cần thiết
-                imageViewGr.setTag("baseline_drive_file_rename_outline_24");
+            // Kiểm tra tên option không trống
+            if (selectedText.isEmpty()) {
+                Toast.makeText(dialog3.getContext(), "Tên option không được để trống!", Toast.LENGTH_SHORT).show();
+                return;
             }
 
-            // Cập nhật text cho buttonSelectOption trong dialog 1
-            btnSelectedOption.setText(selectedText); // Cập nhật text
+            // Xác định icon (hoặc đặt mặc định nếu không chọn icon)
+            String selectedIconTag;
+            ImageView imageViewIcon = dialog3.findViewById(R.id.imgicon);
 
-            // Đóng dialog 3 và mở lại dialog 1
+            if (imageViewIcon != null && imageViewIcon.getTag() != null) {
+                selectedIconTag = imageViewIcon.getTag().toString(); // Lấy tag icon
+            } else {
+                selectedIconTag = "baseline_drive_file_rename_outline_24"; // Icon mặc định
+            }
+
+            // Tạo option mới với icon (dưới dạng chuỗi) và tên
+            Option newOption = new Option(selectedIconTag, selectedText);
+
+            // Lưu option mới vào Firestore
+            saveOptionToFirestore(newOption);
+
+            // Đóng dialog3
             dialog3.dismiss();
-            showDialog1();
+            showDialog2();
         });
 
-        TextView backToDialog1 = dialog3.findViewById(R.id.textViewBack2);
-        backToDialog1.setOnClickListener(v -> {
+        TextView backToDialog2 = dialog3.findViewById(R.id.textViewBack2);
+        backToDialog2.setOnClickListener(v -> {
             dialog3.dismiss();  // Đóng hộp thoại 3
             showDialog2();      // Quay lại hộp thoại 2
         });
 
         dialog3.show();
+    }
+
+
+
+    private void saveOptionToFirestore(Option option) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+
+        if (user != null) {
+            String userString = user.getUid();
+
+            // Lưu option mới vào Firestore trong collection "options"
+            db.collection("users")
+                    .document(userString)
+                    .collection("Options")
+                    .add(option)
+                    .addOnSuccessListener(documentReference -> {
+                        Toast.makeText(getActivity(), "Option đã được lưu!", Toast.LENGTH_SHORT).show();
+
+                        // Sau khi lưu, tải lại danh sách options để cập nhật RecyclerView trong dialog2
+                        loadOptionsFromFirestore();
+                    })
+                    .addOnFailureListener(e ->
+                            Toast.makeText(getActivity(), "Không thể lưu option.", Toast.LENGTH_SHORT).show()
+                    );
+        }
     }
 
 
@@ -511,6 +637,7 @@ public class TabFragment1 extends Fragment {
         dialog4.findViewById(R.id.imageView19).setOnClickListener(optionClickListener);
         dialog4.findViewById(R.id.imageView20).setOnClickListener(optionClickListener);
         dialog4.findViewById(R.id.imageView21).setOnClickListener(optionClickListener);
+        dialog4.findViewById(R.id.imageView22).setOnClickListener(optionClickListener);
         dialog4.findViewById(R.id.imageView23).setOnClickListener(optionClickListener);
         dialog4.findViewById(R.id.imageView24).setOnClickListener(optionClickListener);
         dialog4.show();
@@ -561,12 +688,64 @@ public class TabFragment1 extends Fragment {
 
     }
 
-
     public static String removeSpacesAndToLower(String input) {
         if (input == null) {
             return null; // Xử lý trường hợp chuỗi đầu vào là null
         }
         return input.replaceAll("\\s+", "").toLowerCase(); // Thay thế dấu cách và chuyển thành chữ thường
     }
+
+
+    //     Tải dữ liệu từ Firestore và cập nhật RecyclerView
+    private void loadOptionsFromFirestore() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+        userString = user.getUid();
+
+        db.collection("users").document(userString)
+                .collection("Options").get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    optionList.clear();
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        Option option = doc.toObject(Option.class);
+                        optionList.add(option);
+                    }
+
+                    // Thông báo Adapter cập nhật lại dữ liệu
+                    if (optionAdapter != null) {
+                        optionAdapter.notifyDataSetChanged();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getActivity(), "Failed to load options.", Toast.LENGTH_SHORT).show();
+                    Log.e("FirestoreError", "Error loading options", e);
+                });
+    }
+
+
+
+    private void handleRecyclerViewSelection(Option selectedOption) {
+        if (dialog2 != null && dialog2.isShowing()) {
+            dialog2.dismiss();  // Đóng Dialog 2
+        }
+
+        // Cập nhật tên nhóm vào Dialog 1
+        btnSelectedOption.setText(selectedOption.getName());
+        btnSelectedOption.setTag(selectedOption.getName());
+
+        // Cập nhật icon vào ImageView trong Dialog 1
+        ImageView imgSelectedOption = dialog1.findViewById(R.id.imageViewGr);
+        int iconResId = getResources().getIdentifier(
+                selectedOption.getIcon(), "drawable", getActivity().getPackageName()
+        );
+        imgSelectedOption.setImageResource(iconResId);
+
+        // Mở lại Dialog 1
+        if (dialog1 != null) {
+            dialog1.show();
+        }
+    }
+
 
 }
