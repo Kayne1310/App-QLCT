@@ -9,6 +9,7 @@
     tools:context=".MainActivity"
     android:id="@+id/main">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -29,9 +30,7 @@
         android:background="@android:color/white"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/menu_home" />
-
     </LinearLayout>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

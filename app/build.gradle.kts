@@ -38,7 +38,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -55,7 +54,7 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 //    implementation("com.github.TutorialsAndroid:GButton:v1.0.19")
-
+    implementation ("com.github.Gruzer:simple-gauge-android:0.3.1")
     implementation ("com.github.AnyChart:AnyChart-Android:1.1.5")
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.ui.test.junit4)
@@ -65,6 +64,12 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
     implementation("com.google.android.gms:play-services-auth")
     implementation("com.google.firebase:firebase-firestore")
+
     implementation("androidx.cardview:cardview:1.0.0")
     implementation ("androidx.recyclerview:recyclerview:1.2.1")
+    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
 }
+
+
+
+

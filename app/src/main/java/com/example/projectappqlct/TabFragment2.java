@@ -2,23 +2,20 @@ package com.example.projectappqlct;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.Toast;
-
-import kotlin.LateinitKt;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link NotificantFragment#newInstance} factory method to
+ * Use the {@link TabFragment2#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NotificantFragment extends Fragment {
+public class TabFragment2 extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -29,7 +26,7 @@ public class NotificantFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public NotificantFragment() {
+    public TabFragment2() {
         // Required empty public constructor
     }
 
@@ -39,11 +36,11 @@ public class NotificantFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment NotificantFragment.
+     * @return A new instance of fragment TabFragment2.
      */
     // TODO: Rename and change types and number of parameters
-    public static NotificantFragment newInstance(String param1, String param2) {
-        NotificantFragment fragment = new NotificantFragment();
+    public static TabFragment2 newInstance(String param1, String param2) {
+        TabFragment2 fragment = new TabFragment2();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -59,14 +56,9 @@ public class NotificantFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        return inflater.inflate(R.layout.fragment_notificant, container, false);
-
-
-
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_tab2, container, false);
     }
 }
