@@ -70,7 +70,8 @@
             android:layout_height="60dp"
             android:ems="10"
             android:inputType="text"
-            android:hint="Name group" />
+            android:hint="Name group"
+            android:background="@android:color/transparent"/>
     </LinearLayout>
 
 

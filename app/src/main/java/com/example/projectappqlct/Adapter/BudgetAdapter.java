@@ -1,4 +1,4 @@
-package com.example.projectappqlct;
+package com.example.projectappqlct.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +14,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.projectappqlct.DetailActivity;
 import com.example.projectappqlct.Model.Budget;
+import com.example.projectappqlct.R;
 
 import java.text.NumberFormat;
 import java.util.List;

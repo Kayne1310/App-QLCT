@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -51,7 +52,7 @@ public class FAQ extends AppCompatActivity {
         FAQAdapter adapter = new FAQAdapter(faqList);
         faqRecyclerView.setAdapter(adapter);
 
-        ImageView backIcon = findViewById(R.id.backIcon);
+        LinearLayout backIcon = findViewById(R.id.backIcon);
 
         // Thiết lập sự kiện click
         backIcon.setOnClickListener(new View.OnClickListener() {

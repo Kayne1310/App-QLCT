@@ -46,5 +46,12 @@
     <string name="dash">-</string>
     <string name="scrollViewStart">START OF SCROLLVIEW</string>
     <string name="scrollViewEnd">END OF SCROLLVIEW</string>
+    <string name="channel_name">Budget Exceeded</string>
+    <string name="channel_description">Notifications for budget limits exceeded</string>
+    <string-array name="sex_options">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Other</item>
+    </string-array>
 
 </resources>

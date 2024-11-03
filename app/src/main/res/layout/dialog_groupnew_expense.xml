@@ -71,7 +71,8 @@
             android:layout_weight="12"
             android:ems="10"
             android:hint="Name group"
-            android:inputType="text" />
+            android:inputType="text"
+            android:background="@android:color/transparent"/>
     </LinearLayout>
 
     <TextView
