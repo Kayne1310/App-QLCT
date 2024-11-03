@@ -79,22 +79,9 @@ public class HistoryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
 
         // Initialize AnyChartView
-        anyChartView = view.findViewById(R.id.any_chart_view);
 
-        // Set up AnyChartView
-        setupChart();
 
         return view;
     }
-    private void setupChart() {
-        Pie pie = AnyChart.pie();
-        List<DataEntry> data = new ArrayList<>();
-        data.add(new ValueDataEntry("Category A", 40));
-        data.add(new ValueDataEntry("Category B", 30));
 
-
-        pie.data(data);
-        anyChartView.setChart(pie);
-
-    }
 }

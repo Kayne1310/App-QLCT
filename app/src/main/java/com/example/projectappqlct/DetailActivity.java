@@ -132,9 +132,9 @@ public class DetailActivity extends DemoBase {
         chart.setDrawBarShadow(false);
         chart.setHighlightFullBarEnabled(false);
 
-        // draw bars behind lines
+// Draw only bars
         chart.setDrawOrder(new CombinedChart.DrawOrder[]{
-                CombinedChart.DrawOrder.BAR, CombinedChart.DrawOrder.BUBBLE, CombinedChart.DrawOrder.CANDLE, CombinedChart.DrawOrder.LINE, CombinedChart.DrawOrder.SCATTER
+                CombinedChart.DrawOrder.BAR
         });
 
         Legend l = chart.getLegend();
@@ -145,32 +145,32 @@ public class DetailActivity extends DemoBase {
         l.setDrawInside(false);
 
         YAxis rightAxis = chart.getAxisRight();
-        rightAxis.setDrawGridLines(false);
-        rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+        rightAxis.setEnabled(false); // Disable the right Y-axis
 
         YAxis leftAxis = chart.getAxisLeft();
         leftAxis.setDrawGridLines(false);
-        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+        leftAxis.setAxisMinimum(0f); // Set minimum to zero
 
         XAxis xAxis = chart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM); // Show X-axis only at the bottom
+        xAxis.setDrawGridLines(false); // Remove vertical grid lines
         xAxis.setAxisMinimum(0f);
         xAxis.setGranularity(1f);
+
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getAxisLabel(float value, AxisBase axis) {
                 return months[(int) value % months.length];
             }
         });
-        CombinedData data = new CombinedData();
 
-//        data.setData(generateLineData());
-        data.setData(generateBarData());
-//        data.setData(generateBubbleData());
-//        data.setData(generateScatterData());
-//        data.setData(generateCandleData());
+        CombinedData data = new CombinedData();
+        data.setData(generateBarData()); // Set only bar data
         data.setValueTypeface(tfLight);
 
+
+        chart.getDescription().setEnabled(false);
+        chart.getLegend().setEnabled(false);
         xAxis.setAxisMaximum(data.getXMax() + 0.25f);
 
         chart.setData(data);
