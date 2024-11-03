@@ -1,5 +1,6 @@
 package com.example.projectappqlct;
 
+
 import static android.content.ContentValues.TAG;
 
 import android.nfc.Tag;
@@ -9,9 +10,13 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+
+
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 
 import com.example.projectappqlct.Adapter.NotificationAdapter;
 import com.example.projectappqlct.Model.Notification;
@@ -31,21 +36,27 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+
+
 public class NotificationActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private NotificationAdapter adapter;
     private List<Notification> notificationList;
     private TextView cancelTextView; // Khai báo TextView Cancel
+
     private FirebaseAuth auth;
     private FirebaseUser user;
     private FirebaseFirestore db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
 
+
         db = FirebaseFirestore.getInstance();
+
         // Khởi tạo RecyclerView
         recyclerView = findViewById(R.id.recyclerViewNotifications);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -106,9 +117,6 @@ public class NotificationActivity extends AppCompatActivity {
         // Khởi tạo danh sách thông báo
 
 
-
-
-
         // Khởi tạo TextView Cancel và thiết lập OnClickListener
         cancelTextView = findViewById(R.id.textViewCancel);
         cancelTextView.setOnClickListener(new View.OnClickListener() {
@@ -123,3 +131,5 @@ public class NotificationActivity extends AppCompatActivity {
 
 
 }
+
+

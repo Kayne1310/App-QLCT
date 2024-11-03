@@ -6,4 +6,7 @@
     </style>
 
     <style name="Theme.ProjectAppQLCT" parent="Base.Theme.ProjectAppQLCT" />
+    <style name="Theme.MyApp" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Các thiết lập khác của theme -->
+    </style>
 </resources>

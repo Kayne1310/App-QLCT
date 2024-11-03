@@ -16,23 +16,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProjectAppQLCT"
         tools:targetApi="31">
+
         <activity
             android:name=".DetailExpense"
             android:exported="false" />
+
         <activity
-            android:name=".NotificationActivity"
+
+            android:name=".FAQ"
             android:exported="false" />
         <activity
-            android:name=".TestChart"
-            android:exported="false">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            android:name=".NotificationActivity"
+            android:exported="false"/>
 
 
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
         <activity
             android:name=".DetailActivity"
             android:exported="false" />
@@ -50,8 +47,10 @@
             android:name=".Login.SignUpActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".Login.LoginActivity"
+
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -60,6 +59,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".MainActivity"
             android:exported="false"
