@@ -50,6 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+
         >
         <LinearLayout
             android:layout_width="match_parent"
@@ -60,7 +61,9 @@
             android:layout_marginBottom="20dp"
             android:background="@drawable/item_background"
             android:elevation="3dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:id="@+id/notificant"
+            >
 
             <ImageView
                 android:id="@+id/imageView2"
@@ -75,7 +78,7 @@
                 android:orientation="vertical"
                 android:clickable="true"
                 android:focusable="true"
-                android:id="@+id/notificant">
+              >
 
                 <TextView
                     android:id="@+id/textnotificant"
@@ -251,20 +254,23 @@
             android:layout_marginRight="20dp"
             android:orientation="horizontal"
             android:background="@drawable/item_background"
-            android:elevation="3dp" >
+            android:elevation="3dp"
+            android:id="@+id/faq_question">
 
             <ImageView
                 android:id="@+id/imageView452"
                 android:layout_width="52dp"
                 android:layout_height="39dp"
                 android:layout_marginTop="5dp"
-
                 app:srcCompat="@drawable/faq" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:clickable="true"
+                android:focusable="true"
+               >
 
                 <TextView
                     android:id="@+id/textView235"

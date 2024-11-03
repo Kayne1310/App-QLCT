@@ -16,6 +16,12 @@
         android:theme="@style/Theme.ProjectAppQLCT"
         tools:targetApi="31">
         <activity
+            android:name=".FAQ"
+            android:exported="false" />
+        <activity
+            android:name=".NotificationActivity"
+            android:exported="false"/>
+        <activity
             android:name=".TestChart"
             android:exported="false" >
 <!--            <intent-filter>-->
@@ -41,9 +47,6 @@
             android:exported="false" />
         <activity
             android:name=".Login.LoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
             android:exported="true">
 
              <intent-filter>
@@ -53,6 +56,9 @@
              <category android:name="android.intent.category.LAUNCHER" />
              </intent-filter>
         </activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"></activity>
 
         <meta-data
             android:name="preloaded_fonts"

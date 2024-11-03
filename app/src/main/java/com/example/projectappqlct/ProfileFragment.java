@@ -1,5 +1,6 @@
 package com.example.projectappqlct;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -78,38 +79,68 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
-        if(user!=null){
-            String getEmailUser=user.getEmail();
-             email=view.findViewById(R.id.textEmail);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String getEmailUser = user.getEmail();
+            email = view.findViewById(R.id.textEmail);
             email.setText(getEmailUser);
 
         }
 
 
-        LinearLayout notificant=view.findViewById(R.id.notificant);
+        LinearLayout notificant = view.findViewById(R.id.notificant);
         notificant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("check","test");
+                Intent intent = new Intent(getActivity(), NotificationActivity.class);
+                startActivity(intent);
+            }
+        });
 
-
+        LinearLayout faq = view.findViewById(R.id.faq_question);
+        faq.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), FAQ.class);
+                startActivity(intent);
             }
         });
 
 
-        LinearLayout logout=view.findViewById(R.id.logout);
+        LinearLayout logout = view.findViewById(R.id.logout);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Đăng xuất khỏi Firebase
                 FirebaseAuth.getInstance().signOut();
-                // Đăng xuất thành công, có thể chuyển hướng người dùng về màn hình login
-                Intent intent = new Intent(getActivity(), LoginActivity.class); // Chuyển sang LoginActivity (hoặc bất kỳ activity nào bạn muốn)
+
+                // Cập nhật trạng thái đăng nhập trong SharedPreferences
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", getActivity().MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("isLoggedIn", false);
+                editor.apply();
+
+                // Chuyển người dùng về màn hình Login
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 getActivity().finish();
             }
         });
+
+
+
+
+//        LinearLayout Notificant=view.findViewById(R.id.notificant);
+//
+//        Notificant.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent=new Intent(getActivity(), NotificationActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+
 
         LinearLayout editProfile = view.findViewById(R.id.editprofile);
         editProfile.setOnClickListener(new View.OnClickListener() {

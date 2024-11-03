@@ -4,6 +4,7 @@ import static android.content.ContentValues.TAG;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -42,6 +43,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.text.TextWatcher;
 
+import com.example.projectappqlct.Login.LoginActivity;
 import com.example.projectappqlct.Model.Expense;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -87,6 +89,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // Kiểm tra trạng thái đăng nhập
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+        Log.d("MainActivity", "User logged in: " + isLoggedIn);
+        if (!isLoggedIn) {
+            // Nếu chưa đăng nhập, chuyển về LoginActivity
+            Log.d("MainActivity", "Redirecting to LoginActivity");
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish(); // Đóng MainActivity để không quay lại
+        }
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
 
