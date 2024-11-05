@@ -2,19 +2,18 @@ package com.example.projectappqlct;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.ekn.gruzer.gaugelibrary.Range;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,37 +28,33 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.projectappqlct.Helper.BudgetCallback;
+import com.ekn.gruzer.gaugelibrary.ArcGauge;
 import com.example.projectappqlct.Model.Budget;
 import com.example.projectappqlct.Model.Expense;
 import com.example.projectappqlct.Model.Option;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link TabFragment#newInstance} factory method to
+ * Use the {@link TabFragment_Budget#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TabFragment extends Fragment {
+public class TabFragment_Budget extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -88,33 +83,51 @@ public class TabFragment extends Fragment {
     private List<Option> optionList = new ArrayList<>();
     private EditText editTextAmount, editTextDate;
     private ImageView imageViewGr;
+    private int totalAmount = 0;
+    private int totalDeficit = 0;
+    private int budgetCount = 0;
+    private int processedBudgets = 0;
+    private ArcGauge arcGauge;
+    private TextView textViewTotalBudget, textViewTotalExpense, textViewEndOfMonth;
+    private String selectedMonthYear;
+    private List<Budget> budgets;
 
-    public static TabFragment newInstance(List<Budget> budgets) {
-        TabFragment fragment = new TabFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(ARG_BUDGETS, new ArrayList<>(budgets));
-        fragment.setArguments(args);
-        return fragment;
-    }
 
-    public TabFragment() {
+//    public static TabFragment_Budget newInstance(List<Budget> budgets) {
+//        TabFragment_Budget fragment = new TabFragment_Budget();
+//        Bundle args = new Bundle();
+//        args.putSerializable(ARG_BUDGETS, new ArrayList<>(budgets));
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
+
+    public TabFragment_Budget() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment TabFragment1.
-     */
+//    /**
+//     * Use this factory method to create a new instance of
+//     * this fragment using the provided parameters.
+//     *
+//     * @param param1 Parameter 1.
+//     * @param param2 Parameter 2.
+//     * @return A new instance of fragment TabFragment1.
+//     */
     // TODO: Rename and change types and number of parameters
-    public static TabFragment newInstance(String param1, String param2) {
-        TabFragment fragment = new TabFragment();
+//    public static TabFragment_Budget newInstance(String param1, String param2) {
+//        TabFragment_Budget fragment = new TabFragment_Budget();
+//        Bundle args = new Bundle();
+//        args.putString(ARG_PARAM1, param1);
+//        args.putString(ARG_PARAM2, param2);
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
+
+    public static TabFragment_Budget newInstance(List<Budget> budgets, String monthYear) {
+        TabFragment_Budget fragment = new TabFragment_Budget();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putSerializable("Budgets", (Serializable) budgets); // Truyền danh sách ngân sách
+        args.putString("monthYear", monthYear); // Truyền tháng/năm
         fragment.setArguments(args);
         return fragment;
     }
@@ -129,13 +142,39 @@ public class TabFragment extends Fragment {
 
         if (getArguments() != null) {
             budgetList = (List<Budget>) getArguments().getSerializable(ARG_BUDGETS);
+            selectedMonthYear = getArguments().getString("monthYear");
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tab, container, false);
+
+        // Ánh xạ ArcGauge từ layout
+        arcGauge = view.findViewById(R.id.arcGauge);
+
+        // Ánh xạ các TextView từ layout
+        textViewTotalBudget = view.findViewById(R.id.TextViewTotalBudget);
+        textViewTotalExpense = view.findViewById(R.id.TextViewTotalExpense);
+        textViewEndOfMonth = view.findViewById(R.id.TextViewEndOfMonth);
+
+        // Thiết lập các Range cho ArcGauge
+        setupGaugeRanges();
+
+        // Khởi tạo Firebase
+        db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+
+        // Lấy dữ liệu nếu người dùng đã đăng nhập
+        if (user != null) {
+            userString = user.getUid();
+            loadBudgets();
+        } else {
+            Log.e("AuthError", "Người dùng chưa đăng nhập");
+        }
 
 
         Button showDialogButton = view.findViewById(R.id.btnBG);
@@ -151,9 +190,169 @@ public class TabFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(new BudgetAdapter(getActivity(), budgetList));
 
+        // Cập nhật TextView đếm ngược đến cuối tháng
+        updateDaysRemainingToEndOfMonth();
 
         return view;
     }
+
+    private void setupGaugeRanges() {
+        Range range1 = new Range();
+        range1.setColor(Color.parseColor("#ce0000"));
+        range1.setFrom(0);
+        range1.setTo(50);
+
+        Range range2 = new Range();
+        range2.setColor(Color.parseColor("#E3E500"));
+        range2.setFrom(50);
+        range2.setTo(100);
+
+        Range range3 = new Range();
+        range3.setColor(Color.parseColor("#00b20b"));
+        range3.setFrom(100);
+        range3.setTo(150);
+
+        arcGauge.addRange(range1);
+        arcGauge.addRange(range2);
+        arcGauge.addRange(range3);
+    }
+
+    private void loadBudgets() {
+        db.collection("users").document(userString).collection("Budgets")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        budgetCount = 0;
+                        totalAmount = 0;
+                        totalDeficit = 0;
+
+                        for (DocumentSnapshot document : task.getResult()) {
+                            Budget budget = document.toObject(Budget.class);
+                            if (budget != null) {
+                                // Lấy tháng/năm từ calendar của Budget
+                                String budgetMonthYear = budget.getCalendar().substring(3);
+                                if (budgetMonthYear.equals(selectedMonthYear)) {
+                                    // Nếu trùng tháng/năm, tính tổng ngân sách và xử lý chi tiêu
+                                    budgetCount++;
+                                    totalAmount += budget.getAmount();
+                                    fetchTotalExpenseForBudget(budget, budget.getAmount(), selectedMonthYear);
+                                }
+                            }
+                        }
+                    } else {
+                        Log.e("BudgetError", "Error fetching budgets", task.getException());
+                    }
+                });
+    }
+
+
+
+    private void fetchTotalExpenseForBudget(Budget budget, int budgetAmount, String selectedMonthYear) {
+        if (budget.getCalendar() == null) return;
+
+        db.collection("users").document(userString).collection("Expenses")
+                .whereEqualTo("group", budget.getGroup())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        int totalExpense = 0;
+                        for (DocumentSnapshot document : task.getResult()) {
+                            Expense expense = document.toObject(Expense.class);
+
+                            if (expense != null) {
+                                // Lấy chuỗi MM/yyyy từ calendar của Expense
+                                String expenseMonthYear = expense.getCalendar().substring(3);
+
+                                // So sánh MM/yyyy của Budget và Expense với tab hiện tại
+                                if (expenseMonthYear.equals(selectedMonthYear)) {
+                                    totalExpense += expense.getAmount();
+                                }
+                            }
+                        }
+
+                        int deficit = budgetAmount - totalExpense;
+                        totalDeficit += deficit;
+                        processedBudgets++;
+
+                        // Cập nhật gauge khi tất cả ngân sách được xử lý
+                        if (processedBudgets == budgetCount) {
+                            updateGauge();
+                        }
+                    } else {
+                        Log.e("ExpenseError", "Error fetching expenses", task.getException());
+                    }
+                });
+    }
+
+
+
+    private void updateGauge() {
+        Log.d("GaugeUpdate", "Total Amount: " + totalAmount + ", Total Deficit: " + totalDeficit);
+
+        arcGauge.setMinValue(0);
+        arcGauge.setMaxValue(totalAmount);
+        arcGauge.setValue(totalDeficit);  // Giá trị đường tiến độ của gauge
+
+        // Cập nhật TextView tổng ngân sách và tổng chi tiêu
+        textViewTotalBudget.setText(formatCurrency(totalAmount));
+        textViewTotalExpense.setText(formatCurrency(totalAmount - totalDeficit));
+    }
+
+    private void updateDaysRemainingToEndOfMonth() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+
+        if (user == null) {
+            Log.e("AuthError", "Người dùng chưa đăng nhập");
+            return;
+        }
+
+        // Lấy tháng/năm từ biến selectedMonthYear
+        if (selectedMonthYear == null) {
+            Log.e("InputError", "selectedMonthYear không được xác định");
+            return;
+        }
+
+        // Phân tách tháng và năm từ selectedMonthYear
+        String[] monthYearParts = selectedMonthYear.split("/");
+        if (monthYearParts.length != 2) {
+            Log.e("InputError", "Định dạng selectedMonthYear không đúng");
+            return;
+        }
+
+        int month = Integer.parseInt(monthYearParts[0]) - 1; // Giảm 1 vì Calendar.MONTH bắt đầu từ 0
+        int year = Integer.parseInt(monthYearParts[1]);
+
+        // Thiết lập ngày hiện tại từ hệ thống
+        Calendar currentDate = Calendar.getInstance();
+        // Lấy ngày hôm nay
+        int today = currentDate.get(Calendar.DAY_OF_MONTH);
+
+        // Xác định ngày cuối tháng
+        Calendar endOfMonth = Calendar.getInstance();
+        endOfMonth.set(year, month, endOfMonth.getActualMaximum(Calendar.DAY_OF_MONTH));
+
+        // Tính số ngày còn lại
+        long daysRemaining = (endOfMonth.getTimeInMillis() - currentDate.getTimeInMillis()) / (24 * 60 * 60 * 1000);
+
+        // Nếu ngày hiện tại lớn hơn ngày cuối tháng, đặt daysRemaining bằng 0
+        if (today > endOfMonth.get(Calendar.DAY_OF_MONTH)) {
+            daysRemaining = 0;
+        } else {
+            daysRemaining = Math.max(daysRemaining, 0); // Đảm bảo không có số ngày âm
+        }
+
+        // Cập nhật vào TextView
+        textViewEndOfMonth.setText(daysRemaining + " ngày");
+    }
+
+
+
+
+    private String formatCurrency(int amount) {
+        return String.format("%,d", amount);
+    }
+
 
 
     // Phương thức tạo dialog với layout và kích thước tùy chỉnh
@@ -301,65 +500,63 @@ public class TabFragment extends Fragment {
             // Lấy tên icon từ Tag;
 
 
-            Budget budget = new Budget(AmountInt, Calendar, Group, Icon);
+            // Budget budget = new Budget(AmountInt, Calendar, Group, Icon);
 
             auth = FirebaseAuth.getInstance();
             user = auth.getCurrentUser();
             userString = user.getUid();
 
+            // Truy vấn Firestore để kiểm tra dữ liệu trùng lặp
+            String finalIcon = Icon;
             db.collection("users").document(userString)
-                    .collection("Budgets")
-                    .add(budget)
-                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                        @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            String budgetId = documentReference.getId(); // Lấy ID
-                            budget.setId(budgetId); // Cập nhật ID vào đối tượng Budget
+                            .collection("Budgets")
+                            .whereEqualTo("group", Group)
+                            .whereEqualTo("calendar", Calendar)
+                            .get()
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                                    // Dữ liệu đã tồn tại với group và calendar trùng lặp
+                                    Toast.makeText(getActivity(), "This budget entry already exists", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    // Nếu không trùng lặp, tiếp tục thêm dữ liệu
+                                    Budget budget = new Budget(AmountInt, Calendar, Group, finalIcon);
 
-                            // Lưu budget với ID vào Firestore
-                            documentReference.set(budget) // Cập nhật Firestore với budget đã có ID
-                                    .addOnSuccessListener(aVoid -> {
+                                    db.collection("users").document(userString)
+                                            .collection("Budgets")
+                                            .add(budget)
+                                            .addOnSuccessListener(documentReference -> {
+                                                String budgetId = documentReference.getId(); // Lấy ID
+                                                budget.setId(budgetId); // Cập nhật ID vào đối tượng Budget
 
-                                        // Đóng dialog1 và reload lại fragment budget
-                                        Toast.makeText(getActivity(), "Add budget successful", Toast.LENGTH_SHORT).show();
+                                                // Lưu budget với ID vào Firestore
+                                                documentReference.set(budget) // Cập nhật Firestore với budget đã có ID
+                                                        .addOnSuccessListener(aVoid -> {
+                                                            // Đóng dialog1 và reload lại fragment budget
+                                                            Toast.makeText(getActivity(), "Add budget successful", Toast.LENGTH_SHORT).show();
 
-                                        // Gọi phương thức reload từ MainActivity
-                                        if (dialog1 != null && dialog1.isShowing()) {
-                                            dialog1.dismiss();
-                                        }
+                                                            if (dialog1 != null && dialog1.isShowing()) {
+                                                                dialog1.dismiss();
+                                                            }
 
+                                                            BudgetFragment parentFragment = (BudgetFragment) getParentFragment();
+                                                            if (parentFragment != null) {
+                                                                parentFragment.addBudgetData(budget);
+                                                                parentFragment.loadBudgetsAndSetupTabs(); // Thêm dữ liệu mới vào ViewPager và TabLayout
+                                                            }
+                                                        })
+                                                        .addOnFailureListener(e -> {
+                                                            Log.i("check", "Error updating budget ID", e);
+                                                        });
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                Log.i("check", "Error adding document", e);
+                                            });
+                                }
+                            });
 
-//                                        // Gọi lại phương thức để load lại dữ liệu
-//                                        BudgetFragment parentFragment = (BudgetFragment) getParentFragment();
-//                                        if (parentFragment != null) {
-//                                            parentFragment.loadBudgetsAndSetupTabs();
-//                                        }
-
-                                        BudgetFragment parentFragment = (BudgetFragment) getParentFragment();
-                                        if (parentFragment != null) {
-                                            parentFragment.addBudgetData(budget);
-                                            parentFragment.loadBudgetsAndSetupTabs();// Thêm dữ liệu mới vào ViewPager và TabLayout
-                                        }
-
-
-
-
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        Log.i("check", "Error updating budget ID", e);
-                                    });
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.i("check", "Error adding document", e);
-                        }
-                    });
         });
         dialog1.show();
     }
-
 
 
     // Hiển thị hộp thoại 2
@@ -573,7 +770,6 @@ public class TabFragment extends Fragment {
     }
 
 
-
     private void saveOptionToFirestore(Option option) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -722,7 +918,6 @@ public class TabFragment extends Fragment {
                     Log.e("FirestoreError", "Error loading options", e);
                 });
     }
-
 
 
     private void handleRecyclerViewSelection(Option selectedOption) {

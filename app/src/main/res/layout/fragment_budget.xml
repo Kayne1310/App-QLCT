@@ -9,12 +9,12 @@
     tools:context=".BudgetFragment">
 <!--    android:gravity="center"-->
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone" />
+<!--    <ProgressBar-->
+<!--        android:id="@+id/progressBar"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:visibility="gone" />-->
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
@@ -26,29 +26,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-<!--    <com.ekn.gruzer.gaugelibrary.ArcGauge-->
-<!--        android:layout_marginTop="20dp"-->
-<!--        android:id="@+id/arcGauge"-->
-<!--        android:layout_width="200dp"-->
-<!--        android:layout_height="200dp" />-->
-
-
-<!--    <Button-->
-<!--        android:id="@+id/btnBG"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="20dp"-->
-<!--        android:layout_marginBottom="32dp"-->
-<!--        android:backgroundTint="@color/design_default_color_error"-->
-<!--        android:text="Create Budget"-->
-<!--        android:textAlignment="center"/>-->
-
-
-
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/recyclerViewBudgets"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent" />-->
 
 
 </LinearLayout>

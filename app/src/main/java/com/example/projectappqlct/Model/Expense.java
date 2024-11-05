@@ -1,7 +1,10 @@
 package com.example.projectappqlct.Model;
 
-public class Expense {
+import java.io.Serializable;
+
+public class Expense implements Serializable {
    // ID from Firestore document
+   private String id;
     private int amount;
     private String calendar;
     private String group;
@@ -19,6 +22,14 @@ public class Expense {
 
     public Expense(){
 
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getNote() {

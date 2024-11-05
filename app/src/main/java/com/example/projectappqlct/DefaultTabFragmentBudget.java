@@ -5,11 +5,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,23 +14,18 @@ import android.widget.Button;
 
 import com.example.projectappqlct.Model.Budget;
 import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link DefaultTabFragment#newInstance} factory method to
+ * Use the {@link DefaultTabFragmentBudget#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DefaultTabFragment extends TabFragment {
+public class DefaultTabFragmentBudget extends TabFragment_Budget {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -51,7 +43,7 @@ public class DefaultTabFragment extends TabFragment {
     private Map<String, List<Budget>> budgetByMonthYear = new HashMap<>();
     private BudgetFragment budgetFragment;
 
-    public DefaultTabFragment() {
+    public DefaultTabFragmentBudget() {
         // Required empty public constructor
     }
 
@@ -64,8 +56,8 @@ public class DefaultTabFragment extends TabFragment {
      * @return A new instance of fragment DefaultTabFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DefaultTabFragment newInstance(String param1, String param2) {
-        DefaultTabFragment fragment = new DefaultTabFragment();
+    public static DefaultTabFragmentBudget newInstance(String param1, String param2) {
+        DefaultTabFragmentBudget fragment = new DefaultTabFragmentBudget();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);

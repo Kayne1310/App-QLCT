@@ -62,8 +62,8 @@ dependencies {
     debugImplementation(libs.ui.test.manifest)
     implementation ("com.google.android.material:material:1.9.0")
     implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
-    implementation("com.google.android.gms:play-services-auth")
     implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.android.gms:play-services-auth")
     implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
 }
 

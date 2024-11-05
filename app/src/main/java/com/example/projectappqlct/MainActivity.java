@@ -127,6 +127,15 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        //route tu activity DetailExpense ve main acitivy roi route sang fragment history
+        if (intent != null && intent.hasExtra("DetailExpense")) {
+            String fragmentToShow = intent.getStringExtra("DetailExpense");
+            if ("DetailExpense".equals(fragmentToShow)) {
+                viewPager.setCurrentItem(1); // 3 là chỉ số của BudgetFragment
+                bottomNavigationView.getMenu().findItem(R.id.menu_history).setChecked(true);
+            }
+        }
+
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -227,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
                 // Tham chiếu đến các EditText
 
                 editTextAmount = dialog1.findViewById(R.id.editTextAmount);
-                editTextDate = dialog1.findViewById(R.id.editTextDate);
+                editTextDate = dialog1.findViewById(R.id.editTextCalendar);
                 imageViewGr = dialog1.findViewById(R.id.imageViewGr);
 
                 editTextAmount.addTextChangedListener(new TextWatcher() {
@@ -342,7 +351,28 @@ public class MainActivity extends AppCompatActivity {
                             .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                 @Override
                                 public void onSuccess(DocumentReference documentReference) {
-                                    Log.i("check", "DocumentSnapshot added with ID: " + documentReference.getId());
+                                    String documentId = documentReference.getId(); // Lấy ID của document
+
+                                    // Cập nhật ID vào tài liệu Expense
+                                    documentReference.update("id", documentId)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Log.i("check", "Document ID updated successfully");
+
+                                                    Intent intent = getIntent();
+                                                    finish(); // Kết thúc Activity hiện tại
+                                                    startActivity(intent); // Khởi động lại Activity -> trở về trang home
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.i("check", "Error updating document ID", e);
+                                                }
+                                            });
+
+                                    Log.i("check", "DocumentSnapshot added with ID: " + documentId);
                                     dialog1.dismiss();
                                     resetDialogFields();
                                     Toast.makeText(MainActivity.this, "Add expense successful", Toast.LENGTH_SHORT).show();
@@ -354,6 +384,7 @@ public class MainActivity extends AppCompatActivity {
                                     Log.i("check", "Error adding document", e);
                                 }
                             });
+
 
                 });
                 dialog1.show();

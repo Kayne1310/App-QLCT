@@ -41,7 +41,7 @@
             android:layout_gravity="center"
             android:background="#AAFFFFFF"
             android:paddingTop="5dp"
-            android:text="Change Password"
+            android:text="Detail Budget"
             android:textSize="25sp"
             android:textStyle="bold" />
     </FrameLayout>
@@ -68,6 +68,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -130,7 +131,7 @@
                 android:paddingLeft="75dp">
 
                 <TextView
-                    android:id="@+id/textViewDachii"
+                    android:id="@+id/TextViewTotalExpense1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -139,7 +140,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/textViewConlaii"
+                    android:id="@+id/textViewDeficit1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -161,7 +162,7 @@
                 <ProgressBar
                     android:id="@+id/progressBar1"
                     style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="370dp"
+                    android:layout_width="330dp"
                     android:layout_height="7dp"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
@@ -200,11 +201,20 @@
                 android:background="#D3D0D0"
                 android:textSize="20sp" />
 
-
-            <com.github.mikephil.charting.charts.CombinedChart
-                android:id="@+id/chart1"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="400dp" />
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:gravity="center"
+                android:backgroundTint="#FFFDE7">
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/chart1"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -221,7 +231,7 @@
                     android:textSize="20dp" />
 
                 <TextView
-                    android:id="@+id/textviewAmount1"
+                    android:id="@+id/textViewSuggestedDailyExpense"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
@@ -248,51 +258,17 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
-                    android:text="Dự kiến chi tiêu"
-                    android:textSize="20dp" />
-
-                <TextView
-                    android:id="@+id/textviewAmount2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:text="0.00"
-                    android:textSize="20dp"
-                    android:textStyle="bold" />
-
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:background="#988989" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_weight="1"
                     android:text="Thực tế chi hiêu hàng ngày"
                     android:textSize="20dp" />
 
                 <TextView
-                    android:id="@+id/textviewAmount"
+                    android:id="@+id/textViewActualDailyExpense"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
                     android:text="0.00"
                     android:textSize="20dp"
                     android:textStyle="bold" />
-
-
             </LinearLayout>
 
             <View
@@ -322,7 +298,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#D3D0D0"
-                android:textSize="20sp" />
+                android:textSize="10sp" />
 
             <Button
                 android:id="@+id/btnDelete"
