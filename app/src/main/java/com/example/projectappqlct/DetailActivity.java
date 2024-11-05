@@ -195,9 +195,6 @@ public class DetailActivity extends DemoBase {
                     textViewDeficit.setTextColor(ContextCompat.getColor(this, R.color.green));
                 }
 
-                if (totalExpense >= budgetAmount) {
-                    Toast.makeText(this, "Chi phí của bạn đã bằng hoặc vượt quá ngân sách", Toast.LENGTH_SHORT).show();
-                }
 
             });
 

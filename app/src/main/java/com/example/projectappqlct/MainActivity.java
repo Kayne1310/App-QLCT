@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         if (intent != null && intent.hasExtra("showFragment")) {
             String fragmentToShow = intent.getStringExtra("showFragment");
             if ("profile".equals(fragmentToShow)) {
-                viewPager.setCurrentItem(4); // 4 là chỉ số của ProfileFragment
+                viewPager.setCurrentItem(3); // 4 là chỉ số của ProfileFragment
                 bottomNavigationView.getMenu().findItem(R.id.menu_profile).setChecked(true);
             }
         }
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         if (intent != null && intent.hasExtra("ChangePassword")) {
             String fragmentToShow = intent.getStringExtra("ChangePassword");
             if ("ChangePassword".equals(fragmentToShow)) {
-                viewPager.setCurrentItem(4); // 4 là chỉ số của ProfileFragment
+                viewPager.setCurrentItem(3); // 4 là chỉ số của ProfileFragment
                 bottomNavigationView.getMenu().findItem(R.id.menu_profile).setChecked(true);
             }
         }
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         if (intent != null && intent.hasExtra("DetailActivity")) {
             String fragmentToShow = intent.getStringExtra("DetailActivity");
             if ("DetailActivity".equals(fragmentToShow)) {
-                viewPager.setCurrentItem(3); // 3 là chỉ số của BudgetFragment
+                viewPager.setCurrentItem(2); // 3 là chỉ số của BudgetFragment
                 bottomNavigationView.getMenu().findItem(R.id.menu_budget).setChecked(true);
             }
         }
@@ -166,13 +166,11 @@ public class MainActivity extends AppCompatActivity {
                     case 1:
                         bottomNavigationView.getMenu().findItem(R.id.menu_history).setChecked(true);
                         break;
+
                     case 2:
-                        bottomNavigationView.getMenu().findItem(R.id.menu_create).setChecked(true);
-                        break;
-                    case 3:
                         bottomNavigationView.getMenu().findItem(R.id.menu_budget).setChecked(true);
                         break;
-                    case 4:
+                    case 3:
                         bottomNavigationView.getMenu().findItem(R.id.menu_profile).setChecked(true);
                 }
             }
@@ -191,17 +189,20 @@ public class MainActivity extends AppCompatActivity {
                 if (id == R.id.menu_home) {
                     viewPager.setCurrentItem(0);
                     return true;
-                } else if (id == R.id.menu_history) {
+                }
+                else if (id == R.id.menu_history) {
                     viewPager.setCurrentItem(1);
                     return true;
-                } else if (id == R.id.menu_create) {
+                }
+                else if (id == R.id.menu_create) {
                     showDialog1();
                     return true;
-                } else if (id == R.id.menu_budget) {
-                    viewPager.setCurrentItem(3);
+                }
+                else if (id == R.id.menu_budget) {
+                    viewPager.setCurrentItem(2);
                     return true;
                 } else if (id == R.id.menu_profile) {
-                    viewPager.setCurrentItem(4);
+                    viewPager.setCurrentItem(3);
                 }
                 return false;
             }
@@ -337,10 +338,11 @@ public class MainActivity extends AppCompatActivity {
                     int AmountInt = Integer.parseInt(Amount);
                     String Calendar = editTextDate.getText().toString().trim().isEmpty() ? editTextDate.getHint().toString().trim() : editTextDate.getText().toString().trim();
                     String Group = buttonSelect.getText().toString().trim();
-                    if (Group.isEmpty()){
+                    if (Group.isEmpty()||Group.equals("Select Group")){
                         Toast.makeText(MainActivity.this, "Please enter a valid group", Toast.LENGTH_SHORT).show();
                         return;
                     }
+
 
                     String Note = buttonSelectNote.getText().toString().trim();
                     String Icon = null;
@@ -360,51 +362,45 @@ public class MainActivity extends AppCompatActivity {
                     FirebaseUser user = auth.getCurrentUser();
                     String userString = user.getUid();
 
+
                     // Thêm Expense vào Firestore
                     db.collection("users").document(userString)
                             .collection("Expenses")
                             .add(expense)
-                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                @Override
-                                public void onSuccess(DocumentReference documentReference) {
-                                    String documentId = documentReference.getId(); // Lấy ID của document
+                            .addOnSuccessListener(documentReference -> {
+                                String documentId = documentReference.getId();
+                                documentReference.update("id", documentId)
+                                        .addOnSuccessListener(aVoid -> {
+                                            Log.i("check", "Document ID updated successfully");
 
-                                    // Cập nhật ID vào tài liệu Expense
-                                    documentReference.update("id", documentId)
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    Log.i("check", "Document ID updated successfully");
+                                            // Đóng dialog sau khi thêm thành công
+                                            dialog1.dismiss();
+                                            resetDialogFields();
 
-                                                    Intent intent = getIntent();
-                                                    finish(); // Kết thúc Activity hiện tại
-                                                    startActivity(intent); // Khởi động lại Activity -> trở về trang home
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Log.i("check", "Error updating document ID", e);
-                                                }
-                                            });
+                                            // Kiểm tra vị trí hiện tại của ViewPager và gửi Intent tương ứng
+                                            int currentPage = viewPager.getCurrentItem();
+                                            Intent updateIntent = null;
 
-                                    Log.i("check", "DocumentSnapshot added with ID: " + documentId);
-                                    dialog1.dismiss();
+                                            if (currentPage == 0) {
+                                                // Nếu ViewPager đang ở vị trí 0, gửi Intent cho trang đầu
+                                                updateIntent = new Intent("DATA_UPDATED");
+                                            } else if (currentPage == 1) {
+                                                // Nếu ViewPager đang ở vị trí 1, gửi Intent cho trang 2
+                                                updateIntent = new Intent("EXPENSE_ADDED");
 
+                                            }
+                                            else if(currentPage==3){
+                                                updateIntent=new Intent("Load_Buget");
+                                            }
+                                            // Gửi Intent dựa trên trang hiện tại
+                                            LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(updateIntent);
 
-                                    resetDialogFields();
-                                    Intent intent = new Intent("DATA_UPDATED");
-                                    LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(intent);
-                                    Toast.makeText(MainActivity.this, "Add expense successful", Toast.LENGTH_SHORT).show();
-                                    checkBudgetLimit(getApplicationContext(),userString,expense.getGroup(),expense.getAmount(),expense.getCalendar());
-                                }
+                                            Toast.makeText(MainActivity.this, "Add expense successful", Toast.LENGTH_SHORT).show();
+                                            checkBudgetLimit(getApplicationContext(), userString, expense.getGroup(), expense.getAmount(), expense.getCalendar());
+                                        })
+                                        .addOnFailureListener(e -> Log.i("check", "Error updating document ID", e));
                             })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.i("check", "Error adding document", e);
-                                }
-                            });
+                            .addOnFailureListener(e -> Log.i("check", "Error adding document", e));
 
 
                 });
@@ -877,7 +873,7 @@ public class MainActivity extends AppCompatActivity {
                                                         Log.i("check", "Notification added with ID: " + documentReference.getId());
 
                                                         // Send local notification to the user
-                                                        NotificationHelper.sendNotificationToUser(context, title, content);
+                                                        sendNotificationToUser(context, title, content);
                                                     });
                                         }
                                         if (totalExpenseThisMonth[0] == groupBudget) { // Use the array's element
@@ -894,7 +890,7 @@ public class MainActivity extends AppCompatActivity {
                                                         Log.i("check", "Notification added with ID: " + documentReference.getId());
 
                                                         // Send local notification to the user
-                                                        NotificationHelper.sendNotificationToUser(context, title, content);
+                                                        sendNotificationToUser(context, title, content);
                                                     });
                                         }
                                     }

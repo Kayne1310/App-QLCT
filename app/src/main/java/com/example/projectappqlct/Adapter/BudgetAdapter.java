@@ -109,10 +109,7 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.BudgetView
 
 
 
-            // Kiểm tra và hiển thị Toast nếu chi phí đạt hoặc vượt ngân sách
-            if (totalExpense >= budgetAmount) {
-                Toast.makeText(mContext, "Chi phí của bạn đã bằng hoặc lớn hơn ngân sách", Toast.LENGTH_SHORT).show();
-            }
+
         });
     }
 

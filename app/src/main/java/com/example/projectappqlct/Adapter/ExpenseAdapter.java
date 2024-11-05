@@ -1,4 +1,4 @@
-package com.example.projectappqlct;
+package com.example.projectappqlct.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -20,7 +20,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Calendar;
 
+import com.example.projectappqlct.DetailExpense;
 import com.example.projectappqlct.Model.Expense;
+import com.example.projectappqlct.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -38,12 +40,14 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
     private FirebaseAuth auth;
     private FirebaseUser user;
     private String userString;
+    private int currentTabPosition;
 
 
     public ExpenseAdapter(Context context, List<Expense> listExpense) {
         this.mContext = context;
         // Khởi tạo ListExpense nếu nó null
         this.ListExpense = listExpense != null ? listExpense : new ArrayList<>();
+
         db = FirebaseFirestore.getInstance();
     }
 
@@ -108,15 +112,15 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
 
             // Kiểm tra nếu là "Hôm nay", "Hôm qua", hoặc lấy thứ trong tuần
             if (formattedDate.equals(formattedToday)) {
-                holder.textviewToday.setText("Hôm nay");
+                holder.textviewToday.setText("Today");
             } else if (formattedDate.equals(formattedYesterday)) {
-                holder.textviewToday.setText("Hôm qua");
+                holder.textviewToday.setText("Yesterday");
             } else {
                 // Lấy thứ trong tuần nếu không phải hôm nay hoặc hôm qua
                 Calendar dayCalendar = Calendar.getInstance(); // Khai báo dayCalendar
                 dayCalendar.setTime(date);
 
-                String[] daysOfWeek = {"Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"};
+                String[] daysOfWeek = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
                 String dayOfWeek = daysOfWeek[dayCalendar.get(Calendar.DAY_OF_WEEK) - 1];
 
                 holder.textviewToday.setText(dayOfWeek);
@@ -150,7 +154,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
 
         } catch (ParseException e) {
             e.printStackTrace();
-            holder.textviewToday.setText("Ngày không hợp lệ");
+            holder.textviewToday.setText("Day Error");
         }
     }
 
@@ -158,6 +162,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
         Intent intent = new Intent(mContext, DetailExpense.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("Object_expense", expense);
+
         intent.putExtras(bundle);
         mContext.startActivity(intent);
     }

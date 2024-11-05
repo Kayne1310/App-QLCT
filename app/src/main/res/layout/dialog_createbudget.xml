@@ -44,7 +44,7 @@
         android:id="@+id/textView10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#D3D0D0"
+        android:background="#F4F2F2"
         android:textSize="40sp" />
 
     <LinearLayout
@@ -95,7 +95,9 @@
             android:ems="10"
             android:hint="Amount"
             android:textColor="#8D8585"
-            android:inputType="number"/>
+            android:padding="10dp"
+            android:inputType="number"
+            android:background="@null"/>
 
 
     </LinearLayout>
@@ -120,7 +122,9 @@
             android:layout_height="70dp"
             android:layout_weight="1"
             android:ems="10"
-            android:focusable="false"/>
+            android:focusable="false"
+            android:padding="10dp"
+            android:background="@null"/>
 
     </LinearLayout>
 

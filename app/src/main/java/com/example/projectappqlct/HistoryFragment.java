@@ -1,9 +1,14 @@
 package com.example.projectappqlct;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.util.Log;
@@ -15,12 +20,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
-import com.anychart.chart.common.dataentry.DataEntry;
-import com.anychart.chart.common.dataentry.ValueDataEntry;
-import com.anychart.charts.Pie;
-import com.example.projectappqlct.Model.Budget;
+import com.example.projectappqlct.Adapter.ExpenseAdapter;
 import com.example.projectappqlct.Model.Expense;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -30,10 +31,15 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -65,6 +71,8 @@ public class HistoryFragment extends Fragment {
     private String userString;
     private TextView totalBudgetTextView;
 
+
+    private int currentTabPosition = -1;
     public HistoryFragment() {
         // Required empty public constructor
     }
@@ -109,7 +117,15 @@ public class HistoryFragment extends Fragment {
 
         // Create adapter for ViewPager
         adapter = new ExpenseViewPagerAdapter(this);
+        int defaultPosition = adapter.getCurrentMonthYearPosition();
+        if (defaultPosition != -1) { // Nếu tìm thấy vị trí của tháng-năm hiện tại
+            viewPager.setCurrentItem(defaultPosition, false);
+        }
+
+
         viewPager.setAdapter(adapter);
+        // Kiểm tra nếu có intent từ DetailExpense
+
 
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance();
@@ -152,15 +168,22 @@ public class HistoryFragment extends Fragment {
                     }
                 });
 
-
+        //load lai khi create expense  o history
+        LocalBroadcastManager.getInstance(requireContext())
+                .registerReceiver(expenseAddedReceiver, new IntentFilter("EXPENSE_ADDED"));
         // Load data from Firestore and setup tabs
         loadHistoryAndSetupTabs();
+        // Quay lại tab đã lưu nếu có
+        if (currentTabPosition != -1 && currentTabPosition < monthYearList.size()) {
+            viewPager.setCurrentItem(currentTabPosition, false);
+        }
 
         return view;
     }
 
 
     public void loadHistoryAndSetupTabs() {
+
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
         String userString = user.getUid();
@@ -195,14 +218,50 @@ public class HistoryFragment extends Fragment {
     private void groupHistorysByMonthYear(List<Expense> expenses) {
         expenseByMonthYear.clear();
 
+        // Sử dụng SimpleDateFormat để phân tích ngày
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+
         for (Expense expense : expenses) {
             String monthYear = expense.getCalendar().substring(3); // Get month/year from "dd/MM/yyyy"
+
+            // Chuyển đổi ngày từ chuỗi sang đối tượng Date
+            Date expenseDate = null;
+            try {
+                expenseDate = format.parse(expense.getCalendar());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            // Kiểm tra nếu danh sách chưa có tháng/năm
             if (!expenseByMonthYear.containsKey(monthYear)) {
                 expenseByMonthYear.put(monthYear, new ArrayList<>());
             }
+
+            // Thêm chi tiêu vào danh sách
             expenseByMonthYear.get(monthYear).add(expense);
         }
+
+        // Sắp xếp các chi tiêu trong từng tháng/năm theo ngày từ gần nhất đến xa nhất
+        for (String monthYear : expenseByMonthYear.keySet()) {
+            List<Expense> expenseList = expenseByMonthYear.get(monthYear);
+
+            // Sắp xếp bằng cách sử dụng Comparator
+            Collections.sort(expenseList, new Comparator<Expense>() {
+                @Override
+                public int compare(Expense e1, Expense e2) {
+                    try {
+                        Date date1 = format.parse(e1.getCalendar());
+                        Date date2 = format.parse(e2.getCalendar());
+                        return date2.compareTo(date1); // So sánh theo thứ tự giảm dần
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                        return 0; // Nếu có lỗi xảy ra, không thay đổi vị trí
+                    }
+                }
+            });
+        }
     }
+
 
 
 
@@ -211,13 +270,22 @@ public class HistoryFragment extends Fragment {
         Collections.sort(monthYearList);
 
         adapter.updateData(monthYearList, expenseByMonthYear);
-        viewPager.setAdapter(null);
         viewPager.setAdapter(adapter);
 
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             String monthYear = monthYearList.get(position);
             tab.setText(monthYear);  // Set month/year as tab title
         }).attach();
+
+
+
+        // Chuyển đến tab tháng-năm hiện tại
+        int defaultPosition = adapter.getCurrentMonthYearPosition();
+        if (defaultPosition != -1) {
+            viewPager.setCurrentItem(defaultPosition, false);
+        }
+
+
     }
 
 
@@ -229,5 +297,26 @@ public class HistoryFragment extends Fragment {
             tab.setText("No data");
         }).attach();
     }
+
+    private BroadcastReceiver expenseAddedReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Khi nhận được thông báo EXPENSE_ADDED, tải lại dữ liệu
+
+            loadHistoryAndSetupTabs();
+
+        }
+    };
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Huỷ đăng ký BroadcastReceiver để tránh rò rỉ bộ nhớ
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(expenseAddedReceiver);
+    }
+
+
+
+
 
 }

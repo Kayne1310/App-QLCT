@@ -12,7 +12,7 @@
 <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="Số tiền bạn có thể chi"
+    android:text="The amount you can spend"
     android:textSize="17dp"
     android:layout_marginTop="10dp"/>
 
@@ -45,7 +45,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tổng ngân sách"
+            android:text="Total Budgets"
             android:textSize="15dp"/>
     </LinearLayout>
 
@@ -72,7 +72,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tổng đã chi"
+            android:text="Total Expense"
             android:textSize="15dp"/>
     </LinearLayout>
 
@@ -99,11 +99,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Đến cuối tháng"
+            android:text=" End of the month"
             android:textSize="15dp"/>
     </LinearLayout>
 
+
+
+
 </LinearLayout>
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/loadingExpense"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
     <Button
         android:id="@+id/btnBG"
         android:layout_width="wrap_content"

@@ -110,7 +110,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Đã chi"
+                    android:text="Spent"
                     android:textSize="17dp" />
 
                 <TextView
@@ -119,7 +119,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingRight="10dp"
-                    android:text="Còn lại"
+                    android:text="Remaining"
                     android:textAlignment="textEnd"
                     android:textSize="17dp" />
             </LinearLayout>
@@ -227,7 +227,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
-                    android:text="Nên chi hàng ngày"
+                    android:text="Should spend daily"
                     android:textSize="20dp" />
 
                 <TextView
@@ -258,7 +258,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
-                    android:text="Thực tế chi hiêu hàng ngày"
+                    android:text="Actual daily expenses"
                     android:textSize="20dp" />
 
                 <TextView
