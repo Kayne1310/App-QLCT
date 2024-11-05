@@ -32,7 +32,7 @@
                 android:layout_height="match_parent"
                 android:paddingTop="5dp"
                 android:text="Back"
-                android:textSize="20dp" />
+                android:textSize="16sp" />
         </LinearLayout>
 
         <TextView
@@ -40,9 +40,9 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:background="#AAFFFFFF"
-            android:paddingTop="5dp"
-            android:text="Acitivty Detail"
-            android:textSize="25sp"
+            android:paddingTop="10dp"
+            android:text="Detail Budget"
+            android:textSize="16sp"
             android:textStyle="bold" />
     </FrameLayout>
 
@@ -68,6 +68,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -83,7 +84,7 @@
                     android:layout_height="match_parent"
 
                     android:text="Item 1"
-                    android:textSize="25sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -95,7 +96,7 @@
                 android:layout_marginLeft="75dp"
                 android:layout_marginTop="20dp"
                 android:text="Item 2"
-                android:textSize="25dp" />
+                android:textSize="18dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -109,7 +110,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Đã chi"
+                    android:text="Spent"
                     android:textSize="17dp" />
 
                 <TextView
@@ -118,7 +119,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingRight="10dp"
-                    android:text="Còn lại"
+                    android:text="Remaining"
                     android:textAlignment="textEnd"
                     android:textSize="17dp" />
             </LinearLayout>
@@ -130,7 +131,7 @@
                 android:paddingLeft="75dp">
 
                 <TextView
-                    android:id="@+id/textViewDachii"
+                    android:id="@+id/TextViewTotalExpense1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -139,12 +140,11 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/textViewConlaii"
+                    android:id="@+id/textViewDeficit1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingRight="10dp"
-                    android:text="9,000.00"
                     android:textAlignment="textEnd"
                     android:textSize="17dp"
                     android:textStyle="bold" />
@@ -161,7 +161,7 @@
                 <ProgressBar
                     android:id="@+id/progressBar1"
                     style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="370dp"
+                    android:layout_width="330dp"
                     android:layout_height="7dp"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
@@ -188,7 +188,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Item 3"
-                    android:textSize="25sp" />
+                    android:textSize="18dp" />
 
             </LinearLayout>
 
@@ -200,11 +200,20 @@
                 android:background="#DEDAE4"
                 android:textSize="20sp" />
 
-
-            <com.github.mikephil.charting.charts.CombinedChart
-                android:id="@+id/chart1"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="400dp" />
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:gravity="center"
+                android:backgroundTint="#FFFDE7">
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/chart1"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -217,16 +226,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
-                    android:text="Nên chi hàng ngày"
-                    android:textSize="20dp" />
+                    android:text="Should spend daily"
+                    android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/textviewAmount1"
+                    android:id="@+id/textViewSuggestedDailyExpense"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
                     android:text="1,800.00"
-                    android:textSize="20dp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
 
@@ -248,51 +257,17 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
-                    android:text="Dự kiến chi tiêu"
-                    android:textSize="20dp" />
+                    android:text="Actual daily expenses"
+                    android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/textviewAmount2"
+                    android:id="@+id/textViewActualDailyExpense"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
                     android:text="0.00"
-                    android:textSize="20dp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
-
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:background="#988989" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_weight="1"
-                    android:text="Thực tế chi hiêu hàng ngày"
-                    android:textSize="20dp" />
-
-                <TextView
-                    android:id="@+id/textviewAmount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:text="0.00"
-                    android:textSize="20dp"
-                    android:textStyle="bold" />
-
-
             </LinearLayout>
 
             <View
@@ -315,14 +290,15 @@
                 android:backgroundTint="#0000"
                 android:text="Edit"
                 android:textColor="#00B70D"
-                android:textSize="20dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#DEDAE4"
-                android:textSize="20sp" />
+                android:background="#D3D0D0"
+                android:textSize="10sp" />
+
 
             <Button
                 android:id="@+id/btnDelete"
@@ -331,7 +307,7 @@
                 android:backgroundTint="#0000"
                 android:text="Delete"
                 android:textColor="#EE2121"
-                android:textSize="20dp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/textView3"

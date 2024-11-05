@@ -6,37 +6,45 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:orientation="horizontal">
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
+        <!-- Back Button -->
         <TextView
             android:id="@+id/textViewBack1"
-            android:layout_width="1dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="20dp"
             android:layout_weight="1"
             android:drawableLeft="@drawable/baseline_arrow_back_ios_24"
-            android:drawablePadding="-30dp"
             android:text="Back"
-            android:textAlignment="center"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textStyle="normal" />
+
+        <!-- Centered Text -->
         <TextView
-            android:layout_marginTop="10dp"
             android:id="@+id/textView2"
-            android:layout_width="10dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
+            android:gravity="center"
             android:text="Select group"
-            android:textSize="30sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
-        <SearchView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+        <!-- Search Icon -->
+        <ImageView
+            android:id="@+id/imageViewSearch"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:scaleType="fitEnd"
+            android:src="@drawable/baseline_search_24" />
     </LinearLayout>
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -56,7 +64,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#D3D0D0"
-                    android:textSize="40dp"/>
+                    android:textSize="10dp"/>
 
 
                 <Button
@@ -70,14 +78,24 @@
                     android:text="Group new"
                     android:textColor="#34AB35"
                     android:textColorLink="@color/design_default_color_on_primary"
-                    android:textSize="18dp" />
+                    android:textSize="16sp" />
 
                 <TextView
-
                     android:id="@+id/textViewabcxyz"
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
                     android:background="#D3D0D0" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewOption"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+<!--                <TextView-->
+
+<!--                    android:id="@+id/textViewabcqwe"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="10dp"-->
+<!--                    android:background="#D3D0D0" />-->
                 <Button
                     android:backgroundTint="#00B00020"
                     android:id="@+id/btnEat"
@@ -86,7 +104,7 @@
                     android:textColor="#000000"
                     android:drawableLeft="@drawable/eat"
                     android:paddingRight="270dp"
-                    android:textSize="18dp"
+                    android:textSize="16sp"
                     android:text="Eat" />
 
                 <TextView
@@ -103,7 +121,7 @@
 
                     android:drawableLeft="@drawable/shopping"
                     android:paddingRight="220dp"
-                    android:textSize="18dp"
+                    android:textSize="16sp"
                     android:text="Shopping" />
 
                 <TextView
@@ -120,7 +138,7 @@
 
                     android:drawableLeft="@drawable/family"
                     android:paddingRight="240dp"
-                    android:textSize="18dp"
+                    android:textSize="16sp"
                     android:text="Family" />
 
                 <TextView
@@ -136,7 +154,7 @@
                     android:textColor="#000000"
                     android:drawableLeft="@drawable/healthy"
                     android:paddingRight="230dp"
-                    android:textSize="18dp"
+                    android:textSize="16sp"
                     android:text="Healthy" />
 
                 <TextView
@@ -152,7 +170,7 @@
                     android:textColor="#000000"
                     android:drawableLeft="@drawable/vehicle"
                     android:paddingRight="230dp"
-                    android:textSize="18dp"
+                    android:textSize="16sp"
                     android:text="Vehicle" />
 
                 <TextView
@@ -170,7 +188,7 @@
 
                     android:drawableLeft="@drawable/sport"
                     android:paddingRight="240dp"
-                    android:textSize="18dp"
+                    android:textSize="16sp"
                     android:text="Sport" />
 
                 <TextView
@@ -186,7 +204,7 @@
                     android:textColor="#000000"
                     android:drawableLeft="@drawable/education"
                     android:paddingRight="200dp"
-                    android:textSize="18dp"
+                    android:textSize="16sp"
                     android:text="Education" />
 
                 <TextView
@@ -202,7 +220,7 @@
                     android:textColor="#000000"
                     android:drawableLeft="@drawable/entertainment"
                     android:paddingRight="170dp"
-                    android:textSize="18dp"
+                    android:textSize="16sp"
                     android:text="Entertainment" />
 
                 <TextView
@@ -218,7 +236,7 @@
                     android:textColor="#000000"
                     android:drawableLeft="@drawable/gifts"
                     android:paddingRight="250dp"
-                    android:textSize="18dp"
+                    android:textSize="16sp"
                     android:text="Gifts" />
 
                 <TextView
@@ -234,7 +252,7 @@
                     android:textColor="#000000"
                     android:drawableLeft="@drawable/invest"
                     android:paddingRight="240dp"
-                    android:textSize="18dp"
+                    android:textSize="16sp"
                     android:text="Invest" />
 
                 <TextView
@@ -250,7 +268,7 @@
                     android:textColor="#000000"
                     android:drawableLeft="@drawable/makeup"
                     android:paddingRight="220dp"
-                    android:textSize="18dp"
+                    android:textSize="16sp"
                     android:text="Make up" />
 
                 <TextView
@@ -266,7 +284,7 @@
                     android:textColor="#000000"
                     android:drawableLeft="@drawable/donate"
                     android:paddingRight="230dp"
-                    android:textSize="18dp"
+                    android:textSize="16sp"
                     android:text="Donate" />
 
                 <TextView
@@ -282,7 +300,7 @@
                     android:textColor="#000000"
                     android:drawableLeft="@drawable/other"
                     android:paddingRight="240dp"
-                    android:textSize="18dp"
+                    android:textSize="16sp"
                     android:text="Other" />
 
             </LinearLayout>

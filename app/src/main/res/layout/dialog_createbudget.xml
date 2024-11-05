@@ -4,39 +4,39 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:gravity="center_horizontal">
+    android:gravity="center_horizontal"
+    android:background="#DEDAE4"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:orientation="horizontal">
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@color/white">
         <TextView
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="20dp"
             android:id="@+id/textViewCancel"
-            android:layout_width="10dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="Cancel"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:textStyle="normal" />
+            android:textSize="16sp" />
         <TextView
-            android:layout_marginTop="10dp"
             android:id="@+id/textView2"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
+            android:gravity="center"
             android:text="Budget"
-            android:textAlignment="center"
-            android:textSize="30sp"
-            android:textStyle="bold" />
+            android:textSize="16sp"
+            android:textStyle="bold"  />
         <TextView
-            android:layout_marginTop="10dp"
             android:id="@+id/textView3"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:textSize="16sp" />
     </LinearLayout>
 
@@ -44,58 +44,63 @@
         android:id="@+id/textView10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#D3D0D0"
-        android:textSize="40sp" />
+        android:background="#DEDAE4"
+        android:textSize="40sp"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@color/white">
 
         <ImageView
-
             android:id="@+id/imageViewGr"
-            android:layout_width="10dp"
-            android:layout_height="34dp"
-            android:layout_marginTop="17dp"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="20dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/baseline_groups_2_24"
             android:tag="baseline_groups_2_24"/>
 
         <Button
             android:id="@+id/btnSelectedOption"
-            android:layout_width="310dp"
+            android:layout_width="0dp"
             android:layout_height="70dp"
+            android:layout_weight="4"
             android:backgroundTint="#00B00020"
             android:hint="Select group"
             android:textColor="#A8A8A8"
             android:padding="10dp"
             android:textAlignment="textStart"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@color/white">
 
         <ImageView
             android:id="@+id/imageView0"
-            android:layout_width="1dp"
-            android:layout_height="34dp"
-            android:layout_marginTop="17dp"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="20dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/baseline_attach_money_24" />
 
         <EditText
             android:id="@+id/editTextAmount"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="70dp"
-            android:layout_weight="1"
-            android:ems="10"
+            android:layout_weight="4"
             android:hint="Amount"
             android:textColor="#8D8585"
-            android:inputType="number"/>
+            android:padding="10dp"
+            android:inputType="number"
+            android:background="@null"
+            android:textSize="16sp"/>
 
 
     </LinearLayout>
@@ -103,24 +108,27 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@color/white">
 
         <ImageView
             android:id="@+id/imageView1"
-            android:layout_width="1dp"
-            android:layout_height="34dp"
-            android:layout_marginTop="17dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginTop="20dp"
             app:srcCompat="@drawable/baseline_calendar_month_24" />
 
         <EditText
 
             android:id="@+id/editTextCalendar"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="70dp"
-            android:layout_weight="1"
-            android:ems="10"
-            android:focusable="false"/>
+            android:layout_weight="4"
+            android:focusable="false"
+            android:background="@android:color/transparent"
+            android:hint="dd/mm/yyyy"
+            android:padding="10dp"/>
 
     </LinearLayout>
 
@@ -130,9 +138,10 @@
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
         android:layout_weight="1"
-        android:background="#00FFFFFF"
+        android:background="#DEDAE4"
         android:textSize="300sp"
-        android:inputType="date"/>
+        android:inputType="date"
+        />
 
     <Button
         android:id="@+id/btnAddBudget"
@@ -140,5 +149,6 @@
         android:layout_height="50dp"
         android:backgroundTint="#22AC2B"
         android:text="Add Budget" />
+
 </LinearLayout>
 

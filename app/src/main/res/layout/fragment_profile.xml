@@ -111,6 +111,7 @@
                 android:layout_marginRight="20dp"
                 android:orientation="horizontal"
                 android:background="@drawable/item_background"
+                android:id="@+id/LnMychart"
                 android:elevation="3dp" >
 
                 <ImageView
