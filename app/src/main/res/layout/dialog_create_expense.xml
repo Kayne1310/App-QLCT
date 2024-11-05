@@ -44,7 +44,7 @@
         android:id="@+id/textView10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#D3D0D0"
+        android:background="#F4F2F2"
         android:textSize="40sp" />
 
     <LinearLayout
@@ -95,8 +95,10 @@
             android:layout_height="70dp"
             android:layout_weight="4"
             android:hint="Amount"
+            android:inputType="number"
             android:textColor="#8D8585"
-            android:inputType="number" />
+            android:padding="10dp"
+            android:background="@android:color/transparent"/>
     </LinearLayout>
 
     <!-- Third LinearLayout with ImageView and EditText -->
@@ -119,8 +121,10 @@
             android:layout_width="0dp"
             android:layout_height="70dp"
             android:layout_weight="4"
+            android:padding="10dp"
             android:hint="dd/mm/yyyy"
             android:focusable="false"
+            android:background="@android:color/transparent"
             />
 
     </LinearLayout>
