@@ -9,7 +9,9 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.ekn.gruzer.gaugelibrary.Range;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -30,6 +32,7 @@ import android.widget.Toast;
 
 import com.ekn.gruzer.gaugelibrary.ArcGauge;
 import com.example.projectappqlct.Adapter.BudgetAdapter;
+import com.example.projectappqlct.Helper.CustomValueFormatter;
 import com.example.projectappqlct.Model.Budget;
 import com.example.projectappqlct.Model.Expense;
 import com.example.projectappqlct.Model.Option;
@@ -92,6 +95,8 @@ public class TabFragment_Budget extends Fragment {
     private TextView textViewTotalBudget, textViewTotalExpense, textViewEndOfMonth;
     private String selectedMonthYear;
     private List<Budget> budgets;
+    private ProgressBar loadingExpense;
+
 
 
 //    public static TabFragment_Budget newInstance(List<Budget> budgets) {
@@ -155,7 +160,7 @@ public class TabFragment_Budget extends Fragment {
 
         // Ánh xạ ArcGauge từ layout
         arcGauge = view.findViewById(R.id.arcGauge);
-
+        loadingExpense = view.findViewById(R.id.loadingExpense);
         // Ánh xạ các TextView từ layout
         textViewTotalBudget = view.findViewById(R.id.TextViewTotalBudget);
         textViewTotalExpense = view.findViewById(R.id.TextViewTotalExpense);
@@ -187,7 +192,8 @@ public class TabFragment_Budget extends Fragment {
         });
 
         // recycleview budget
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewBudgets);
+        recyclerView = view.findViewById(R.id.recyclerViewBudgets);
+        recyclerView.setVisibility(View.INVISIBLE);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(new BudgetAdapter(getActivity(), budgetList));
 
@@ -219,6 +225,12 @@ public class TabFragment_Budget extends Fragment {
     }
 
     private void loadBudgets() {
+        loadingExpense.setVisibility(View.VISIBLE);
+
+        // Ẩn RecyclerView và ArcGauge
+
+        arcGauge.setVisibility(View.INVISIBLE);
+
         db.collection("users").document(userString).collection("Budgets")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -243,9 +255,13 @@ public class TabFragment_Budget extends Fragment {
                     } else {
                         Log.e("BudgetError", "Error fetching budgets", task.getException());
                     }
+                    if (budgetCount > 0) {
+                        arcGauge.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        loadingExpense.setVisibility(View.GONE);
+                    }
                 });
     }
-
 
 
     private void fetchTotalExpenseForBudget(Budget budget, int budgetAmount, String selectedMonthYear) {
@@ -286,7 +302,6 @@ public class TabFragment_Budget extends Fragment {
     }
 
 
-
     private void updateGauge() {
         Log.d("GaugeUpdate", "Total Amount: " + totalAmount + ", Total Deficit: " + totalDeficit);
 
@@ -297,6 +312,19 @@ public class TabFragment_Budget extends Fragment {
         // Cập nhật TextView tổng ngân sách và tổng chi tiêu
         textViewTotalBudget.setText(formatCurrency(totalAmount));
         textViewTotalExpense.setText(formatCurrency(totalAmount - totalDeficit));
+
+
+        arcGauge.setFormatter(new CustomValueFormatter());
+    }
+
+    private String formatGaugeValue(double value) {
+        if (value < 1000) {
+            return String.valueOf((int) value); // Trả về giá trị nguyên nếu dưới 1000
+        } else if (value < 1_000_000) {
+            return String.format("%.1fk", value / 1000); // Định dạng thành "k"
+        } else {
+            return String.format("%.1fM", value / 1_000_000); // Định dạng thành "M"
+        }
     }
 
     private void updateDaysRemainingToEndOfMonth() {
@@ -344,16 +372,13 @@ public class TabFragment_Budget extends Fragment {
         }
 
         // Cập nhật vào TextView
-        textViewEndOfMonth.setText(daysRemaining + " ngày");
+        textViewEndOfMonth.setText(daysRemaining + " Day");
     }
-
-
 
 
     private String formatCurrency(int amount) {
         return String.format("%,d", amount);
     }
-
 
 
     // Phương thức tạo dialog với layout và kích thước tùy chỉnh
@@ -509,54 +534,62 @@ public class TabFragment_Budget extends Fragment {
 
             // Truy vấn Firestore để kiểm tra dữ liệu trùng lặp
             String finalIcon = Icon;
-            db.collection("users").document(userString)
-                            .collection("Budgets")
-                            .whereEqualTo("group", Group)
-                            .whereEqualTo("calendar", Calendar)
-                            .get()
-                            .addOnCompleteListener(task -> {
-                                if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                                    // Dữ liệu đã tồn tại với group và calendar trùng lặp
-                                    Toast.makeText(getActivity(), "This budget entry already exists", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    // Nếu không trùng lặp, tiếp tục thêm dữ liệu
-                                    Budget budget = new Budget(AmountInt, Calendar, Group, finalIcon);
-
-                                    db.collection("users").document(userString)
-                                            .collection("Budgets")
-                                            .add(budget)
-                                            .addOnSuccessListener(documentReference -> {
-                                                String budgetId = documentReference.getId(); // Lấy ID
-                                                budget.setId(budgetId); // Cập nhật ID vào đối tượng Budget
-
-                                                // Lưu budget với ID vào Firestore
-                                                documentReference.set(budget) // Cập nhật Firestore với budget đã có ID
-                                                        .addOnSuccessListener(aVoid -> {
-                                                            // Đóng dialog1 và reload lại fragment budget
-                                                            Toast.makeText(getActivity(), "Add budget successful", Toast.LENGTH_SHORT).show();
-
-                                                            if (dialog1 != null && dialog1.isShowing()) {
-                                                                dialog1.dismiss();
-                                                            }
-
-                                                            BudgetFragment parentFragment = (BudgetFragment) getParentFragment();
-                                                            if (parentFragment != null) {
-                                                                parentFragment.addBudgetData(budget);
-                                                                parentFragment.loadBudgetsAndSetupTabs(); // Thêm dữ liệu mới vào ViewPager và TabLayout
-                                                            }
-                                                        })
-                                                        .addOnFailureListener(e -> {
-                                                            Log.i("check", "Error updating budget ID", e);
-                                                        });
-                                            })
-                                            .addOnFailureListener(e -> {
-                                                Log.i("check", "Error adding document", e);
-                                            });
-                                }
-                            });
+            if (userString != null) {
+                // Truy vấn Firestore để kiểm tra dữ liệu trùng lặp từ server
+                db.collection("users").document(userString)
+                        .collection("Budgets")
+                        .whereEqualTo("group", Group)
+                        .whereEqualTo("calendar", Calendar)
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                                // Dữ liệu đã tồn tại với group và calendar trùng lặp
+                                Toast.makeText(getActivity(), "This budget entry already exists", Toast.LENGTH_SHORT).show();
+                            } else {
+                                updateDataBudget(AmountInt, Calendar, Group, finalIcon);
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("FirestoreError", "Error checking duplicate data", e);
+                        });
+            }
 
         });
         dialog1.show();
+    }
+
+    public void updateDataBudget(int AmountInt, String Calendar, String Group, String finalIcon) {
+        // Nếu không trùng lặp, tiếp tục thêm dữ liệu
+        Budget budget = new Budget(AmountInt, Calendar, Group, finalIcon);
+
+        db.collection("users").document(userString)
+                .collection("Budgets")
+                .add(budget)
+                .addOnSuccessListener(documentReference -> {
+                    String budgetId = documentReference.getId(); // Lấy ID
+                    budget.setId(budgetId); // Cập nhật ID vào đối tượng Budget
+
+                    // Lưu budget với ID vào Firestore
+                    documentReference.set(budget)
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(getActivity(), "Add budget successful", Toast.LENGTH_SHORT).show();
+                                if (dialog1 != null && dialog1.isShowing()) {
+                                    dialog1.dismiss();
+                                }
+
+                                BudgetFragment parentFragment = (BudgetFragment) getParentFragment();
+                                if (parentFragment != null) {
+                                    parentFragment.addBudgetData(budget);
+                                    parentFragment.loadBudgetsAndSetupTabs(); // Thêm dữ liệu mới vào ViewPager và TabLayout
+                                }
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("FirestoreError", "Error updating budget ID", e);
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FirestoreError", "Error adding document", e);
+                });
     }
 
 

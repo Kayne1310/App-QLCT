@@ -55,6 +55,8 @@ public class ProfileFragment extends Fragment {
     private TextView email;
     private FirebaseFirestore db;
     private TextView username;
+    private LinearLayout lnMyChart;
+
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -97,6 +99,7 @@ public class ProfileFragment extends Fragment {
         if(user!=null){
             String getEmailUser=user.getEmail();
              email=view.findViewById(R.id.textEmail);
+             email.setText(getEmailUser);
 
         }
 
@@ -158,7 +161,17 @@ public class ProfileFragment extends Fragment {
         });
 
 
+        lnMyChart = view.findViewById(R.id.LnMychart);
 
+        lnMyChart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Chuyển sang FragmentHome khi click
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                startActivity(intent);
+
+            }
+        });
 
         LinearLayout Notificant=view.findViewById(R.id.notificant);
 

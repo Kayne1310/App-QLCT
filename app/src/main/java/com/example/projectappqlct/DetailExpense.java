@@ -34,7 +34,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class DetailExpense extends AppCompatActivity {
-    private TextView detailItemGr, detailItemAm, detailItemCa, tvEdit, tvbtnDelete;
+    private TextView detailItemGr, detailItemAm, detailItemCa, tvEdit, tvbtnDelete,Note;
     private ImageView detailImgicon;
     LinearLayout textViewBack;
     private Expense expense;
@@ -48,7 +48,7 @@ public class DetailExpense extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+
         setContentView(R.layout.activity_detail_expense);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -60,9 +60,13 @@ public class DetailExpense extends AppCompatActivity {
         // nút back
         textViewBack = findViewById(R.id.back);
         textViewBack.setOnClickListener(v -> {
+            // Lấy chỉ số của ViewPager hiện tại
+
+
             // Chuyển sang màn hình chi tiết item
             Intent intent = new Intent(DetailExpense.this, MainActivity.class);
             intent.putExtra("DetailExpense", "DetailExpense");
+
             startActivity(intent);
             finish();
 
@@ -89,6 +93,10 @@ public class DetailExpense extends AppCompatActivity {
         int iconResId = getResources().getIdentifier(expense.getIcon(), "drawable", getPackageName());
         // Set icon vào ImageView
         detailImgicon.setImageResource(iconResId);
+
+        Note=findViewById(R.id.Note);
+        Note.setText(expense.getNote());
+
 
         detailItemCa = findViewById(R.id.tv_calendar);
         detailItemCa.setText(expense.getCalendar());

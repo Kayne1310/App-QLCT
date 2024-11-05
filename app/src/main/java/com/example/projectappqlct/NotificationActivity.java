@@ -32,6 +32,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -78,18 +80,19 @@ public class NotificationActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            List<Notification> notificationList = new ArrayList<>();
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
+
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 String title = document.getString("title");
                                 String content = document.getString("content");
                                 String time = document.getString("time");
 
-                                // Chuyển đổi chuỗi thời gian thành đối tượng Date
                                 try {
-                                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
                                     Date notificationDate = dateFormat.parse(time);
+
                                     Calendar notificationCalendar = Calendar.getInstance();
                                     notificationCalendar.setTime(notificationDate);
-
                                     int notificationMonth = notificationCalendar.get(Calendar.MONTH) + 1;
                                     int notificationYear = notificationCalendar.get(Calendar.YEAR);
 
@@ -97,8 +100,6 @@ public class NotificationActivity extends AppCompatActivity {
                                     if (notificationMonth == currentMonth && notificationYear == currentYear) {
                                         Notification notification = new Notification(title, content, time);
                                         notificationList.add(notification);
-                                        adapter = new NotificationAdapter(notificationList);
-                                        recyclerView.setAdapter(adapter);
                                     }
 
                                 } catch (ParseException e) {
@@ -106,9 +107,24 @@ public class NotificationActivity extends AppCompatActivity {
                                 }
                             }
 
-                            // Thông báo adapter cập nhật dữ liệu
+                            // Sắp xếp danh sách notificationList theo ngày tháng năm
+                            Collections.sort(notificationList, new Comparator<Notification>() {
+                                @Override
+                                public int compare(Notification n1, Notification n2) {
+                                    try {
+                                        Date date1 = dateFormat.parse(n1.getTime());
+                                        Date date2 = dateFormat.parse(n2.getTime());
+                                        return date2.compareTo(date1);
+                                    } catch (ParseException e) {
+                                        Log.e(TAG, "Lỗi định dạng ngày tháng", e);
+                                        return 0;
+                                    }
+                                }
+                            });
 
-
+                            // Cập nhật adapter và recyclerView
+                            adapter = new NotificationAdapter(notificationList);
+                            recyclerView.setAdapter(adapter);
                         } else {
                             Log.w(TAG, "Error Notification", task.getException());
                         }

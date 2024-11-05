@@ -16,7 +16,6 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         // Khởi tạo các Fragment chỉ một lần
         fragmentList.add(new HomeFragment());
         fragmentList.add(new HistoryFragment());
-        fragmentList.add(new CreateFragment());
         fragmentList.add(new BudgetFragment());
         fragmentList.add(new ProfileFragment());
     }
