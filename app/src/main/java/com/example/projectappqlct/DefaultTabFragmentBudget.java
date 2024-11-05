@@ -1,21 +1,31 @@
 package com.example.projectappqlct;
 
+import android.app.Dialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import com.example.projectappqlct.Model.Budget;
+import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link TabFragment2#newInstance} factory method to
+ * Use the {@link DefaultTabFragmentBudget#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TabFragment2 extends Fragment {
+public class DefaultTabFragmentBudget extends TabFragment_Budget {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,8 +35,15 @@ public class TabFragment2 extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private Dialog dialog1;
+    private TabLayout tabLayout;
+    private ViewPager2 viewPager;
+    private BudgetViewPagerAdapter adapter;
+    private FirebaseFirestore db;
+    private Map<String, List<Budget>> budgetByMonthYear = new HashMap<>();
+    private BudgetFragment budgetFragment;
 
-    public TabFragment2() {
+    public DefaultTabFragmentBudget() {
         // Required empty public constructor
     }
 
@@ -36,11 +53,11 @@ public class TabFragment2 extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment TabFragment2.
+     * @return A new instance of fragment DefaultTabFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static TabFragment2 newInstance(String param1, String param2) {
-        TabFragment2 fragment = new TabFragment2();
+    public static DefaultTabFragmentBudget newInstance(String param1, String param2) {
+        DefaultTabFragmentBudget fragment = new DefaultTabFragmentBudget();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -56,9 +73,20 @@ public class TabFragment2 extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-    @Nullable
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_tab2, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_default_tab, container, false);
+        // Khởi tạo BudgetFragment
+
+        Button createBudgetButton = view.findViewById(R.id.btnCreateBudget);
+        createBudgetButton.setOnClickListener(v -> {
+           showDialog1();
+
+
+        });
+
+        return view;
     }
+
 }

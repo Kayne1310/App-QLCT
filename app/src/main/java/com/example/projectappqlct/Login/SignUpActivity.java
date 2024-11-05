@@ -2,6 +2,7 @@ package com.example.projectappqlct.Login;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -56,7 +57,7 @@ public class SignUpActivity extends AppCompatActivity {
                 final String pass = signupPassword.getText().toString().trim();
                 final String name = nameEditText.getText().toString().trim();
                 final String ageString = ageEditText.getText().toString().trim();
-                int age=Integer.parseInt(ageString);
+                int age = Integer.parseInt(ageString);
                 final String address = addressEditText.getText().toString().trim();
                 final String sex = sexEditText.getText().toString().trim();
 

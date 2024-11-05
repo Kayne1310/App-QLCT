@@ -4,24 +4,26 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.projectappqlct.Model.Budget;
+
+import com.example.projectappqlct.Model.Expense;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BudgetViewPagerAdapter extends FragmentStateAdapter {
+public class ExpenseViewPagerAdapter extends FragmentStateAdapter {
     private List<String> monthYearList = new ArrayList<>();
-    private Map<String, List<Budget>> budgetByMonthYear = new HashMap<>();
+    private Map<String, List<Expense>> expenseByMonthYear = new HashMap<>();
 
-    public BudgetViewPagerAdapter(@NonNull Fragment fragment) {
+
+    public ExpenseViewPagerAdapter(@NonNull Fragment fragment) {
         super(fragment);
     }
 
-    public void updateData(List<String> monthYearList, Map<String, List<Budget>> budgetByMonthYear) {
+    public void updateData(List<String> monthYearList, Map<String, List<Expense>> expenseByMonthYear) {
         this.monthYearList = new ArrayList<>(monthYearList);
-        this.budgetByMonthYear = new HashMap<>(budgetByMonthYear);
+        this.expenseByMonthYear = new HashMap<>(expenseByMonthYear);
         notifyDataSetChanged();
     }
 
@@ -30,14 +32,15 @@ public class BudgetViewPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         String monthYear = monthYearList.get(position);
 
-        if (monthYear.equals("Create Budget")) {
-            return new DefaultTabFragmentBudget();
+        // Nếu là tab mặc định "Create Expense", trả về DefaultTabFragment
+        if (monthYear.equals("no data")) {
+            return new DefaultTabFragmentExpense();
         } else {
-            List<Budget> budgets = budgetByMonthYear.get(monthYear);
-            return TabFragment_Budget.newInstance(budgets, monthYear); // Truyền monthYear
+            // Nếu là tab có dữ liệu, trả về TabFragment với danh sách ngân sách tương ứng
+            List<Expense> expenses = expenseByMonthYear.get(monthYear);
+            return TabFragment_History.newInstance(monthYear, expenses);  // Pass monthYear here
         }
     }
-
 
     @Override
     public int getItemCount() {
@@ -60,9 +63,4 @@ public class BudgetViewPagerAdapter extends FragmentStateAdapter {
         }
         return false;
     }
-
-
 }
-
-
-

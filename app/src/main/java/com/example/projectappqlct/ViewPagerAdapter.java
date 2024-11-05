@@ -5,37 +5,33 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
-
+    private final List<Fragment> fragmentList = new ArrayList<>();
 
     public ViewPagerAdapter(@NonNull FragmentManager fm, int behaviorResumeOnlyCurrentFragment) {
-        super(fm);
+        super(fm, behaviorResumeOnlyCurrentFragment);
+        // Khởi tạo các Fragment chỉ một lần
+        fragmentList.add(new HomeFragment());
+        fragmentList.add(new HistoryFragment());
+        fragmentList.add(new CreateFragment());
+        fragmentList.add(new BudgetFragment());
+        fragmentList.add(new ProfileFragment());
     }
 
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        switch (position){
-
-            case 0:
-                return new HomeFragment();
-            case 1:
-                return new HistoryFragment();
-            case 2:
-                return new CreateFragment();
-            case 3:
-                return new BudgetFragment();
-            case 4:
-                return  new ProfileFragment();
-            default:
-                return new HistoryFragment();
-        }
+        // Trả về instance đã được tạo trước đó
+        return fragmentList.get(position);
     }
 
 
     @Override
     public int getCount() {
-        return 5;
+        return fragmentList.size(); // Sử dụng kích thước danh sách để xác định số lượng tab
     }
+
 }
