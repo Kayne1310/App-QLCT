@@ -1,7 +1,12 @@
 package com.example.projectappqlct;
 
+
+import static android.content.ContentValues.TAG;
+import static com.example.projectappqlct.Helper.NotificationHelper.sendNotificationToUser;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -16,32 +21,26 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-
 import android.content.Intent;
-
 import android.widget.Toast;
-
-
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
-
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager.widget.ViewPager;
-
 import android.text.TextWatcher;
-
+import com.example.projectappqlct.Helper.NotificationHelper;
+import com.example.projectappqlct.Login.LoginActivity;
 import com.example.projectappqlct.Model.Expense;
 import com.example.projectappqlct.Model.Option;
+import com.example.projectappqlct.Model.Notification;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -50,11 +49,16 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -82,6 +86,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // Kiểm tra trạng thái đăng nhập
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+        Log.d("MainActivity", "User logged in: " + isLoggedIn);
+        if (!isLoggedIn) {
+            // Nếu chưa đăng nhập, chuyển về LoginActivity
+            Log.d("MainActivity", "Redirecting to LoginActivity");
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish(); // Đóng MainActivity để không quay lại
+        }
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
 
@@ -374,8 +390,13 @@ public class MainActivity extends AppCompatActivity {
 
                                     Log.i("check", "DocumentSnapshot added with ID: " + documentId);
                                     dialog1.dismiss();
+
+
                                     resetDialogFields();
+                                    Intent intent = new Intent("DATA_UPDATED");
+                                    LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(intent);
                                     Toast.makeText(MainActivity.this, "Add expense successful", Toast.LENGTH_SHORT).show();
+                                    checkBudgetLimit(getApplicationContext(),userString,expense.getGroup(),expense.getAmount(),expense.getCalendar());
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
@@ -769,6 +790,117 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+    }
+
+
+    public void reloadBudgetFragment() {
+        // Kiểm tra nếu ViewPager đã được khởi tạo
+        if (viewPager != null) {
+            // Chuyển đến vị trí của fragment budget
+            viewPager.setCurrentItem(3); // 3 là chỉ số của fragment budget trong ViewPager
+        }
+    }
+
+
+    private void checkBudgetLimit(Context context, String userId, String group, int newAmount, String calendarDate) {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        String userString = user.getUid();
+
+        // Set up calendar with current month and year from calendarDate
+        Calendar calendar = Calendar.getInstance();
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            Date date = dateFormat.parse(calendarDate);
+            calendar.setTime(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        int currentMonth = calendar.get(Calendar.MONTH) + 1;
+        int currentYear = calendar.get(Calendar.YEAR);
+        final int[] totalExpenseThisMonth = {0}; // Change to an array to be effectively final
+
+        // Calculate total expenses for the current month for the specified group
+        db.collection("users").document(userId)
+                .collection("Expenses")
+                .whereEqualTo("group", group)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String dateStr = document.getString("calendar");
+                            try {
+                                Date docDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(dateStr);
+                                Calendar docCalendar = Calendar.getInstance();
+                                docCalendar.setTime(docDate);
+                                int docMonth = docCalendar.get(Calendar.MONTH) + 1;
+                                int docYear = docCalendar.get(Calendar.YEAR);
+
+                                if (docMonth == currentMonth && docYear == currentYear) {
+                                    int amount = document.getLong("amount").intValue();
+                                    totalExpenseThisMonth[0] += amount; // Update the array element
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        // Retrieve budget of the group from Firestore
+                        db.collection("users").document(userId)
+                                .collection("Budgets")
+                                .whereEqualTo("group", group)
+                                .get()
+                                .addOnCompleteListener(budgetTask -> {
+                                    if (budgetTask.isSuccessful() && !budgetTask.getResult().isEmpty()) {
+                                        int groupBudget = budgetTask.getResult().getDocuments().get(0)
+                                                .getLong("amount").intValue();
+
+                                        // Check if total expense exceeds the budget
+                                        if (totalExpenseThisMonth[0] > groupBudget) { // Use the array's element
+                                            // Save notification to Firestore
+
+                                            int difference = totalExpenseThisMonth[0] - groupBudget;
+                                            NumberFormat numberFormat = NumberFormat.getInstance(Locale.getDefault());
+                                            String formattedDifference = numberFormat.format(difference);
+
+                                            String title = "Over budget!";
+                                            String content = "Group " + group + " has gone over budget " + formattedDifference + " VND.";
+                                            String time = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault()).format(new Date());
+
+                                            Notification notification = new Notification(title, content, time);
+                                            db.collection("users").document(userId)
+                                                    .collection("Notifications")
+                                                    .add(notification)
+                                                    .addOnSuccessListener(documentReference -> {
+                                                        Log.i("check", "Notification added with ID: " + documentReference.getId());
+
+                                                        // Send local notification to the user
+                                                        NotificationHelper.sendNotificationToUser(context, title, content);
+                                                    });
+                                        }
+                                        if (totalExpenseThisMonth[0] == groupBudget) { // Use the array's element
+                                            // Save notification to Firestore
+                                            String title = "Spent all this month's budget!";
+                                            String content = "Group " + group + "has spent all the budget this month "  + " VND.";
+                                            String time = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault()).format(new Date());
+
+                                            Notification notification = new Notification(title, content, time);
+                                            db.collection("users").document(userId)
+                                                    .collection("Notifications")
+                                                    .add(notification)
+                                                    .addOnSuccessListener(documentReference -> {
+                                                        Log.i("check", "Notification added with ID: " + documentReference.getId());
+
+                                                        // Send local notification to the user
+                                                        NotificationHelper.sendNotificationToUser(context, title, content);
+                                                    });
+                                        }
+                                    }
+                                });
+                    }
+                });
     }
 
 

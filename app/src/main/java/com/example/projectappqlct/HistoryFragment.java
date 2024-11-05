@@ -106,6 +106,7 @@ public class HistoryFragment extends Fragment {
         viewPager = view.findViewById(R.id.viewPagerHistory);
         db = FirebaseFirestore.getInstance();
 
+
         // Create adapter for ViewPager
         adapter = new ExpenseViewPagerAdapter(this);
         viewPager.setAdapter(adapter);
@@ -228,8 +229,5 @@ public class HistoryFragment extends Fragment {
             tab.setText("No data");
         }).attach();
     }
-
-
-
 
 }

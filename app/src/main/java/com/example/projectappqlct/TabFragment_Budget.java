@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ekn.gruzer.gaugelibrary.ArcGauge;
+import com.example.projectappqlct.Adapter.BudgetAdapter;
 import com.example.projectappqlct.Model.Budget;
 import com.example.projectappqlct.Model.Expense;
 import com.example.projectappqlct.Model.Option;

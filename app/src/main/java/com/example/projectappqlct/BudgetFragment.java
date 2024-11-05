@@ -1,4 +1,5 @@
 package com.example.projectappqlct;
+
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
@@ -17,7 +18,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 /**
  * A simple {@link Fragment} subclass.

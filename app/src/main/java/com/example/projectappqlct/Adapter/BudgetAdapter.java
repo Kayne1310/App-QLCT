@@ -1,4 +1,4 @@
-package com.example.projectappqlct;
+package com.example.projectappqlct.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -18,12 +18,15 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.projectappqlct.DetailActivity;
 import com.example.projectappqlct.Model.Budget;
 import com.example.projectappqlct.Model.Expense;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.example.projectappqlct.R;
+
 
 import java.text.NumberFormat;
 import java.util.ArrayList;

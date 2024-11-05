@@ -18,6 +18,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.example.projectappqlct.Adapter.BudgetAdapter;
 import com.example.projectappqlct.Helper.DemoBase;
 import androidx.activity.EdgeToEdge;
 import androidx.core.content.ContextCompat;
@@ -148,6 +149,7 @@ public class DetailActivity extends DemoBase {
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
+
         // Lấy dữ liệu Budget từ Intent
         budget = (Budget) getIntent().getSerializableExtra("Object_budget");
 
@@ -164,6 +166,7 @@ public class DetailActivity extends DemoBase {
             fetchMatchingExpenses(budget, totalExpense -> {
                 getDaysWithExpenses(user.getUid(), budget.getGroup(), days -> {
                     int daysSinceStart = days; // Nhận số ngày từ callback
+
 
                     // Kiểm tra nếu tổng chi phí lớn hơn 0 và số ngày trôi qua lớn hơn 0
                     int actualDailyExpense = (totalExpense > 0 && daysSinceStart > 0) ? (totalExpense / daysSinceStart) : 0;

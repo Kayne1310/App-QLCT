@@ -7,11 +7,13 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.projectappqlct.HomeFragment;
 import com.example.projectappqlct.MainActivity;
 import com.example.projectappqlct.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -53,24 +56,44 @@ public class LoginActivity extends AppCompatActivity {
         forgotPassword = findViewById(R.id.forgot_password);
 
         auth = FirebaseAuth.getInstance();
+        // Kiểm tra trạng thái đăng nhập
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+
+        if (isLoggedIn) {
+            // Đã đăng nhập, chuyển thẳng tới MainActivity
+            navigateToMainActivity();
+        }
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String email = loginEmail.getText().toString();
                 String pass = loginPassword.getText().toString();
+
+                Log.d("LoginActivity", "Attempting to login with Email: " + email);
+
                 if (!email.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     if (!pass.isEmpty()) {
                         auth.signInWithEmailAndPassword(email, pass)
                                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                                     @Override
                                     public void onSuccess(AuthResult authResult) {
-                                        Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                                        Log.d("LoginActivity", "Login Successful");
+
+                                        // Lưu trạng thái đăng nhập vào SharedPreferences
+                                        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                        editor.putBoolean("isLoggedIn", true); // Lưu trạng thái đăng nhập
+                                        editor.apply();
+                                        Toast.makeText(LoginActivity.this, "Login Successful !", Toast.LENGTH_SHORT).show();
                                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                         finish();
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
+                                        Log.e("LoginActivity", "Login Failed: " + e.getMessage());
                                         Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
                                     }
                                 });
@@ -84,6 +107,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+
         signupRedirectText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,5 +157,11 @@ public class LoginActivity extends AppCompatActivity {
                 dialog.show();
             }
         });
+    }
+
+    private void navigateToMainActivity() {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish(); // Đóng LoginActivity để không quay lại
     }
 }

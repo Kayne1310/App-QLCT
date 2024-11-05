@@ -1,7 +1,14 @@
 package com.example.projectappqlct;
 
+
+import static android.content.ContentValues.TAG;
+
+
+import android.content.SharedPreferences;
+
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -23,8 +30,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.projectappqlct.Login.LoginActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,6 +53,8 @@ public class ProfileFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private TextView email;
+    private FirebaseFirestore db;
+    private TextView username;
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -78,38 +91,85 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
         FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
+        String userString=user.getUid();
         if(user!=null){
             String getEmailUser=user.getEmail();
              email=view.findViewById(R.id.textEmail);
-            email.setText(getEmailUser);
 
         }
 
+        db=FirebaseFirestore.getInstance();
+        username=view.findViewById(R.id.username);
 
-        LinearLayout notificant=view.findViewById(R.id.notificant);
-        notificant.setOnClickListener(new View.OnClickListener() {
+        db.collection("users").document(userString)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DocumentSnapshot document=task.getResult();
+
+                            if(document.exists()){
+                                String usernameString=document.getString("name");
+                                username.setText(usernameString);
+                            }
+
+                        }
+                        else{
+                            Log.w(TAG,"Error get username",task.getException());
+                        }
+                    }
+                });
+
+
+
+        LinearLayout faq = view.findViewById(R.id.faq_question);
+        faq.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("check","test");
-
-
+                Intent intent = new Intent(getActivity(), FAQ.class);
+                startActivity(intent);
             }
         });
 
 
-        LinearLayout logout=view.findViewById(R.id.logout);
+
+        LinearLayout logout = view.findViewById(R.id.logout);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Đăng xuất khỏi Firebase
                 FirebaseAuth.getInstance().signOut();
-                // Đăng xuất thành công, có thể chuyển hướng người dùng về màn hình login
-                Intent intent = new Intent(getActivity(), LoginActivity.class); // Chuyển sang LoginActivity (hoặc bất kỳ activity nào bạn muốn)
+
+                // Cập nhật trạng thái đăng nhập trong SharedPreferences
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", getActivity().MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("isLoggedIn", false);
+                editor.apply();
+
+                // Chuyển người dùng về màn hình Login
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 getActivity().finish();
             }
         });
+
+
+
+
+        LinearLayout Notificant=view.findViewById(R.id.notificant);
+
+        Notificant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getActivity(), NotificationActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         LinearLayout editProfile = view.findViewById(R.id.editprofile);
         editProfile.setOnClickListener(new View.OnClickListener() {
@@ -119,6 +179,8 @@ public class ProfileFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+
 
 
 

@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".HistoryFragment"
     android:background="#E4E0E9"
+
     android:orientation="vertical">
 
     <LinearLayout
@@ -31,10 +32,7 @@
             android:layout_marginBottom="10dp"
             android:textSize="20dp"
             android:textStyle="bold" />
-
-
     </LinearLayout>
-
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayoutHistory"

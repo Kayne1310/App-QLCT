@@ -28,6 +28,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         return fragmentList.get(position);
     }
 
+
     @Override
     public int getCount() {
         return fragmentList.size(); // Sử dụng kích thước danh sách để xác định số lượng tab
