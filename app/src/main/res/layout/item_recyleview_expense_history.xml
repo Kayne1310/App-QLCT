@@ -69,7 +69,9 @@
                 android:layout_width="37dp"
                 android:layout_height="60dp"
                 android:layout_marginLeft="10dp"
-                app:srcCompat="@drawable/baseline_drive_file_rename_outline_24" />
+                app:srcCompat="@drawable/baseline_drive_file_rename_outline_24"
+                android:scaleType="fitCenter"
+                />
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"

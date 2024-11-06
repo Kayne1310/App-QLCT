@@ -2,30 +2,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="8dp"
-    android:gravity="center"
+    android:clickable="true"
     android:focusable="true"
-    android:clickable="true">
+    android:orientation="vertical"
+    android:paddingTop="5dp">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingBottom="2dp">
 
-    <ImageView
-        android:id="@+id/iconImageView"
-        android:layout_width="0dp"
-        android:layout_height="30dp"
-        android:layout_marginEnd="8dp"
-        android:layout_weight="1"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/baseline_drive_file_rename_outline_24" />
+        <ImageView
+            android:id="@+id/iconImageView"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/baseline_drive_file_rename_outline_24" />
+
+        <TextView
+            android:id="@+id/nameTextView"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="6"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:paddingLeft="8dp"
+            android:text="Option"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/nameTextView"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_weight="6"
-        android:background="?attr/selectableItemBackground"
-        android:padding="10dp"
-        android:text="Option"
-        android:textSize="20sp"
-        android:textStyle="bold"/>
+        android:id="@+id/textView5"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="#D3D0D0" />
 </LinearLayout>

@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.ekn.gruzer.gaugelibrary.ArcGauge;
 import com.example.projectappqlct.Adapter.BudgetAdapter;
+import com.example.projectappqlct.Adapter.OptionAdapter;
 import com.example.projectappqlct.Helper.CustomValueFormatter;
 import com.example.projectappqlct.Model.Budget;
 import com.example.projectappqlct.Model.Expense;
@@ -599,8 +600,8 @@ public class TabFragment_Budget extends Fragment {
             dialog2 = createDialog(R.layout.dialog_selectgroup);
         }
 
-        Button buttonGrn = dialog2.findViewById(R.id.btnGrn);
-        buttonGrn.setOnClickListener(v -> {
+        TextView textViewGrn = dialog2.findViewById(R.id.tv_Grn);
+        textViewGrn.setOnClickListener(v -> {
             dialog2.dismiss();  // Đóng dialog 2
             showDialog3();      // Mở dialog 3
         });
@@ -666,32 +667,32 @@ public class TabFragment_Budget extends Fragment {
         recyclerView.setAdapter(optionAdapter);
 
         // Thêm divider giữa các item
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
+//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
 
         // Nếu muốn sử dụng divider tùy chỉnh, hãy đặt drawable của bạn
-        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.divider));
+//        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.divider));
 
         // Thêm divider vào RecyclerView
-        recyclerView.addItemDecoration(dividerItemDecoration);
+//        recyclerView.addItemDecoration(dividerItemDecoration);
 
 
         // Listener chung cho tất cả các Button trong Dialog 2
         View.OnClickListener optionClickListener = v -> {
-            handleOptionSelected((Button) v);   // Cập nhật text và mở lại Dialog 1
+            handleOptionSelected((TextView) v);   // Cập nhật text và mở lại Dialog 1
         };
-        dialog2.findViewById(R.id.btnEat).setOnClickListener(optionClickListener);
-        dialog2.findViewById(R.id.btnShopping).setOnClickListener(optionClickListener);
-        dialog2.findViewById(R.id.btnFamily).setOnClickListener(optionClickListener);
-        dialog2.findViewById(R.id.btnHealthy).setOnClickListener(optionClickListener);
-        dialog2.findViewById(R.id.btnVehicle).setOnClickListener(optionClickListener);
-        dialog2.findViewById(R.id.btnSport).setOnClickListener(optionClickListener);
-        dialog2.findViewById(R.id.btnEdu).setOnClickListener(optionClickListener);
-        dialog2.findViewById(R.id.btnEntertainment).setOnClickListener(optionClickListener);
-        dialog2.findViewById(R.id.btnGifts).setOnClickListener(optionClickListener);
-        dialog2.findViewById(R.id.btnInvest).setOnClickListener(optionClickListener);
-        dialog2.findViewById(R.id.btnMakeup).setOnClickListener(optionClickListener);
-        dialog2.findViewById(R.id.btnDonate).setOnClickListener(optionClickListener);
-        dialog2.findViewById(R.id.btnOther).setOnClickListener(optionClickListener);
+        dialog2.findViewById(R.id.tv_Eat).setOnClickListener(optionClickListener);
+        dialog2.findViewById(R.id.tv_Shopping).setOnClickListener(optionClickListener);
+        dialog2.findViewById(R.id.tv_Family).setOnClickListener(optionClickListener);
+        dialog2.findViewById(R.id.tv_Healthy).setOnClickListener(optionClickListener);
+        dialog2.findViewById(R.id.tv_Vehicle).setOnClickListener(optionClickListener);
+        dialog2.findViewById(R.id.tv_Sport).setOnClickListener(optionClickListener);
+        dialog2.findViewById(R.id.tv_Edu).setOnClickListener(optionClickListener);
+        dialog2.findViewById(R.id.tv_Entertainment).setOnClickListener(optionClickListener);
+        dialog2.findViewById(R.id.tv_Gifts).setOnClickListener(optionClickListener);
+        dialog2.findViewById(R.id.tv_Invest).setOnClickListener(optionClickListener);
+        dialog2.findViewById(R.id.tv_Makeup).setOnClickListener(optionClickListener);
+        dialog2.findViewById(R.id.tv_Donate).setOnClickListener(optionClickListener);
+        dialog2.findViewById(R.id.tv_Other).setOnClickListener(optionClickListener);
         dialog2.show();
 
     }
@@ -873,7 +874,7 @@ public class TabFragment_Budget extends Fragment {
         dialog4.show();
     }
 
-    private void handleOptionSelected(Button selectedButton) {
+    private void handleOptionSelected(TextView selectedButton) {
         if (dialog2 != null && dialog2.isShowing()) {  // Đóng dialog2 nếu đang mở
             dialog2.dismiss();
         }

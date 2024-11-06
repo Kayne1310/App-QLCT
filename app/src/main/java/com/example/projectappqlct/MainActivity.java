@@ -1,7 +1,6 @@
 package com.example.projectappqlct;
 
 
-import static android.content.ContentValues.TAG;
 import static com.example.projectappqlct.Helper.NotificationHelper.sendNotificationToUser;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -36,17 +35,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager.widget.ViewPager;
 import android.text.TextWatcher;
-import com.example.projectappqlct.Helper.NotificationHelper;
+
+import com.example.projectappqlct.Adapter.OptionAdapter;
 import com.example.projectappqlct.Login.LoginActivity;
 import com.example.projectappqlct.Model.Expense;
 import com.example.projectappqlct.Model.Option;
 import com.example.projectappqlct.Model.Notification;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -109,9 +106,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         viewPager=findViewById(R.id.view_pager);
+
         bottomNavigationView=findViewById(R.id.bottomNavigationView);
         ViewPagerAdapter adapter=new ViewPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         viewPager.setAdapter(adapter);
+
+
 
 
         // Kiểm tra Intent để xác định Fragment cần hiển thị
@@ -389,11 +389,19 @@ public class MainActivity extends AppCompatActivity {
                                                 updateIntent = new Intent("EXPENSE_ADDED");
 
                                             }
-                                            else if(currentPage==3){
+
+
+                                            else if
+                                            (currentPage==2){
                                                 updateIntent=new Intent("Load_Buget");
                                             }
+
+                                            if(currentPage!=3){
+
+
                                             // Gửi Intent dựa trên trang hiện tại
                                             LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(updateIntent);
+                                            }
 
                                             Toast.makeText(MainActivity.this, "Add expense successful", Toast.LENGTH_SHORT).show();
                                             checkBudgetLimit(getApplicationContext(), userString, expense.getGroup(), expense.getAmount(), expense.getCalendar());
@@ -415,8 +423,8 @@ public class MainActivity extends AppCompatActivity {
                     dialog2 = createDialog(R.layout.dialog_selectgroup);
                 }
 
-                Button buttonGrn = dialog2.findViewById(R.id.btnGrn);
-                buttonGrn.setOnClickListener(v -> {
+                TextView textViewGrn = dialog2.findViewById(R.id.tv_Grn);
+                textViewGrn.setOnClickListener(v -> {
                     dialog2.dismiss();  // Đóng dialog 2
                     showDialog3();      // Mở dialog 3
                 });
@@ -482,33 +490,24 @@ public class MainActivity extends AppCompatActivity {
                 optionAdapter = new OptionAdapter(optionList, itemClickListener);
                 recyclerView.setAdapter(optionAdapter);
 
-                // Thêm divider giữa các item
-                DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
-
-                // Nếu muốn sử dụng divider tùy chỉnh, hãy đặt drawable của bạn
-                dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.divider));
-
-                // Thêm divider vào RecyclerView
-                recyclerView.addItemDecoration(dividerItemDecoration);
-
 
                 // Listener chung cho tất cả các Button trong Dialog 2
                 View.OnClickListener optionClickListener = v -> {
-                    handleOptionSelected((Button) v);   // Cập nhật text và mở lại Dialog 1
+                    handleOptionSelected((TextView) v);   // Cập nhật text và mở lại Dialog 1
                 };
-                dialog2.findViewById(R.id.btnEat).setOnClickListener(optionClickListener);
-                dialog2.findViewById(R.id.btnShopping).setOnClickListener(optionClickListener);
-                dialog2.findViewById(R.id.btnFamily).setOnClickListener(optionClickListener);
-                dialog2.findViewById(R.id.btnHealthy).setOnClickListener(optionClickListener);
-                dialog2.findViewById(R.id.btnVehicle).setOnClickListener(optionClickListener);
-                dialog2.findViewById(R.id.btnSport).setOnClickListener(optionClickListener);
-                dialog2.findViewById(R.id.btnEdu).setOnClickListener(optionClickListener);
-                dialog2.findViewById(R.id.btnEntertainment).setOnClickListener(optionClickListener);
-                dialog2.findViewById(R.id.btnGifts).setOnClickListener(optionClickListener);
-                dialog2.findViewById(R.id.btnInvest).setOnClickListener(optionClickListener);
-                dialog2.findViewById(R.id.btnMakeup).setOnClickListener(optionClickListener);
-                dialog2.findViewById(R.id.btnDonate).setOnClickListener(optionClickListener);
-                dialog2.findViewById(R.id.btnOther).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.tv_Eat).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.tv_Shopping).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.tv_Family).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.tv_Healthy).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.tv_Vehicle).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.tv_Sport).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.tv_Edu).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.tv_Entertainment).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.tv_Gifts).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.tv_Invest).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.tv_Makeup).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.tv_Donate).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.tv_Other).setOnClickListener(optionClickListener);
                 dialog2.show();
             }
 
@@ -666,7 +665,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
 
-            private void handleOptionSelected(Button selectedButton) {
+            private void handleOptionSelected(TextView selectedButton) {
                 if (dialog2 != null && dialog2.isShowing()) {  // Đóng dialog2 nếu đang mở
                     dialog2.dismiss();
                 }
