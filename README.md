@@ -2,9 +2,12 @@
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/30ab3ccc-177f-4ed9-8a3a-dc49a947d6a3" alt="Expense Management App" />
-    <img src="https://github.com/user-attachments/assets/5f6b5625-e7b8-4e47-8fff-b41b18f7ffd1" alt="Expense Management App" />
 
 
+
+</p>
+<p align="center">
+      <img src="https://github.com/user-attachments/assets/5f6b5625-e7b8-4e47-8fff-b41b18f7ffd1" alt="Expense Management App" />
 </p>
 
 A simple and effective Android application to manage and track personal expenses. Organize your expenses by category, view insightful reports, and stay on top of your budget.
