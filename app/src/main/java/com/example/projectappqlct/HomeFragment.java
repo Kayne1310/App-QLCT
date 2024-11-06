@@ -659,5 +659,148 @@ public class HomeFragment extends Fragment {
         }
     };
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        Log.e("Test Load","Home Fragment");
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e("Test reload","Home Fragment");
+        queryData("Expenses", new QueryCallBack() {
+            @Override
+            public void onQueryCompleteTotal(int totalAmount) {
+
+            }
+
+            @Override
+            public void onQueryCompleteExpense(int totalExpenseThisMonth, int totalExpenseLastMonth, List<Expense> allExpensesThisMonth,Map<String, GroupExpense> groupDataMap) {
+
+                //Handle Recycerview Expense
+                NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
+                String formattedAmount = numberFormat.format(totalExpenseThisMonth);
+
+
+                moneyexpense.setText(String.valueOf(formattedAmount + " VND"));
+
+
+                // Kiểm tra các trường hợp cho totalExpenseThisMonth và totalExpenseLastMonth
+                if (totalExpenseLastMonth == 0) {
+                    if (totalExpenseThisMonth > 0) {
+                        // Nếu tháng này có chi tiêu nhưng tháng trước không có
+                        txtpercent.setText("100.00%");
+                        txtpercent.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_trending_up_24, 0, 0, 0);
+                    } else {
+                        // Cả hai tháng đều không có chi tiêu
+                        txtpercent.setText("0.00%");
+                    }
+                } else if (totalExpenseThisMonth == 0) {
+                    // Nếu tháng này không có chi tiêu nhưng tháng trước có
+                    txtpercent.setText("0.00%");
+                    txtpercent.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_trending_down_24, 0, 0, 0);
+                } else {
+                    // Cả hai tháng đều có chi tiêu
+                    float percent = ((float) (totalExpenseThisMonth - totalExpenseLastMonth) / totalExpenseLastMonth) * 100;
+                    percent = Math.min(percent, 100); // Đảm bảo phần trăm không vượt quá 100%
+
+                    // Đặt giá trị phần trăm vào TextView
+                    txtpercent.setText(String.format(Locale.US, "%.2f%%", percent));
+
+                    if (totalExpenseThisMonth > totalExpenseLastMonth) {
+                        // Nếu tháng này chi tiêu nhiều hơn tháng trước
+                        txtpercent.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_trending_up_24, 0, 0, 0);
+                    } else {
+                        // Nếu tháng này chi tiêu ít hơn hoặc bằng tháng trước
+                        txtpercent.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_trending_down_24, 0, 0, 0);
+                    }
+                }
+
+                //bar Chart
+                // Preparing data entries for last month and this month
+                ArrayList<BarEntry> entries = new ArrayList<>();
+                entries.add(new BarEntry(0, totalExpenseLastMonth));  // Chi tiêu tháng trước
+                entries.add(new BarEntry(1, totalExpenseThisMonth));  // Chi tiêu tháng này
+
+                // Customizing Y-axis
+                YAxis yAxisLeft = barChart.getAxisLeft();
+                yAxisLeft.setAxisMinimum(0f);  // Bắt đầu từ 0
+                yAxisLeft.setDrawGridLines(false);  // Ẩn đường lưới
+                yAxisLeft.setDrawAxisLine(false);   // Ẩn trục Y bên trái
+                yAxisLeft.setEnabled(false);        // Không hiển thị nhãn bên trục Y trái
+
+                // Disabling right Y-axis
+                YAxis yAxisRight = barChart.getAxisRight();
+                yAxisRight.setEnabled(false);
+
+                // Customizing X-axis
+                XAxis xAxis = barChart.getXAxis();
+                xAxis.setValueFormatter(new IndexAxisValueFormatter(xValues));
+                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                xAxis.setDrawGridLines(false);  // Ẩn đường lưới dọc
+                xAxis.setDrawAxisLine(false);
+                xAxis.setGranularity(1f);       // Đảm bảo chỉ số không bị lặp
+                xAxis.setLabelCount(xValues.size());// Ẩn trục X
+
+                // Setting up data set
+                BarDataSet dataSet = new BarDataSet(entries, "");
+                dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+                dataSet.setValueTypeface(Typeface.SANS_SERIF);
+                dataSet.setValueTextSize(12f); // Hiển thị giá trị trên các thanh
+
+
+                // Tạo ValueFormatter tùy chỉnh để thêm "VND"
+                dataSet.setValueFormatter(new ValueFormatter() {
+                    @Override
+                    public String getBarLabel(BarEntry barEntry) {
+                        float value = barEntry.getY();
+                        if (value >= 1_000_000) {
+                            return String.format("%.1fM", value / 1000000); // Triệu
+                        } else if (value >= 1_000) {
+                            return String.format("%.0fK", value / 1000); // Nghìn
+                        } else {
+                            return String.valueOf((int) value); // Giá trị nguyên nếu nhỏ hơn 1000
+                        }
+                    }
+                });
+
+                // Assigning data to chart
+                BarData barData = new BarData(dataSet);
+                barData.setBarWidth(0.3f);
+                barChart.setData(barData);
+
+                // Disable chart description
+                barChart.getDescription().setEnabled(false);
+                barChart.getLegend().setEnabled(false);
+
+                // Refresh chart
+                barChart.invalidate();
+
+                // Initialize RecyclerViews
+
+                // Add data to expenseList here
+                expenseAdapter = new ExpenseHomeAdapter(groupDataMap, totalExpenseThisMonth);
+                expenseRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                expenseRecyclerView.setAdapter(expenseAdapter);
+                checkEmptyData(groupDataMap, emptyTextView, expenseRecyclerView);
+
+                // Add data to transactionList here
+
+                transactionAdapter = new TransactionRecentAdapter(allExpensesThisMonth);
+
+
+                //Handle Recyclerview Transaction recent
+
+                transactionRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                transactionRecyclerView.setAdapter(transactionAdapter);
+
+                checkEmptyData(allExpensesThisMonth, emptyTransaction, transactionRecyclerView);
+
+
+            }
+
+
+        });
+    }
 }

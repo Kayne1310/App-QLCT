@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager2.widget.ViewPager2;
@@ -247,8 +249,18 @@ public class BudgetFragment extends Fragment {
 //        }).attach();
 //    }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        Log.e("Test Load","Budget Fragment");
+    }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e("Test reload","Budget Fragment");
+        loadBudgetsAndSetupTabs();
+    }
 
 }
 

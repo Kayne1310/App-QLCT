@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView=findViewById(R.id.bottomNavigationView);
         ViewPagerAdapter adapter=new ViewPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(0);
 
 
 
@@ -897,6 +898,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+
+
 
 
 }

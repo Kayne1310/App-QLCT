@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager2.widget.ViewPager2;
@@ -315,6 +316,20 @@ public class HistoryFragment extends Fragment {
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(expenseAddedReceiver);
     }
 
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        Log.e("Test Load","History Fragment");
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e("Test reload","History Fragment");
+        loadHistoryAndSetupTabs();
+    }
 
 
 
