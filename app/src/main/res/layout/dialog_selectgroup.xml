@@ -67,18 +67,19 @@
                     android:textSize="10dp"/>
 
 
-                <Button
-                    android:id="@+id/btnGrn"
+                <TextView
+                    android:id="@+id/tv_Grn"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:backgroundTint="#00B00020"
                     android:drawableLeft="@drawable/baseline_add_circle_outline_24"
-                    android:paddingRight="210dp"
-                    android:shadowRadius="1"
+                    android:drawablePadding="8dp"
+                    android:gravity="center_vertical"
                     android:text="Group new"
+                    android:paddingLeft="20dp"
                     android:textColor="#34AB35"
-                    android:textColorLink="@color/design_default_color_on_primary"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/textViewabcxyz"
@@ -96,82 +97,101 @@
 <!--                    android:layout_width="match_parent"-->
 <!--                    android:layout_height="10dp"-->
 <!--                    android:background="#D3D0D0" />-->
-                <Button
-                    android:backgroundTint="#00B00020"
-                    android:id="@+id/btnEat"
+                <TextView
+                    android:id="@+id/tv_Eat"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
-                    android:textColor="#000000"
+                    android:backgroundTint="#00B00020"
                     android:drawableLeft="@drawable/eat"
-                    android:paddingRight="270dp"
+                    android:drawablePadding="20dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:text="Eat"
+                    android:textColor="#000000"
                     android:textSize="16sp"
-                    android:text="Eat" />
+                    android:textStyle="bold" />
+
 
                 <TextView
                     android:id="@+id/textView5"
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
                     android:background="#D3D0D0" />
-                <Button
-                    android:backgroundTint="#00B00020"
-                    android:id="@+id/btnShopping"
+
+                <TextView
+                    android:id="@+id/tv_Shopping"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
-                    android:textColor="#000000"
-
+                    android:backgroundTint="#00B00020"
                     android:drawableLeft="@drawable/shopping"
-                    android:paddingRight="220dp"
+                    android:drawablePadding="20dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:text="Shopping"
+                    android:textColor="#000000"
                     android:textSize="16sp"
-                    android:text="Shopping" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textView6"
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
                     android:background="#D3D0D0" />
-                <Button
-                    android:backgroundTint="#00B00020"
-                    android:id="@+id/btnFamily"
+
+
+                <TextView
+                    android:id="@+id/tv_Family"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
-                    android:textColor="#000000"
-
+                    android:backgroundTint="#00B00020"
                     android:drawableLeft="@drawable/family"
-                    android:paddingRight="240dp"
+                    android:drawablePadding="20dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:text="Family"
+                    android:textColor="#000000"
                     android:textSize="16sp"
-                    android:text="Family" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textView7"
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
                     android:background="#D3D0D0" />
-                <Button
-                    android:backgroundTint="#00B00020"
-                    android:id="@+id/btnHealthy"
+
+                <TextView
+                    android:id="@+id/tv_Healthy"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
-                    android:textColor="#000000"
+                    android:backgroundTint="#00B00020"
                     android:drawableLeft="@drawable/healthy"
-                    android:paddingRight="230dp"
+                    android:drawablePadding="20dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:text="Healthy"
+                    android:textColor="#000000"
                     android:textSize="16sp"
-                    android:text="Healthy" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textView8"
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
                     android:background="#D3D0D0" />
-                <Button
-                    android:backgroundTint="#00B00020"
-                    android:id="@+id/btnVehicle"
+
+                <TextView
+                    android:id="@+id/tv_Vehicle"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
-                    android:textColor="#000000"
+                    android:backgroundTint="#00B00020"
                     android:drawableLeft="@drawable/vehicle"
-                    android:paddingRight="230dp"
+                    android:drawablePadding="20dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:text="Vehicle"
+                    android:textColor="#000000"
                     android:textSize="16sp"
-                    android:text="Vehicle" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textView9"
@@ -179,129 +199,159 @@
                     android:layout_height="10dp"
                     android:background="#D3D0D0" />
 
-                <Button
-                    android:backgroundTint="#00B00020"
-                    android:id="@+id/btnSport"
+                <TextView
+                    android:id="@+id/tv_Sport"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
-                    android:textColor="#000000"
-
+                    android:backgroundTint="#00B00020"
                     android:drawableLeft="@drawable/sport"
-                    android:paddingRight="240dp"
+                    android:drawablePadding="20dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:text="Sport"
+                    android:textColor="#000000"
                     android:textSize="16sp"
-                    android:text="Sport" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textView10"
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
                     android:background="#D3D0D0" />
-                <Button
-                    android:backgroundTint="#00B00020"
-                    android:id="@+id/btnEdu"
+
+                <TextView
+                    android:id="@+id/tv_Edu"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
-                    android:textColor="#000000"
+                    android:backgroundTint="#00B00020"
                     android:drawableLeft="@drawable/education"
-                    android:paddingRight="200dp"
+                    android:drawablePadding="20dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:text="Education"
+                    android:textColor="#000000"
                     android:textSize="16sp"
-                    android:text="Education" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textView11"
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
                     android:background="#D3D0D0" />
-                <Button
-                    android:backgroundTint="#00B00020"
-                    android:id="@+id/btnEntertainment"
+
+                <TextView
+                    android:id="@+id/tv_Entertainment"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
-                    android:textColor="#000000"
+                    android:backgroundTint="#00B00020"
                     android:drawableLeft="@drawable/entertainment"
-                    android:paddingRight="170dp"
+                    android:drawablePadding="20dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:text="Entertainment"
+                    android:textColor="#000000"
                     android:textSize="16sp"
-                    android:text="Entertainment" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textView12"
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
                     android:background="#D3D0D0" />
-                <Button
-                    android:backgroundTint="#00B00020"
-                    android:id="@+id/btnGifts"
+
+                <TextView
+                    android:id="@+id/tv_Gifts"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
-                    android:textColor="#000000"
+                    android:backgroundTint="#00B00020"
                     android:drawableLeft="@drawable/gifts"
-                    android:paddingRight="250dp"
+                    android:drawablePadding="20dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:text="Gifts"
+                    android:textColor="#000000"
                     android:textSize="16sp"
-                    android:text="Gifts" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textView13"
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
                     android:background="#D3D0D0" />
-                <Button
-                    android:backgroundTint="#00B00020"
-                    android:id="@+id/btnInvest"
+
+                <TextView
+                    android:id="@+id/tv_Invest"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
-                    android:textColor="#000000"
+                    android:backgroundTint="#00B00020"
                     android:drawableLeft="@drawable/invest"
-                    android:paddingRight="240dp"
+                    android:drawablePadding="20dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:text="Invest"
+                    android:textColor="#000000"
                     android:textSize="16sp"
-                    android:text="Invest" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textView14"
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
                     android:background="#D3D0D0" />
-                <Button
-                    android:backgroundTint="#00B00020"
-                    android:id="@+id/btnMakeup"
+
+                <TextView
+                    android:id="@+id/tv_Makeup"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
-                    android:textColor="#000000"
+                    android:backgroundTint="#00B00020"
                     android:drawableLeft="@drawable/makeup"
-                    android:paddingRight="220dp"
+                    android:drawablePadding="20dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:text="Make up"
+                    android:textColor="#000000"
                     android:textSize="16sp"
-                    android:text="Make up" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textView15"
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
                     android:background="#D3D0D0" />
-                <Button
-                    android:backgroundTint="#00B00020"
-                    android:id="@+id/btnDonate"
+
+                <TextView
+                    android:id="@+id/tv_Donate"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
-                    android:textColor="#000000"
+                    android:backgroundTint="#00B00020"
                     android:drawableLeft="@drawable/donate"
-                    android:paddingRight="230dp"
+                    android:drawablePadding="20dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:text="Donate"
+                    android:textColor="#000000"
                     android:textSize="16sp"
-                    android:text="Donate" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textView16"
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
                     android:background="#D3D0D0" />
-                <Button
-                    android:backgroundTint="#00B00020"
-                    android:id="@+id/btnOther"
+
+                <TextView
+                    android:id="@+id/tv_Other"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
-                    android:textColor="#000000"
+                    android:backgroundTint="#00B00020"
                     android:drawableLeft="@drawable/other"
-                    android:paddingRight="240dp"
+                    android:drawablePadding="20dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:text="Other"
+                    android:textColor="#000000"
                     android:textSize="16sp"
-                    android:text="Other" />
+                    android:textStyle="bold" />
 
             </LinearLayout>
         </ScrollView>
