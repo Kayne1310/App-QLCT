@@ -1,11 +1,6 @@
 # Expense Management App
 
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/30ab3ccc-177f-4ed9-8a3a-dc49a947d6a3" alt="Expense Management App" />
 
-
-
-</p>
 <p align="center">
       <img src="https://github.com/user-attachments/assets/5f6b5625-e7b8-4e47-8fff-b41b18f7ffd1" alt="Expense Management App" />
 </p>
