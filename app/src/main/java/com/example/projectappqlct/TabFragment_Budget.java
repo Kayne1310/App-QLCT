@@ -770,7 +770,7 @@ public class TabFragment_Budget extends Fragment {
 
             // Kiểm tra tên option không trống
             if (selectedText.isEmpty()) {
-                Toast.makeText(dialog3.getContext(), "Tên option không được để trống!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(dialog3.getContext(), "The name option cannot be left blank!", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -819,13 +819,13 @@ public class TabFragment_Budget extends Fragment {
                     .collection("Options")
                     .add(option)
                     .addOnSuccessListener(documentReference -> {
-                        Toast.makeText(getActivity(), "Option đã được lưu!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Save successful!", Toast.LENGTH_SHORT).show();
 
                         // Sau khi lưu, tải lại danh sách options để cập nhật RecyclerView trong dialog2
                         loadOptionsFromFirestore();
                     })
                     .addOnFailureListener(e ->
-                            Toast.makeText(getActivity(), "Không thể lưu option.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(getActivity(), "Dont save   option.", Toast.LENGTH_SHORT).show()
                     );
         }
     }

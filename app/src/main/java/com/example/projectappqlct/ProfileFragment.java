@@ -4,6 +4,7 @@ package com.example.projectappqlct;
 import static android.content.ContentValues.TAG;
 
 
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import android.os.Bundle;
@@ -213,5 +214,18 @@ public class ProfileFragment extends Fragment {
 
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        Log.e("Test Load","Profile Fragment");
+    }
+
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e("Test reload","Profile Fragment");
+    }
 
 }
