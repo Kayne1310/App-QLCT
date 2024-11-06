@@ -130,6 +130,7 @@ public class NotificationActivity extends AppCompatActivity {
                         }
                     }
                 });
+
         // Khởi tạo danh sách thông báo
 
 
