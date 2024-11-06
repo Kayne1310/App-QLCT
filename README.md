@@ -19,7 +19,7 @@ A simple and effective Android application to manage and track personal expenses
 - **Categorization**: Organize expenses by custom categories.
 - **Reports & Insights**: View monthly spending trends and category breakdowns.
 - **Budget Management**: Set budgets to monitor spending.
-- **Offline Access**: All data is stored locally, so no internet is needed.
+- **Online Access**: All data is stored online, so  internet is needed.
 
 ## Prerequisites
 - **Android Studio**: Latest stable version.
