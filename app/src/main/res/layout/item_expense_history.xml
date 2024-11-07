@@ -59,9 +59,11 @@
         <ImageView
             android:id="@+id/iconExpense"
             android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            app:srcCompat="@drawable/baseline_drive_file_rename_outline_24" />
+            app:srcCompat="@drawable/baseline_drive_file_rename_outline_24"
+            android:padding="10dp"
+            />
 
         <TextView
             android:id="@+id/groupExpense"
@@ -83,7 +85,8 @@
             android:text="  50 000"
             android:textAlignment="textEnd"
             android:textColor="@color/red"
-            android:textSize="16dp" />
+            android:textSize="16dp"
+            android:padding="10dp"/>
     </LinearLayout>
 
     <View

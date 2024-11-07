@@ -167,7 +167,6 @@ public class ProfileFragment extends Fragment {
         });
 
 
-
         lnMyChart = view.findViewById(R.id.LnMychart);
         lnMyChart.setOnClickListener(new View.OnClickListener() {
             @Override
