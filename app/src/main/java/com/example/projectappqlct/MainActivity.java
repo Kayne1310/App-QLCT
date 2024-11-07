@@ -3,6 +3,7 @@ package com.example.projectappqlct;
 
 import static android.content.ContentValues.TAG;
 import static com.example.projectappqlct.Helper.NotificationHelper.sendNotificationToUser;
+
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -23,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.content.Intent;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -35,7 +37,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager.widget.ViewPager;
+
 import android.text.TextWatcher;
+
 import com.example.projectappqlct.Helper.NotificationHelper;
 import com.example.projectappqlct.Login.LoginActivity;
 import com.example.projectappqlct.Model.Expense;
@@ -106,11 +110,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
-
-        viewPager=findViewById(R.id.view_pager);
-        bottomNavigationView=findViewById(R.id.bottomNavigationView);
-        ViewPagerAdapter adapter=new ViewPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        viewPager = findViewById(R.id.view_pager);
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         viewPager.setAdapter(adapter);
 
 
@@ -157,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
+
             @Override
             public void onPageSelected(int position) {
                 switch (position) {
@@ -337,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
                     int AmountInt = Integer.parseInt(Amount);
                     String Calendar = editTextDate.getText().toString().trim().isEmpty() ? editTextDate.getHint().toString().trim() : editTextDate.getText().toString().trim();
                     String Group = buttonSelect.getText().toString().trim();
-                    if (Group.isEmpty()){
+                    if (Group.isEmpty()) {
                         Toast.makeText(MainActivity.this, "Please enter a valid group", Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -396,7 +399,7 @@ public class MainActivity extends AppCompatActivity {
                                     Intent intent = new Intent("DATA_UPDATED");
                                     LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(intent);
                                     Toast.makeText(MainActivity.this, "Add expense successful", Toast.LENGTH_SHORT).show();
-                                    checkBudgetLimit(getApplicationContext(),userString,expense.getGroup(),expense.getAmount(),expense.getCalendar());
+                                    checkBudgetLimit(getApplicationContext(), userString, expense.getGroup(), expense.getAmount(), expense.getCalendar());
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
@@ -419,7 +422,7 @@ public class MainActivity extends AppCompatActivity {
                     dialog2 = createDialog(R.layout.dialog_selectgroup);
                 }
 
-                Button buttonGrn = dialog2.findViewById(R.id.btnGrn);
+                TextView buttonGrn = dialog2.findViewById(R.id.tv_Grn);
                 buttonGrn.setOnClickListener(v -> {
                     dialog2.dismiss();  // Đóng dialog 2
                     showDialog3();      // Mở dialog 3
@@ -486,33 +489,24 @@ public class MainActivity extends AppCompatActivity {
                 optionAdapter = new OptionAdapter(optionList, itemClickListener);
                 recyclerView.setAdapter(optionAdapter);
 
-                // Thêm divider giữa các item
-                DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
-
-                // Nếu muốn sử dụng divider tùy chỉnh, hãy đặt drawable của bạn
-                dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.divider));
-
-                // Thêm divider vào RecyclerView
-                recyclerView.addItemDecoration(dividerItemDecoration);
-
 
                 // Listener chung cho tất cả các Button trong Dialog 2
                 View.OnClickListener optionClickListener = v -> {
-                    handleOptionSelected((Button) v);   // Cập nhật text và mở lại Dialog 1
+                    handleOptionSelected((TextView) v);   // Cập nhật text và mở lại Dialog 1
                 };
-                dialog2.findViewById(R.id.btnEat).setOnClickListener(optionClickListener);
-                dialog2.findViewById(R.id.btnShopping).setOnClickListener(optionClickListener);
-                dialog2.findViewById(R.id.btnFamily).setOnClickListener(optionClickListener);
-                dialog2.findViewById(R.id.btnHealthy).setOnClickListener(optionClickListener);
-                dialog2.findViewById(R.id.btnVehicle).setOnClickListener(optionClickListener);
-                dialog2.findViewById(R.id.btnSport).setOnClickListener(optionClickListener);
-                dialog2.findViewById(R.id.btnEdu).setOnClickListener(optionClickListener);
-                dialog2.findViewById(R.id.btnEntertainment).setOnClickListener(optionClickListener);
-                dialog2.findViewById(R.id.btnGifts).setOnClickListener(optionClickListener);
-                dialog2.findViewById(R.id.btnInvest).setOnClickListener(optionClickListener);
-                dialog2.findViewById(R.id.btnMakeup).setOnClickListener(optionClickListener);
-                dialog2.findViewById(R.id.btnDonate).setOnClickListener(optionClickListener);
-                dialog2.findViewById(R.id.btnOther).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.tv_Eat).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.tv_Shopping).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.tv_Family).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.tv_Healthy).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.tv_Vehicle).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.tv_Sport).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.tv_Edu).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.tv_Entertainment).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.tv_Gifts).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.tv_Invest).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.tv_Makeup).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.tv_Donate).setOnClickListener(optionClickListener);
+                dialog2.findViewById(R.id.tv_Other).setOnClickListener(optionClickListener);
                 dialog2.show();
             }
 
@@ -670,7 +664,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
 
-            private void handleOptionSelected(Button selectedButton) {
+            private void handleOptionSelected(TextView selectedButton) {
                 if (dialog2 != null && dialog2.isShowing()) {  // Đóng dialog2 nếu đang mở
                     dialog2.dismiss();
                 }
@@ -725,16 +719,15 @@ public class MainActivity extends AppCompatActivity {
 
             // Hàm để reset các trường trong dialog
             private void resetDialogFields() {
-            //  editTextAmount.setText("0"); // Reset số tiền
+                //  editTextAmount.setText("0"); // Reset số tiền
                 editTextAmount.getText().clear();
-                buttonSelect.setText("Select Group"); // Reset nhóm
-                buttonSelectNote.setText("Add Note"); // Reset ghi chú
+                buttonSelect.setHint("Select Group"); // Reset nhóm
+                buttonSelectNote.setHint("Add Note"); // Reset ghi chú
                 btnSelectedOption.setTag(null); // Reset icon button
                 imageViewGr.setTag(null); // Reset tag của ImageView
                 imageViewGr.setImageResource(R.drawable.baseline_groups_2_24); // Hiển thị lại icon mặc định
                 imageViewGr = findViewById(R.id.imageViewGr);  // Nếu bạn cần khởi tạo lại imageViewGr, hãy đặt nó ở đầu phương thức
             }
-
 
 
             //     Tải dữ liệu từ Firestore và cập nhật RecyclerView
@@ -765,7 +758,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
 
-
             private void handleRecyclerViewSelection(Option selectedOption) {
                 if (dialog2 != null && dialog2.isShowing()) {
                     dialog2.dismiss();  // Đóng Dialog 2
@@ -790,15 +782,6 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-    }
-
-
-    public void reloadBudgetFragment() {
-        // Kiểm tra nếu ViewPager đã được khởi tạo
-        if (viewPager != null) {
-            // Chuyển đến vị trí của fragment budget
-            viewPager.setCurrentItem(3); // 3 là chỉ số của fragment budget trong ViewPager
-        }
     }
 
 
@@ -883,7 +866,7 @@ public class MainActivity extends AppCompatActivity {
                                         if (totalExpenseThisMonth[0] == groupBudget) { // Use the array's element
                                             // Save notification to Firestore
                                             String title = "Spent all this month's budget!";
-                                            String content = "Group " + group + "has spent all the budget this month "  + " VND.";
+                                            String content = "Group " + group + "has spent all the budget this month " + " VND.";
                                             String time = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault()).format(new Date());
 
                                             Notification notification = new Notification(title, content, time);

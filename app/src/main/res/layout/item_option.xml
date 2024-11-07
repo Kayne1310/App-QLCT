@@ -13,7 +13,6 @@
         android:id="@+id/iconImageView"
         android:layout_width="0dp"
         android:layout_height="30dp"
-        android:layout_marginEnd="8dp"
         android:layout_weight="1"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/baseline_drive_file_rename_outline_24" />
@@ -24,8 +23,8 @@
         android:layout_height="50dp"
         android:layout_weight="6"
         android:background="?attr/selectableItemBackground"
-        android:padding="10dp"
+        android:paddingTop="10dp"
         android:text="Option"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="bold"/>
 </LinearLayout>

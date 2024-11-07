@@ -3,6 +3,7 @@ package com.example.projectappqlct;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Intent;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
@@ -122,6 +123,10 @@ public class NotificationActivity extends AppCompatActivity {
         cancelTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(NotificationActivity.this, MainActivity.class);
+                intent.putExtra("showFragment", "profile");
+                startActivity(intent);
+                overridePendingTransition(0, R.anim.exit_to_right);
                 finish(); // Kết thúc NotificationActivity và trở về trang trước đó
             }
         });

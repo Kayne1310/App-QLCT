@@ -44,14 +44,12 @@ public class EditProfile extends AppCompatActivity {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-
             return insets;
         });
 
+
         db = FirebaseFirestore.getInstance();
-
         etUsername = findViewById(R.id.username);
-
         etName = findViewById(R.id.name);
         etAge = findViewById(R.id.age);
         etAddress = findViewById(R.id.address);
@@ -101,13 +99,11 @@ public class EditProfile extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 Intent intent = new Intent(EditProfile.this, MainActivity.class);
                 intent.putExtra("showFragment", "profile"); // Truyền thông tin về fragment
                 startActivity(intent);
+                overridePendingTransition(0, R.anim.exit_to_right);
                 finish();
-
             }
         });
 
@@ -148,13 +144,13 @@ public class EditProfile extends AppCompatActivity {
                             @Override
                             public void onSuccess(Void unused) {
 
-                                Toast.makeText(EditProfile.this,   "Update Sucessful !", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(EditProfile.this, "Update Sucessful !", Toast.LENGTH_SHORT).show();
                             }
                         })
-                        .addOnFailureListener(e->{
-                            Toast.makeText(EditProfile.this, "Failed Update"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(EditProfile.this, "Failed Update" + e.getMessage(), Toast.LENGTH_SHORT).show();
                         });
-                        // Thêm tài liệu mới
+                // Thêm tài liệu mới
 
             }
         });

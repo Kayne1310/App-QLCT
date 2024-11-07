@@ -9,7 +9,9 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.ekn.gruzer.gaugelibrary.Range;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -37,6 +39,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Source;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
@@ -247,7 +250,6 @@ public class TabFragment_Budget extends Fragment {
     }
 
 
-
     private void fetchTotalExpenseForBudget(Budget budget, int budgetAmount, String selectedMonthYear) {
         if (budget.getCalendar() == null) return;
 
@@ -284,7 +286,6 @@ public class TabFragment_Budget extends Fragment {
                     }
                 });
     }
-
 
 
     private void updateGauge() {
@@ -348,12 +349,9 @@ public class TabFragment_Budget extends Fragment {
     }
 
 
-
-
     private String formatCurrency(int amount) {
         return String.format("%,d", amount);
     }
-
 
 
     // Phương thức tạo dialog với layout và kích thước tùy chỉnh
@@ -509,56 +507,66 @@ public class TabFragment_Budget extends Fragment {
 
             // Truy vấn Firestore để kiểm tra dữ liệu trùng lặp
             String finalIcon = Icon;
-            db.collection("users").document(userString)
-                            .collection("Budgets")
-                            .whereEqualTo("group", Group)
-                            .whereEqualTo("calendar", Calendar)
-                            .get()
-                            .addOnCompleteListener(task -> {
-                                if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                                    // Dữ liệu đã tồn tại với group và calendar trùng lặp
-                                    Toast.makeText(getActivity(), "This budget entry already exists", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    // Nếu không trùng lặp, tiếp tục thêm dữ liệu
-                                    Budget budget = new Budget(AmountInt, Calendar, Group, finalIcon);
-
-                                    db.collection("users").document(userString)
-                                            .collection("Budgets")
-                                            .add(budget)
-                                            .addOnSuccessListener(documentReference -> {
-                                                String budgetId = documentReference.getId(); // Lấy ID
-                                                budget.setId(budgetId); // Cập nhật ID vào đối tượng Budget
-
-                                                // Lưu budget với ID vào Firestore
-                                                documentReference.set(budget) // Cập nhật Firestore với budget đã có ID
-                                                        .addOnSuccessListener(aVoid -> {
-                                                            // Đóng dialog1 và reload lại fragment budget
-                                                            Toast.makeText(getActivity(), "Add budget successful", Toast.LENGTH_SHORT).show();
-
-                                                            if (dialog1 != null && dialog1.isShowing()) {
-                                                                dialog1.dismiss();
-                                                            }
-
-                                                            BudgetFragment parentFragment = (BudgetFragment) getParentFragment();
-                                                            if (parentFragment != null) {
-                                                                parentFragment.addBudgetData(budget);
-                                                                parentFragment.loadBudgetsAndSetupTabs(); // Thêm dữ liệu mới vào ViewPager và TabLayout
-                                                            }
-                                                        })
-                                                        .addOnFailureListener(e -> {
-                                                            Log.i("check", "Error updating budget ID", e);
-                                                        });
-                                            })
-                                            .addOnFailureListener(e -> {
-                                                Log.i("check", "Error adding document", e);
-                                            });
-                                }
-                            });
+            if (userString != null) {
+                // Truy vấn Firestore để kiểm tra dữ liệu trùng lặp từ server
+                db.collection("users").document(userString)
+                        .collection("Budgets")
+                        .whereEqualTo("group", Group)
+                        .whereEqualTo("calendar", Calendar)
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                                // Dữ liệu đã tồn tại với group và calendar trùng lặp
+                                Toast.makeText(getActivity(), "This budget entry already exists", Toast.LENGTH_SHORT).show();
+                                btnSelectedOption.setTag(null); // Reset icon button
+                            } else {
+                                djtkonme(AmountInt, Calendar, Group, finalIcon);
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("FirestoreError", "Error checking duplicate data", e);
+                        });
+            }
 
         });
+
         dialog1.show();
     }
 
+
+    public void djtkonme(int AmountInt, String Calendar, String Group, String finalIcon) {
+        // Nếu không trùng lặp, tiếp tục thêm dữ liệu
+        Budget budget = new Budget(AmountInt, Calendar, Group, finalIcon);
+
+        db.collection("users").document(userString)
+                .collection("Budgets")
+                .add(budget)
+                .addOnSuccessListener(documentReference -> {
+                    String budgetId = documentReference.getId(); // Lấy ID
+                    budget.setId(budgetId); // Cập nhật ID vào đối tượng Budget
+
+                    // Lưu budget với ID vào Firestore
+                    documentReference.set(budget)
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(getActivity(), "Add budget successful", Toast.LENGTH_SHORT).show();
+                                if (dialog1 != null && dialog1.isShowing()) {
+                                    dialog1.dismiss();
+                                }
+
+                                BudgetFragment parentFragment = (BudgetFragment) getParentFragment();
+                                if (parentFragment != null) {
+                                    parentFragment.addBudgetData(budget);
+                                    parentFragment.loadBudgetsAndSetupTabs(); // Thêm dữ liệu mới vào ViewPager và TabLayout
+                                }
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("FirestoreError", "Error updating budget ID", e);
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FirestoreError", "Error adding document", e);
+                });
+    }
 
     // Hiển thị hộp thoại 2
     public void showDialog2() {
@@ -566,8 +574,8 @@ public class TabFragment_Budget extends Fragment {
             dialog2 = createDialog(R.layout.dialog_selectgroup);
         }
 
-        Button buttonGrn = dialog2.findViewById(R.id.btnGrn);
-        buttonGrn.setOnClickListener(v -> {
+        TextView textViewGrn = dialog2.findViewById(R.id.tv_Grn);
+        textViewGrn.setOnClickListener(v -> {
             dialog2.dismiss();  // Đóng dialog 2
             showDialog3();      // Mở dialog 3
         });
@@ -644,76 +652,26 @@ public class TabFragment_Budget extends Fragment {
 
         // Listener chung cho tất cả các Button trong Dialog 2
         View.OnClickListener optionClickListener = v -> {
-            handleOptionSelected((Button) v);   // Cập nhật text và mở lại Dialog 1
+            handleOptionSelected((TextView) v);   // Cập nhật text và mở lại Dialog 1
         };
-        dialog2.findViewById(R.id.btnEat).setOnClickListener(optionClickListener);
-        dialog2.findViewById(R.id.btnShopping).setOnClickListener(optionClickListener);
-        dialog2.findViewById(R.id.btnFamily).setOnClickListener(optionClickListener);
-        dialog2.findViewById(R.id.btnHealthy).setOnClickListener(optionClickListener);
-        dialog2.findViewById(R.id.btnVehicle).setOnClickListener(optionClickListener);
-        dialog2.findViewById(R.id.btnSport).setOnClickListener(optionClickListener);
-        dialog2.findViewById(R.id.btnEdu).setOnClickListener(optionClickListener);
-        dialog2.findViewById(R.id.btnEntertainment).setOnClickListener(optionClickListener);
-        dialog2.findViewById(R.id.btnGifts).setOnClickListener(optionClickListener);
-        dialog2.findViewById(R.id.btnInvest).setOnClickListener(optionClickListener);
-        dialog2.findViewById(R.id.btnMakeup).setOnClickListener(optionClickListener);
-        dialog2.findViewById(R.id.btnDonate).setOnClickListener(optionClickListener);
-        dialog2.findViewById(R.id.btnOther).setOnClickListener(optionClickListener);
+        dialog2.findViewById(R.id.tv_Eat).setOnClickListener(optionClickListener);
+        dialog2.findViewById(R.id.tv_Shopping).setOnClickListener(optionClickListener);
+        dialog2.findViewById(R.id.tv_Family).setOnClickListener(optionClickListener);
+        dialog2.findViewById(R.id.tv_Healthy).setOnClickListener(optionClickListener);
+        dialog2.findViewById(R.id.tv_Vehicle).setOnClickListener(optionClickListener);
+        dialog2.findViewById(R.id.tv_Sport).setOnClickListener(optionClickListener);
+        dialog2.findViewById(R.id.tv_Edu).setOnClickListener(optionClickListener);
+        dialog2.findViewById(R.id.tv_Entertainment).setOnClickListener(optionClickListener);
+        dialog2.findViewById(R.id.tv_Gifts).setOnClickListener(optionClickListener);
+        dialog2.findViewById(R.id.tv_Invest).setOnClickListener(optionClickListener);
+        dialog2.findViewById(R.id.tv_Makeup).setOnClickListener(optionClickListener);
+        dialog2.findViewById(R.id.tv_Donate).setOnClickListener(optionClickListener);
+        dialog2.findViewById(R.id.tv_Other).setOnClickListener(optionClickListener);
         dialog2.show();
 
     }
 
 
-//    // Hiển thị hộp thoại 3
-//    private void showDialog3() {
-//        if (dialog3 == null) {  // Khởi tạo dialog3 nếu chưa khởi tạo
-//            dialog3 = createDialog(R.layout.dialog_newgroup);
-//        }
-//
-//        // Chọn icon
-//        imgiconclick = dialog3.findViewById(R.id.imgicon);
-//        imgiconclick.setOnClickListener(v -> {
-//            showDialog4();  // Mở dialog 4
-//        });
-//
-//        // Chọn text
-//        EditText editTextGroup = dialog3.findViewById(R.id.editTextNameGr);
-//
-//        // Nút Lưu
-//
-//        Button buttonSave = dialog3.findViewById(R.id.btnSave);
-//        buttonSave.setOnClickListener(v -> {
-//            String selectedText = editTextGroup.getText().toString().trim();
-//
-//            // Cập nhật icon cho ImageView imageViewGr trong dialog 1
-//            ImageView imageViewGr = dialog1.findViewById(R.id.imageViewGr);
-//            if (imageViewGr != null && selectedIconDrawable != null) {
-//                imageViewGr.setImageDrawable(selectedIconDrawable); // Update icon
-//                // Set the tag to the imageViewGr using the selectedIconTag
-//                imageViewGr.setTag(selectedIconTag); // Assign the tag retrieved from dialog 4
-//            } else {
-//                // Nếu không có icon được chọn, đặt icon mặc định
-//                imageViewGr.setImageResource(R.drawable.baseline_drive_file_rename_outline_24);
-//                // Set tag mặc định nếu cần thiết
-//                imageViewGr.setTag("baseline_drive_file_rename_outline_24");
-//            }
-//
-//            // Cập nhật text cho buttonSelectOption trong dialog 1
-//            btnSelectedOption.setText(selectedText); // Cập nhật text
-//
-//            // Đóng dialog 3 và mở lại dialog 1
-//            dialog3.dismiss();
-//            showDialog1();
-//        });
-//
-//        TextView backToDialog1 = dialog3.findViewById(R.id.textViewBack2);
-//        backToDialog1.setOnClickListener(v -> {
-//            dialog3.dismiss();  // Đóng hộp thoại 3
-//            showDialog2();      // Quay lại hộp thoại 2
-//        });
-//
-//        dialog3.show();
-//    }
 
     private void showDialog3() {
         if (dialog3 == null) {  // Khởi tạo dialog3 nếu chưa khởi tạo
@@ -840,7 +798,7 @@ public class TabFragment_Budget extends Fragment {
         dialog4.show();
     }
 
-    private void handleOptionSelected(Button selectedButton) {
+    private void handleOptionSelected(TextView selectedButton) {
         if (dialog2 != null && dialog2.isShowing()) {  // Đóng dialog2 nếu đang mở
             dialog2.dismiss();
         }
@@ -942,6 +900,7 @@ public class TabFragment_Budget extends Fragment {
             dialog1.show();
         }
     }
+
 
 
 }
