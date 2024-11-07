@@ -1,4 +1,4 @@
-package com.example.projectappqlct;
+package com.example.projectappqlct.TabFragment;
 
 import android.os.Bundle;
 
@@ -18,6 +18,7 @@ import java.text.DecimalFormat;
 
 import com.example.projectappqlct.Adapter.ExpenseAdapter;
 import com.example.projectappqlct.Model.Expense;
+import com.example.projectappqlct.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;

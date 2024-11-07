@@ -8,7 +8,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -37,11 +36,10 @@ public class ChangePassword extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 Intent intent = new Intent(ChangePassword.this, MainActivity.class);
                 intent.putExtra("ChangePassword", "ChangePassword"); // Truyền thông tin về fragment
                 startActivity(intent);
+                overridePendingTransition(0, R.anim.exit_to_right);
                 finish();
 
             }

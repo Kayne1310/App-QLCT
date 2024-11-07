@@ -1,21 +1,17 @@
-package com.example.projectappqlct;
+package com.example.projectappqlct.TabFragment;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.ekn.gruzer.gaugelibrary.Range;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,19 +25,19 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.ekn.gruzer.gaugelibrary.ArcGauge;
 import com.example.projectappqlct.Adapter.BudgetAdapter;
 import com.example.projectappqlct.Adapter.OptionAdapter;
+import com.example.projectappqlct.Fragment.BudgetFragment;
 import com.example.projectappqlct.Helper.CustomValueFormatter;
 import com.example.projectappqlct.Model.Budget;
 import com.example.projectappqlct.Model.Expense;
 import com.example.projectappqlct.Model.Option;
+import com.example.projectappqlct.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -49,9 +45,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.core.content.ContextCompat;
 
 
 /**
@@ -72,7 +65,6 @@ public class TabFragment_Budget extends Fragment {
     private FirebaseAuth auth;
     private FirebaseUser user;
     private String userString;
-
     private Dialog dialog1, dialog2, dialog3, dialog4;
     private Button btnSelectedOption, buttonSelect;
     private ImageView imgiconclick, imageviewGr;
@@ -100,35 +92,9 @@ public class TabFragment_Budget extends Fragment {
 
 
 
-//    public static TabFragment_Budget newInstance(List<Budget> budgets) {
-//        TabFragment_Budget fragment = new TabFragment_Budget();
-//        Bundle args = new Bundle();
-//        args.putSerializable(ARG_BUDGETS, new ArrayList<>(budgets));
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-
     public TabFragment_Budget() {
         // Required empty public constructor
     }
-
-//    /**
-//     * Use this factory method to create a new instance of
-//     * this fragment using the provided parameters.
-//     *
-//     * @param param1 Parameter 1.
-//     * @param param2 Parameter 2.
-//     * @return A new instance of fragment TabFragment1.
-//     */
-    // TODO: Rename and change types and number of parameters
-//    public static TabFragment_Budget newInstance(String param1, String param2) {
-//        TabFragment_Budget fragment = new TabFragment_Budget();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
 
     public static TabFragment_Budget newInstance(List<Budget> budgets, String monthYear) {
         TabFragment_Budget fragment = new TabFragment_Budget();
@@ -556,6 +522,7 @@ public class TabFragment_Budget extends Fragment {
             }
 
         });
+
         dialog1.show();
     }
 
@@ -593,6 +560,40 @@ public class TabFragment_Budget extends Fragment {
                 });
     }
 
+
+    public void djtkonme(int AmountInt, String Calendar, String Group, String finalIcon) {
+        // Nếu không trùng lặp, tiếp tục thêm dữ liệu
+        Budget budget = new Budget(AmountInt, Calendar, Group, finalIcon);
+
+        db.collection("users").document(userString)
+                .collection("Budgets")
+                .add(budget)
+                .addOnSuccessListener(documentReference -> {
+                    String budgetId = documentReference.getId(); // Lấy ID
+                    budget.setId(budgetId); // Cập nhật ID vào đối tượng Budget
+
+                    // Lưu budget với ID vào Firestore
+                    documentReference.set(budget)
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(getActivity(), "Add budget successful", Toast.LENGTH_SHORT).show();
+                                if (dialog1 != null && dialog1.isShowing()) {
+                                    dialog1.dismiss();
+                                }
+
+                                BudgetFragment parentFragment = (BudgetFragment) getParentFragment();
+                                if (parentFragment != null) {
+                                    parentFragment.addBudgetData(budget);
+                                    parentFragment.loadBudgetsAndSetupTabs(); // Thêm dữ liệu mới vào ViewPager và TabLayout
+                                }
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("FirestoreError", "Error updating budget ID", e);
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FirestoreError", "Error adding document", e);
+                });
+    }
 
     // Hiển thị hộp thoại 2
     public void showDialog2() {
@@ -698,56 +699,6 @@ public class TabFragment_Budget extends Fragment {
     }
 
 
-//    // Hiển thị hộp thoại 3
-//    private void showDialog3() {
-//        if (dialog3 == null) {  // Khởi tạo dialog3 nếu chưa khởi tạo
-//            dialog3 = createDialog(R.layout.dialog_newgroup);
-//        }
-//
-//        // Chọn icon
-//        imgiconclick = dialog3.findViewById(R.id.imgicon);
-//        imgiconclick.setOnClickListener(v -> {
-//            showDialog4();  // Mở dialog 4
-//        });
-//
-//        // Chọn text
-//        EditText editTextGroup = dialog3.findViewById(R.id.editTextNameGr);
-//
-//        // Nút Lưu
-//
-//        Button buttonSave = dialog3.findViewById(R.id.btnSave);
-//        buttonSave.setOnClickListener(v -> {
-//            String selectedText = editTextGroup.getText().toString().trim();
-//
-//            // Cập nhật icon cho ImageView imageViewGr trong dialog 1
-//            ImageView imageViewGr = dialog1.findViewById(R.id.imageViewGr);
-//            if (imageViewGr != null && selectedIconDrawable != null) {
-//                imageViewGr.setImageDrawable(selectedIconDrawable); // Update icon
-//                // Set the tag to the imageViewGr using the selectedIconTag
-//                imageViewGr.setTag(selectedIconTag); // Assign the tag retrieved from dialog 4
-//            } else {
-//                // Nếu không có icon được chọn, đặt icon mặc định
-//                imageViewGr.setImageResource(R.drawable.baseline_drive_file_rename_outline_24);
-//                // Set tag mặc định nếu cần thiết
-//                imageViewGr.setTag("baseline_drive_file_rename_outline_24");
-//            }
-//
-//            // Cập nhật text cho buttonSelectOption trong dialog 1
-//            btnSelectedOption.setText(selectedText); // Cập nhật text
-//
-//            // Đóng dialog 3 và mở lại dialog 1
-//            dialog3.dismiss();
-//            showDialog1();
-//        });
-//
-//        TextView backToDialog1 = dialog3.findViewById(R.id.textViewBack2);
-//        backToDialog1.setOnClickListener(v -> {
-//            dialog3.dismiss();  // Đóng hộp thoại 3
-//            showDialog2();      // Quay lại hộp thoại 2
-//        });
-//
-//        dialog3.show();
-//    }
 
     private void showDialog3() {
         if (dialog3 == null) {  // Khởi tạo dialog3 nếu chưa khởi tạo
@@ -976,6 +927,7 @@ public class TabFragment_Budget extends Fragment {
             dialog1.show();
         }
     }
+
 
 
 }

@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:background="@drawable/pagebkg"
-    tools:context=".Login.SignUpActivity">
+    tools:context=".Authentication.SignUpActivity">
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,7 +40,8 @@
                 android:hint="Email"
                 android:drawableLeft="@drawable/baseline_email_24"
                 android:drawablePadding="8dp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                android:singleLine="true"/>
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -52,7 +53,8 @@
                 android:drawableLeft="@drawable/lock"
                 android:drawablePadding="8dp"
                 android:textColor="@color/black"
-                android:inputType="textPassword"/>
+                android:inputType="textPassword"
+                android:singleLine="true"/>
 
             <EditText
                 android:layout_width="match_parent"
@@ -64,7 +66,8 @@
                 android:hint="Name"
                 android:drawableLeft="@drawable/baseline_person_24"
                 android:drawablePadding="8dp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                android:singleLine="true"/>
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -89,7 +92,8 @@
                 android:hint="Address"
                 android:drawableLeft="@drawable/ic_baseline_whatshot_24"
                 android:drawablePadding="8dp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                android:singleLine="true"/>
 
             <EditText
                 android:id="@+id/sex"
@@ -101,7 +105,8 @@
                 android:drawablePadding="8dp"
                 android:hint="Sex"
                 android:padding="8dp"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:singleLine="true"/>
 
 
             <Button

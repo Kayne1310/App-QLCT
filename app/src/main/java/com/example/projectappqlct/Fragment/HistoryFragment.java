@@ -1,4 +1,4 @@
-package com.example.projectappqlct;
+package com.example.projectappqlct.Fragment;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -22,8 +22,9 @@ import android.widget.TextView;
 
 
 import com.anychart.AnyChartView;
-import com.example.projectappqlct.Adapter.ExpenseAdapter;
+import com.example.projectappqlct.ViewPagerAdapter.ExpenseViewPagerAdapter;
 import com.example.projectappqlct.Model.Expense;
+import com.example.projectappqlct.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;

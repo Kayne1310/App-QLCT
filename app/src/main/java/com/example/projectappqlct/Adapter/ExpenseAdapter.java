@@ -1,6 +1,8 @@
 package com.example.projectappqlct.Adapter;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,7 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Calendar;
 
-import com.example.projectappqlct.DetailExpense;
+import com.example.projectappqlct.Detail.DetailExpense;
 import com.example.projectappqlct.Model.Expense;
 import com.example.projectappqlct.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -162,9 +164,16 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
         Intent intent = new Intent(mContext, DetailExpense.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("Object_expense", expense);
-
         intent.putExtras(bundle);
-        mContext.startActivity(intent);
+
+        // Kiểm tra xem context có phải là Activity không để sử dụng ActivityOptions
+        if (mContext instanceof Activity) {
+            ActivityOptions options = ActivityOptions.makeCustomAnimation(
+                    mContext, R.anim.enter_from_right, R.anim.stay);
+            mContext.startActivity(intent, options.toBundle());
+        } else {
+            mContext.startActivity(intent);
+        }
     }
 
     @Override

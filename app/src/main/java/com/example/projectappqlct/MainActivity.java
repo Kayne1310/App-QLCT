@@ -2,6 +2,7 @@ package com.example.projectappqlct;
 
 
 import static com.example.projectappqlct.Helper.NotificationHelper.sendNotificationToUser;
+
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -22,25 +23,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.content.Intent;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.fragment.app.FragmentStatePagerAdapter;;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager.widget.ViewPager;
+
 import android.text.TextWatcher;
 
 import com.example.projectappqlct.Adapter.OptionAdapter;
-import com.example.projectappqlct.Login.LoginActivity;
+import com.example.projectappqlct.Authentication.LoginActivity;
 import com.example.projectappqlct.Model.Expense;
 import com.example.projectappqlct.Model.Option;
 import com.example.projectappqlct.Model.Notification;
+import com.example.projectappqlct.ViewPagerAdapter.BudgetViewPagerAdapter;
+import com.example.projectappqlct.ViewPagerAdapter.ViewPagerAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -61,10 +64,8 @@ import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity {
-
     private ViewPager viewPager;
     private BottomNavigationView bottomNavigationView;
-
     private EditText editTextAmount, editTextDate;
     private Dialog dialog1, dialog2, dialog3, dialog4, dialog5;
     private Button btnSelectedOption, buttonSelect, buttonSelectNote;
@@ -103,16 +104,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
-
-        viewPager=findViewById(R.id.view_pager);
-
-        bottomNavigationView=findViewById(R.id.bottomNavigationView);
-        ViewPagerAdapter adapter=new ViewPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        viewPager = findViewById(R.id.view_pager);
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(0);
-
-
 
 
         // Kiểm tra Intent để xác định Fragment cần hiển thị
@@ -158,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
+
             @Override
             public void onPageSelected(int position) {
                 switch (position) {
@@ -190,16 +187,13 @@ public class MainActivity extends AppCompatActivity {
                 if (id == R.id.menu_home) {
                     viewPager.setCurrentItem(0);
                     return true;
-                }
-                else if (id == R.id.menu_history) {
+                } else if (id == R.id.menu_history) {
                     viewPager.setCurrentItem(1);
                     return true;
-                }
-                else if (id == R.id.menu_create) {
+                } else if (id == R.id.menu_create) {
                     showDialog1();
                     return true;
-                }
-                else if (id == R.id.menu_budget) {
+                } else if (id == R.id.menu_budget) {
                     viewPager.setCurrentItem(2);
                     return true;
                 } else if (id == R.id.menu_profile) {
@@ -339,7 +333,7 @@ public class MainActivity extends AppCompatActivity {
                     int AmountInt = Integer.parseInt(Amount);
                     String Calendar = editTextDate.getText().toString().trim().isEmpty() ? editTextDate.getHint().toString().trim() : editTextDate.getText().toString().trim();
                     String Group = buttonSelect.getText().toString().trim();
-                    if (Group.isEmpty()||Group.equals("Select Group")){
+                    if (Group.isEmpty() || Group.equals("Select Group")) {
                         Toast.makeText(MainActivity.this, "Please enter a valid group", Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -389,25 +383,22 @@ public class MainActivity extends AppCompatActivity {
                                                 // Nếu ViewPager đang ở vị trí 1, gửi Intent cho trang 2
                                                 updateIntent = new Intent("EXPENSE_ADDED");
 
+                                            } else if
+                                            (currentPage == 2) {
+                                                updateIntent = new Intent("Load_Buget");
+
+
                                             }
-
-
-                                            else if
-                                            (currentPage==2){
-                                                updateIntent=new Intent("Load_Buget");
-                                            }
-
-                                            if(currentPage!=3){
-
-
-                                            // Gửi Intent dựa trên trang hiện tại
-                                            LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(updateIntent);
+                                            if (currentPage != 3) {
+                                                // Gửi Intent dựa trên trang hiện tại
+                                                LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(updateIntent);
                                             }
 
                                             Toast.makeText(MainActivity.this, "Add expense successful", Toast.LENGTH_SHORT).show();
                                             checkBudgetLimit(getApplicationContext(), userString, expense.getGroup(), expense.getAmount(), expense.getCalendar());
                                         })
                                         .addOnFailureListener(e -> Log.i("check", "Error updating document ID", e));
+
                             })
                             .addOnFailureListener(e -> Log.i("check", "Error adding document", e));
 
@@ -426,6 +417,7 @@ public class MainActivity extends AppCompatActivity {
 
                 TextView textViewGrn = dialog2.findViewById(R.id.tv_Grn);
                 textViewGrn.setOnClickListener(v -> {
+
                     dialog2.dismiss();  // Đóng dialog 2
                     showDialog3();      // Mở dialog 3
                 });
@@ -721,16 +713,15 @@ public class MainActivity extends AppCompatActivity {
 
             // Hàm để reset các trường trong dialog
             private void resetDialogFields() {
-            //  editTextAmount.setText("0"); // Reset số tiền
+                //  editTextAmount.setText("0"); // Reset số tiền
                 editTextAmount.getText().clear();
-                buttonSelect.setText("Select Group"); // Reset nhóm
-                buttonSelectNote.setText("Add Note"); // Reset ghi chú
+                buttonSelect.setHint("Select Group"); // Reset nhóm
+                buttonSelectNote.setHint("Add Note"); // Reset ghi chú
                 btnSelectedOption.setTag(null); // Reset icon button
                 imageViewGr.setTag(null); // Reset tag của ImageView
                 imageViewGr.setImageResource(R.drawable.baseline_groups_2_24); // Hiển thị lại icon mặc định
                 imageViewGr = findViewById(R.id.imageViewGr);  // Nếu bạn cần khởi tạo lại imageViewGr, hãy đặt nó ở đầu phương thức
             }
-
 
 
             //     Tải dữ liệu từ Firestore và cập nhật RecyclerView
@@ -761,7 +752,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
 
-
             private void handleRecyclerViewSelection(Option selectedOption) {
                 if (dialog2 != null && dialog2.isShowing()) {
                     dialog2.dismiss();  // Đóng Dialog 2
@@ -789,16 +779,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void reloadBudgetFragment() {
-        // Kiểm tra nếu ViewPager đã được khởi tạo
-        if (viewPager != null) {
-            // Chuyển đến vị trí của fragment budget
-            viewPager.setCurrentItem(3); // 3 là chỉ số của fragment budget trong ViewPager
-        }
-    }
-
-
-    private void checkBudgetLimit(Context context, String userId, String group, int newAmount, String calendarDate) {
+    private void checkBudgetLimit(Context context, String userId, String group,
+                                  int newAmount, String calendarDate) {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -879,7 +861,7 @@ public class MainActivity extends AppCompatActivity {
                                         if (totalExpenseThisMonth[0] == groupBudget) { // Use the array's element
                                             // Save notification to Firestore
                                             String title = "Spent all this month's budget!";
-                                            String content = "Group " + group + "has spent all the budget this month "  + " VND.";
+                                            String content = "Group " + group + "has spent all the budget this month " + " VND.";
                                             String time = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault()).format(new Date());
 
                                             Notification notification = new Notification(title, content, time);
@@ -898,8 +880,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
-
-
 
 
 }

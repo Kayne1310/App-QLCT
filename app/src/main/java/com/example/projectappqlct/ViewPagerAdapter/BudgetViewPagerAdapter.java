@@ -1,10 +1,12 @@
-package com.example.projectappqlct;
+package com.example.projectappqlct.ViewPagerAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.example.projectappqlct.TabFragment.DefaultTabFragmentBudget;
 import com.example.projectappqlct.Model.Budget;
+import com.example.projectappqlct.TabFragment.TabFragment_Budget;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

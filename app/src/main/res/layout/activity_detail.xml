@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".DetailActivity">
+    tools:context=".Detail.DetailActivity">
 
     <!-- FrameLayout chứa nút back và tiêu đề -->
     <FrameLayout
@@ -16,23 +16,20 @@
         <LinearLayout
             android:id="@+id/textviewBack"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="5dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
             android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="41dp"
-                android:layout_height="30dp"
-                android:layout_marginTop="3dp"
-                android:src="@drawable/baseline_arrow_back_ios_24" />
-
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
+                android:drawableLeft="@drawable/baseline_arrow_back_ios_24"
                 android:paddingTop="5dp"
                 android:text="Back"
-                android:textSize="16sp" />
+                android:textSize="16dp" />
+
+
         </LinearLayout>
 
         <TextView
@@ -42,8 +39,7 @@
             android:background="#AAFFFFFF"
             android:paddingTop="10dp"
             android:text="Detail Budget"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textSize="26sp" />
     </FrameLayout>
 
 
@@ -147,6 +143,7 @@
                     android:paddingRight="10dp"
                     android:textAlignment="textEnd"
                     android:textSize="17dp"
+                    android:text="0.00"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -215,6 +212,11 @@
 
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#988989" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -234,7 +236,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
-                    android:text="1,800.00"
+                    android:text="0.00"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -272,8 +274,9 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"
+                android:layout_height="1dp"
                 android:background="#988989" />
+
 
             <TextView
                 android:id="@+id/textView1"

@@ -22,7 +22,7 @@
             android:textSize="16sp"
             android:textStyle="normal" />
 
-        <!-- Centered Text -->
+
         <TextView
             android:id="@+id/textView2"
             android:layout_width="0dp"
@@ -30,8 +30,7 @@
             android:layout_weight="2"
             android:gravity="center"
             android:text="Select group"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textSize="26sp" />
 
         <!-- Search Icon -->
         <ImageView
@@ -54,10 +53,11 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textView3"
@@ -66,14 +66,13 @@
                     android:background="#D3D0D0"
                     android:textSize="10dp"/>
 
-
                 <TextView
                     android:id="@+id/tv_Grn"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:backgroundTint="#00B00020"
                     android:drawableLeft="@drawable/baseline_add_circle_outline_24"
-                    android:drawablePadding="8dp"
+                    android:drawablePadding="20dp"
                     android:gravity="center_vertical"
                     android:text="Group new"
                     android:paddingLeft="20dp"
@@ -91,12 +90,7 @@
                     android:id="@+id/recyclerViewOption"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
-<!--                <TextView-->
 
-<!--                    android:id="@+id/textViewabcqwe"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="10dp"-->
-<!--                    android:background="#D3D0D0" />-->
                 <TextView
                     android:id="@+id/tv_Eat"
                     android:layout_width="match_parent"

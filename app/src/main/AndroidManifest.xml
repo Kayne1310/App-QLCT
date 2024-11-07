@@ -19,7 +19,7 @@
 
 
         <activity
-            android:name=".DetailExpense"
+            android:name=".Detail.DetailExpense"
             android:exported="false" />
 
         <activity
@@ -31,7 +31,7 @@
             android:exported="false"/>
 
         <activity
-            android:name=".DetailActivity"
+            android:name=".Detail.DetailActivity"
             android:exported="false" />
 
         <activity
@@ -47,12 +47,12 @@
             android:theme="@style/Theme.ProjectAppQLCT" />
 
         <activity
-            android:name=".Login.SignUpActivity"
+            android:name=".Authentication.SignUpActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".Login.LoginActivity"
+            android:name=".Authentication.LoginActivity"
 
             android:exported="true"
             android:screenOrientation="portrait">
@@ -66,11 +66,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="false">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
         </activity>
 
 

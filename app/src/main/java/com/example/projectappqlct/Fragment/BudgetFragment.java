@@ -1,4 +1,4 @@
-package com.example.projectappqlct;
+package com.example.projectappqlct.Fragment;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,7 +14,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.projectappqlct.ViewPagerAdapter.BudgetViewPagerAdapter;
 import com.example.projectappqlct.Model.Budget;
+import com.example.projectappqlct.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;

@@ -1,4 +1,4 @@
-package com.example.projectappqlct;
+package com.example.projectappqlct.Detail;
 
 
 import android.annotation.SuppressLint;
@@ -17,14 +17,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 
+import com.example.projectappqlct.MainActivity;
 import com.example.projectappqlct.Model.Expense;
+import com.example.projectappqlct.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -60,14 +61,11 @@ public class DetailExpense extends AppCompatActivity {
         // nút back
         textViewBack = findViewById(R.id.back);
         textViewBack.setOnClickListener(v -> {
-            // Lấy chỉ số của ViewPager hiện tại
-
-
             // Chuyển sang màn hình chi tiết item
             Intent intent = new Intent(DetailExpense.this, MainActivity.class);
             intent.putExtra("DetailExpense", "DetailExpense");
-
             startActivity(intent);
+            overridePendingTransition(0, R.anim.exit_to_right);
             finish();
 
         });

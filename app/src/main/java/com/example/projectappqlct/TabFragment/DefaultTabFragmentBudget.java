@@ -1,4 +1,4 @@
-package com.example.projectappqlct;
+package com.example.projectappqlct.TabFragment;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -12,7 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.projectappqlct.Fragment.BudgetFragment;
 import com.example.projectappqlct.Model.Budget;
+import com.example.projectappqlct.R;
+import com.example.projectappqlct.ViewPagerAdapter.BudgetViewPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.firestore.FirebaseFirestore;
 

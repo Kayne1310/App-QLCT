@@ -1,6 +1,5 @@
-package com.example.projectappqlct;
+package com.example.projectappqlct.Adapter;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projectappqlct.Model.FAQItem;
+import com.example.projectappqlct.R;
+
 import java.util.List;
 
 public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.FAQViewHolder> {
