@@ -1,4 +1,4 @@
-package com.example.projectappqlct;
+package com.example.projectappqlct.Detail;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
@@ -25,8 +25,11 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.projectappqlct.MainActivity;
 import com.example.projectappqlct.Model.Budget;
 import com.example.projectappqlct.Model.Expense;
+import com.example.projectappqlct.R;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
@@ -90,6 +93,7 @@ public class DetailActivity extends DemoBase {
             Intent intent = new Intent(DetailActivity.this, MainActivity.class);
             intent.putExtra("DetailActivity", "DetailActivity");
             startActivity(intent);
+            overridePendingTransition(0, R.anim.exit_to_right);
             finish();
 
         });
@@ -195,9 +199,6 @@ public class DetailActivity extends DemoBase {
                     textViewDeficit.setTextColor(ContextCompat.getColor(this, R.color.green));
                 }
 
-                if (totalExpense >= budgetAmount) {
-                    Toast.makeText(this, "Chi phí của bạn đã bằng hoặc vượt quá ngân sách", Toast.LENGTH_SHORT).show();
-                }
 
             });
 

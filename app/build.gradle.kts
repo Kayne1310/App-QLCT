@@ -65,7 +65,7 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.2.1")
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     debugImplementation(libs.ui.test.manifest)
-    implementation("com.google.android.gms:play-services-auth")
+    implementation("com.google.android.gms:play-services-auth:20.6.0")
     //    implementation("com.github.TutorialsAndroid:GButton:v1.0.19")
 
 }

@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:background="@drawable/pagebkg"
-    tools:context=".Login.LoginActivity">
+    tools:context=".Authentication.LoginActivity">
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,7 +41,8 @@
                 android:hint="Email"
                 android:drawableLeft="@drawable/baseline_person_24"
                 android:textColor="@color/black"
-                android:drawablePadding="8dp"/>
+                android:drawablePadding="8dp"
+                android:singleLine="true"/>
 
             <Button
                 android:layout_width="match_parent"

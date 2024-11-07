@@ -6,9 +6,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfileFragment"
+    tools:context=".Fragment.ProfileFragment"
 
     android:orientation="vertical">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
 
     <ImageView
         android:id="@+id/imageView"
@@ -29,6 +38,7 @@
         android:textSize="22sp"
         android:textStyle="bold"
         />
+
     <TextView
         android:layout_gravity="center"
         android:id="@+id/textEmail"
@@ -40,16 +50,6 @@
         android:textStyle="bold"
         />
 
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
@@ -100,6 +100,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/LnMychart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -116,7 +117,6 @@
                     app:srcCompat="@drawable/baseline_bar_chart_24" />
 
                 <LinearLayout
-                    android:id="@+id/LnMychart"
                     android:layout_width="321dp"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
@@ -330,5 +330,3 @@
 
 
 </LinearLayout>
-
-

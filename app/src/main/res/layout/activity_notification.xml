@@ -11,39 +11,33 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:clickable="true"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center">
 
         <TextView
             android:id="@+id/textViewCancel"
-            android:layout_width="15dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="20dp"
-            android:layout_weight="1"
-            android:text="Back"
             android:layout_marginLeft="10dp"
+            android:layout_weight="1"
             android:drawableLeft="@drawable/baseline_arrow_back_ios_24"
-            android:drawablePadding="-30dp"
-            android:textAlignment="center"
-            android:textSize="18sp"
+            android:text="Back"
+            android:textSize="16sp"
             android:textStyle="normal" />
 
         <TextView
-            android:id="@+id/textView2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="#AAFFFFFF"
+            android:paddingTop="10dp"
             android:text="Notification"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textSize="26sp" />
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_weight="1"
             android:textSize="16sp" />
     </LinearLayout>

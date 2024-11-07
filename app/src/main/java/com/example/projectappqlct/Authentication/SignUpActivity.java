@@ -1,4 +1,4 @@
-package com.example.projectappqlct.Login;
+package com.example.projectappqlct.Authentication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,8 +13,6 @@ import android.widget.Toast;
 
 import com.example.projectappqlct.Model.User;
 
-
-import com.example.projectappqlct.Model.User;
 
 import com.example.projectappqlct.R;
 import com.google.android.gms.tasks.OnCompleteListener;

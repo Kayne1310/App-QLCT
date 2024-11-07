@@ -1,4 +1,4 @@
-package com.example.projectappqlct;
+package com.example.projectappqlct.TabFragment;
 
 import android.os.Bundle;
 
@@ -8,12 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.projectappqlct.R;
+
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link CreateFragment#newInstance} factory method to
+ * Use the {@link DefaultTabFragmentExpense#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CreateFragment extends Fragment {
+public class DefaultTabFragmentExpense extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,7 +26,7 @@ public class CreateFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public CreateFragment() {
+    public DefaultTabFragmentExpense() {
         // Required empty public constructor
     }
 
@@ -34,11 +36,11 @@ public class CreateFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment CreateFragment.
+     * @return A new instance of fragment DefaultTabFragmentExpense.
      */
     // TODO: Rename and change types and number of parameters
-    public static CreateFragment newInstance(String param1, String param2) {
-        CreateFragment fragment = new CreateFragment();
+    public static DefaultTabFragmentExpense newInstance(String param1, String param2) {
+        DefaultTabFragmentExpense fragment = new DefaultTabFragmentExpense();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -59,6 +61,6 @@ public class CreateFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_create, container, false);
+        return inflater.inflate(R.layout.fragment_default_tab_expense, container, false);
     }
 }

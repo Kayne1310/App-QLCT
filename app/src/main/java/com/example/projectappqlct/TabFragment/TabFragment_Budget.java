@@ -1,21 +1,17 @@
-package com.example.projectappqlct;
+package com.example.projectappqlct.TabFragment;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.ekn.gruzer.gaugelibrary.Range;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,18 +25,19 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.ekn.gruzer.gaugelibrary.ArcGauge;
 import com.example.projectappqlct.Adapter.BudgetAdapter;
+import com.example.projectappqlct.Adapter.OptionAdapter;
+import com.example.projectappqlct.Fragment.BudgetFragment;
+import com.example.projectappqlct.Helper.CustomValueFormatter;
 import com.example.projectappqlct.Model.Budget;
 import com.example.projectappqlct.Model.Expense;
 import com.example.projectappqlct.Model.Option;
+import com.example.projectappqlct.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Source;
-
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -48,9 +45,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.core.content.ContextCompat;
 
 
 /**
@@ -71,7 +65,6 @@ public class TabFragment_Budget extends Fragment {
     private FirebaseAuth auth;
     private FirebaseUser user;
     private String userString;
-
     private Dialog dialog1, dialog2, dialog3, dialog4;
     private Button btnSelectedOption, buttonSelect;
     private ImageView imgiconclick, imageviewGr;
@@ -95,37 +88,13 @@ public class TabFragment_Budget extends Fragment {
     private TextView textViewTotalBudget, textViewTotalExpense, textViewEndOfMonth;
     private String selectedMonthYear;
     private List<Budget> budgets;
+    private ProgressBar loadingExpense;
 
 
-//    public static TabFragment_Budget newInstance(List<Budget> budgets) {
-//        TabFragment_Budget fragment = new TabFragment_Budget();
-//        Bundle args = new Bundle();
-//        args.putSerializable(ARG_BUDGETS, new ArrayList<>(budgets));
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
 
     public TabFragment_Budget() {
         // Required empty public constructor
     }
-
-//    /**
-//     * Use this factory method to create a new instance of
-//     * this fragment using the provided parameters.
-//     *
-//     * @param param1 Parameter 1.
-//     * @param param2 Parameter 2.
-//     * @return A new instance of fragment TabFragment1.
-//     */
-    // TODO: Rename and change types and number of parameters
-//    public static TabFragment_Budget newInstance(String param1, String param2) {
-//        TabFragment_Budget fragment = new TabFragment_Budget();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
 
     public static TabFragment_Budget newInstance(List<Budget> budgets, String monthYear) {
         TabFragment_Budget fragment = new TabFragment_Budget();
@@ -158,7 +127,7 @@ public class TabFragment_Budget extends Fragment {
 
         // Ánh xạ ArcGauge từ layout
         arcGauge = view.findViewById(R.id.arcGauge);
-
+        loadingExpense = view.findViewById(R.id.loadingExpense);
         // Ánh xạ các TextView từ layout
         textViewTotalBudget = view.findViewById(R.id.TextViewTotalBudget);
         textViewTotalExpense = view.findViewById(R.id.TextViewTotalExpense);
@@ -190,7 +159,8 @@ public class TabFragment_Budget extends Fragment {
         });
 
         // recycleview budget
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewBudgets);
+        recyclerView = view.findViewById(R.id.recyclerViewBudgets);
+        recyclerView.setVisibility(View.INVISIBLE);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(new BudgetAdapter(getActivity(), budgetList));
 
@@ -222,6 +192,12 @@ public class TabFragment_Budget extends Fragment {
     }
 
     private void loadBudgets() {
+        loadingExpense.setVisibility(View.VISIBLE);
+
+        // Ẩn RecyclerView và ArcGauge
+
+        arcGauge.setVisibility(View.INVISIBLE);
+
         db.collection("users").document(userString).collection("Budgets")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -245,6 +221,11 @@ public class TabFragment_Budget extends Fragment {
                         }
                     } else {
                         Log.e("BudgetError", "Error fetching budgets", task.getException());
+                    }
+                    if (budgetCount > 0) {
+                        arcGauge.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        loadingExpense.setVisibility(View.GONE);
                     }
                 });
     }
@@ -298,6 +279,19 @@ public class TabFragment_Budget extends Fragment {
         // Cập nhật TextView tổng ngân sách và tổng chi tiêu
         textViewTotalBudget.setText(formatCurrency(totalAmount));
         textViewTotalExpense.setText(formatCurrency(totalAmount - totalDeficit));
+
+
+        arcGauge.setFormatter(new CustomValueFormatter());
+    }
+
+    private String formatGaugeValue(double value) {
+        if (value < 1000) {
+            return String.valueOf((int) value); // Trả về giá trị nguyên nếu dưới 1000
+        } else if (value < 1_000_000) {
+            return String.format("%.1fk", value / 1000); // Định dạng thành "k"
+        } else {
+            return String.format("%.1fM", value / 1_000_000); // Định dạng thành "M"
+        }
     }
 
     private void updateDaysRemainingToEndOfMonth() {
@@ -345,7 +339,7 @@ public class TabFragment_Budget extends Fragment {
         }
 
         // Cập nhật vào TextView
-        textViewEndOfMonth.setText(daysRemaining + " ngày");
+        textViewEndOfMonth.setText(daysRemaining + " Day");
     }
 
 
@@ -518,9 +512,8 @@ public class TabFragment_Budget extends Fragment {
                             if (task.isSuccessful() && !task.getResult().isEmpty()) {
                                 // Dữ liệu đã tồn tại với group và calendar trùng lặp
                                 Toast.makeText(getActivity(), "This budget entry already exists", Toast.LENGTH_SHORT).show();
-                                btnSelectedOption.setTag(null); // Reset icon button
                             } else {
-                                djtkonme(AmountInt, Calendar, Group, finalIcon);
+                                updateDataBudget(AmountInt, Calendar, Group, finalIcon);
                             }
                         })
                         .addOnFailureListener(e -> {
@@ -531,6 +524,40 @@ public class TabFragment_Budget extends Fragment {
         });
 
         dialog1.show();
+    }
+
+    public void updateDataBudget(int AmountInt, String Calendar, String Group, String finalIcon) {
+        // Nếu không trùng lặp, tiếp tục thêm dữ liệu
+        Budget budget = new Budget(AmountInt, Calendar, Group, finalIcon);
+
+        db.collection("users").document(userString)
+                .collection("Budgets")
+                .add(budget)
+                .addOnSuccessListener(documentReference -> {
+                    String budgetId = documentReference.getId(); // Lấy ID
+                    budget.setId(budgetId); // Cập nhật ID vào đối tượng Budget
+
+                    // Lưu budget với ID vào Firestore
+                    documentReference.set(budget)
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(getActivity(), "Add budget successful", Toast.LENGTH_SHORT).show();
+                                if (dialog1 != null && dialog1.isShowing()) {
+                                    dialog1.dismiss();
+                                }
+
+                                BudgetFragment parentFragment = (BudgetFragment) getParentFragment();
+                                if (parentFragment != null) {
+                                    parentFragment.addBudgetData(budget);
+                                    parentFragment.loadBudgetsAndSetupTabs(); // Thêm dữ liệu mới vào ViewPager và TabLayout
+                                }
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("FirestoreError", "Error updating budget ID", e);
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FirestoreError", "Error adding document", e);
+                });
     }
 
 
@@ -641,13 +668,13 @@ public class TabFragment_Budget extends Fragment {
         recyclerView.setAdapter(optionAdapter);
 
         // Thêm divider giữa các item
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
+//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
 
         // Nếu muốn sử dụng divider tùy chỉnh, hãy đặt drawable của bạn
-        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.divider));
+//        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.divider));
 
         // Thêm divider vào RecyclerView
-        recyclerView.addItemDecoration(dividerItemDecoration);
+//        recyclerView.addItemDecoration(dividerItemDecoration);
 
 
         // Listener chung cho tất cả các Button trong Dialog 2
@@ -694,7 +721,7 @@ public class TabFragment_Budget extends Fragment {
 
             // Kiểm tra tên option không trống
             if (selectedText.isEmpty()) {
-                Toast.makeText(dialog3.getContext(), "Tên option không được để trống!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(dialog3.getContext(), "The name option cannot be left blank!", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -743,13 +770,13 @@ public class TabFragment_Budget extends Fragment {
                     .collection("Options")
                     .add(option)
                     .addOnSuccessListener(documentReference -> {
-                        Toast.makeText(getActivity(), "Option đã được lưu!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Save successful!", Toast.LENGTH_SHORT).show();
 
                         // Sau khi lưu, tải lại danh sách options để cập nhật RecyclerView trong dialog2
                         loadOptionsFromFirestore();
                     })
                     .addOnFailureListener(e ->
-                            Toast.makeText(getActivity(), "Không thể lưu option.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(getActivity(), "Dont save   option.", Toast.LENGTH_SHORT).show()
                     );
         }
     }

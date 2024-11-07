@@ -1,15 +1,20 @@
-package com.example.projectappqlct;
+package com.example.projectappqlct.ViewPagerAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 
+import com.example.projectappqlct.TabFragment.DefaultTabFragmentExpense;
 import com.example.projectappqlct.Model.Expense;
+import com.example.projectappqlct.TabFragment.TabFragment_History;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class ExpenseViewPagerAdapter extends FragmentStateAdapter {
@@ -62,5 +67,13 @@ public class ExpenseViewPagerAdapter extends FragmentStateAdapter {
             }
         }
         return false;
+    }
+
+    public int getCurrentMonthYearPosition() {
+        // Lấy tháng và năm hiện tại dưới dạng "MM/yyyy"
+        String currentMonthYear = new SimpleDateFormat("MM/yyyy", Locale.getDefault()).format(Calendar.getInstance().getTime());
+
+        // Tìm vị trí của tháng và năm hiện tại trong monthYearList
+        return monthYearList.indexOf(currentMonthYear);
     }
 }

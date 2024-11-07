@@ -1,55 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!-- res/layout/activity_faq.xml -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#FFFFFF"
-    >
+    android:orientation="vertical">
 
     <!-- Navigation Bar Layout -->
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="5dp">
 
         <LinearLayout
-
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/backIcon">
 
-            <ImageView
-                android:id="@id/imageView"
-                android:layout_width="41dp"
-                android:layout_height="30dp"
+            <LinearLayout
+                android:id="@+id/backIcon"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:gravity="center">
 
-                android:src="@drawable/baseline_arrow_back_ios_24" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Back"
+                    android:textSize="16dp"
+                    android:drawableLeft="@drawable/baseline_arrow_back_ios_24"/>
 
-            <TextView
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:paddingTop="5dp"
-                android:text="Back"
-                android:textSize="16dp" />
-
-        </LinearLayout>
+            </LinearLayout>
 
         </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="#AAFFFFFF"
-
             android:text="FAQ"
             android:textSize="26sp" />
     </FrameLayout>
@@ -58,16 +49,15 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"/>
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="8dp"
+        android:background="@android:color/darker_gray" />
 
     <!-- FAQ RecyclerView -->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/faqRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

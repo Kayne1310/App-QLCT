@@ -1,6 +1,8 @@
 package com.example.projectappqlct.Adapter;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,13 +14,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.projectappqlct.DetailActivity;
+import com.example.projectappqlct.Detail.DetailActivity;
 import com.example.projectappqlct.Model.Budget;
 import com.example.projectappqlct.Model.Expense;
 import com.google.firebase.auth.FirebaseAuth;
@@ -109,10 +110,7 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.BudgetView
 
 
 
-            // Kiểm tra và hiển thị Toast nếu chi phí đạt hoặc vượt ngân sách
-            if (totalExpense >= budgetAmount) {
-                Toast.makeText(mContext, "Chi phí của bạn đã bằng hoặc lớn hơn ngân sách", Toast.LENGTH_SHORT).show();
-            }
+
         });
     }
 
@@ -121,7 +119,15 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.BudgetView
         Bundle bundle = new Bundle();
         bundle.putSerializable("Object_budget", budget);
         intent.putExtras(bundle);
-        mContext.startActivity(intent);
+
+        // Kiểm tra xem context có phải là Activity không để sử dụng ActivityOptions
+        if (mContext instanceof Activity) {
+            ActivityOptions options = ActivityOptions.makeCustomAnimation(
+                    mContext, R.anim.enter_from_right, R.anim.stay);
+            mContext.startActivity(intent, options.toBundle());
+        } else {
+            mContext.startActivity(intent);
+        }
     }
 
     @Override

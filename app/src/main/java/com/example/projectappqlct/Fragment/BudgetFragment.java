@@ -1,13 +1,23 @@
-package com.example.projectappqlct;
+package com.example.projectappqlct.Fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager2.widget.ViewPager2;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.projectappqlct.ViewPagerAdapter.BudgetViewPagerAdapter;
 import com.example.projectappqlct.Model.Budget;
+import com.example.projectappqlct.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
@@ -85,7 +95,16 @@ public class BudgetFragment extends Fragment {
 
         // Create adapter for ViewPager
         adapter = new BudgetViewPagerAdapter(this);
+
+        int defaultPosition = adapter.getCurrentMonthYearPosition();
+        if (defaultPosition != -1) { // Nếu tìm thấy vị trí của tháng-năm hiện tại
+            viewPager.setCurrentItem(defaultPosition, false);
+        }
         viewPager.setAdapter(adapter);
+
+        //load lai khi createexpense
+        LocalBroadcastManager.getInstance(requireContext())
+                .registerReceiver(loadBuget, new IntentFilter("Load_Buget"));
 
         // Load data from Firestore and setup tabs
         loadBudgetsAndSetupTabs();
@@ -124,6 +143,22 @@ public class BudgetFragment extends Fragment {
             showDefaultTab();
         }
     }
+    private BroadcastReceiver loadBuget = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Khi nhận được thông báo EXPENSE_ADDED, tải lại dữ liệu
+
+            loadBudgetsAndSetupTabs();
+
+        }
+    };
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Huỷ đăng ký BroadcastReceiver để tránh rò rỉ bộ nhớ
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(loadBuget);
+    }
 
     private void groupBudgetsByMonthYear(List<Budget> budgets) {
         budgetByMonthYear.clear();
@@ -140,16 +175,25 @@ public class BudgetFragment extends Fragment {
 
 
     private void setupTabLayoutAndViewPager() {
+        // Lấy danh sách monthYear từ dữ liệu ngân sách
         monthYearList = new ArrayList<>(budgetByMonthYear.keySet());
-        Collections.sort(monthYearList);
+        Collections.sort(monthYearList); // Sắp xếp danh sách tháng-năm
 
+        // Cập nhật dữ liệu cho adapter
         adapter.updateData(monthYearList, budgetByMonthYear);
-        // Tháo và gán lại adapter
-        viewPager.setAdapter(null);
         viewPager.setAdapter(adapter);
+
+        // Gán TabLayout cho ViewPager2
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
-            tab.setText(monthYearList.get(position));
+            String monthYear = monthYearList.get(position);
+            tab.setText(monthYear);  // Set month/year as tab title
         }).attach();
+
+        // Chuyển đến tab tháng-năm hiện tại
+        int defaultPosition = adapter.getCurrentMonthYearPosition();
+        if (defaultPosition != -1) {
+            viewPager.setCurrentItem(defaultPosition, false);
+        }
     }
 
     private void showDefaultTab() {
@@ -208,8 +252,18 @@ public class BudgetFragment extends Fragment {
 //        }).attach();
 //    }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        Log.e("Test Load","Budget Fragment");
+    }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e("Test reload","Budget Fragment");
+        loadBudgetsAndSetupTabs();
+    }
 
 }
 

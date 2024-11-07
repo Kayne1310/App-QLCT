@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="#DEDAE4"
     android:orientation="vertical"
-    tools:context=".HomeFragment">
+    tools:context=".Fragment.HomeFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -44,7 +44,7 @@
                     android:id="@+id/nameUser"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Kayne"
+
 
 
                     android:textColor="#D11111"

@@ -1,15 +1,12 @@
-package com.example.projectappqlct;
+package com.example.projectappqlct.Fragment;
 
 
 import static android.content.ContentValues.TAG;
-
 import android.app.ActivityOptions;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +15,13 @@ import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.projectappqlct.Login.LoginActivity;
+import com.example.projectappqlct.ChangePassword;
+import com.example.projectappqlct.EditProfile;
+import com.example.projectappqlct.FAQ;
+import com.example.projectappqlct.Authentication.LoginActivity;
+import com.example.projectappqlct.MainActivity;
+import com.example.projectappqlct.NotificationActivity;
+import com.example.projectappqlct.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,8 +29,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,8 +49,6 @@ public class ProfileFragment extends Fragment {
     private FirebaseFirestore db;
     private TextView username;
     private LinearLayout lnMyChart;
-    // Khởi tạo Animation từ file XML
-
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -87,19 +86,17 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String userString = user.getUid();
-        if (user != null) {
-            String getEmailUser = user.getEmail();
-            email = view.findViewById(R.id.textEmail);
+        FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
+        String userString=user.getUid();
+        if(user!=null){
+            String getEmailUser=user.getEmail();
+             email=view.findViewById(R.id.textEmail);
+             email.setText(getEmailUser);
 
         }
 
         // Tham chiếu tới LinearLayout
         lnMyChart = view.findViewById(R.id.LnMychart);
-
         // Thiết lập sự kiện click
         lnMyChart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,7 +104,6 @@ public class ProfileFragment extends Fragment {
                 // Chuyển sang FragmentHome khi click
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 startActivity(intent);
-
             }
         });
 
@@ -136,7 +132,11 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FAQ.class);
-                startActivity(intent);
+                // Tạo một ActivityOptions để thực hiện animation khi mở Activity
+                ActivityOptions options = ActivityOptions.makeCustomAnimation(
+                        getActivity(), R.anim.enter_from_right,  R.anim.stay);
+                // Bắt đầu Activity với animation custom
+                startActivity(intent, options.toBundle());
             }
         });
 
@@ -157,27 +157,39 @@ public class ProfileFragment extends Fragment {
                 // Chuyển người dùng về màn hình Login
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                ActivityOptions options = ActivityOptions.makeCustomAnimation(
+                        getActivity(), R.anim.enter_from_right,  R.anim.stay);
+                // Bắt đầu Activity với animation custom
+                startActivity(intent, options.toBundle());
 
-                startActivity(intent);
                 getActivity().finish();
             }
         });
 
 
-        LinearLayout Notificant = view.findViewById(R.id.notificant);
+
+        lnMyChart = view.findViewById(R.id.LnMychart);
+        lnMyChart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Chuyển sang FragmentHome khi click
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
+        LinearLayout Notificant=view.findViewById(R.id.notificant);
         Notificant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Mở NotificationActivity từ Fragment
                 Intent intent = new Intent(getActivity(), NotificationActivity.class);
-
                 // Tạo một ActivityOptions để thực hiện animation khi mở Activity
                 ActivityOptions options = ActivityOptions.makeCustomAnimation(
                         getActivity(), R.anim.enter_from_right,  R.anim.stay);
-
                 // Bắt đầu Activity với animation custom
                 startActivity(intent, options.toBundle());
-                getActivity().finish();
             }
         });
 
@@ -187,7 +199,11 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), EditProfile.class);
-                startActivity(intent);
+                // Tạo một ActivityOptions để thực hiện animation khi mở Activity
+                ActivityOptions options = ActivityOptions.makeCustomAnimation(
+                        getActivity(), R.anim.enter_from_right,  R.anim.stay);
+                // Bắt đầu Activity với animation custom
+                startActivity(intent, options.toBundle());
             }
         });
 
@@ -198,13 +214,22 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ChangePassword.class);
-                startActivity(intent);
+                // Tạo một ActivityOptions để thực hiện animation khi mở Activity
+                ActivityOptions options = ActivityOptions.makeCustomAnimation(
+                        getActivity(), R.anim.enter_from_right,  R.anim.stay);
+                // Bắt đầu Activity với animation custom
+                startActivity(intent, options.toBundle());
             }
         });
-
-
         return view;
 
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e("Test reload","Profile Fragment");
+    }
+
 }

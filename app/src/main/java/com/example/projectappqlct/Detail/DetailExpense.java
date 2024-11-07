@@ -1,4 +1,4 @@
-package com.example.projectappqlct;
+package com.example.projectappqlct.Detail;
 
 
 import android.annotation.SuppressLint;
@@ -17,14 +17,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 
+import com.example.projectappqlct.MainActivity;
 import com.example.projectappqlct.Model.Expense;
+import com.example.projectappqlct.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -34,7 +35,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class DetailExpense extends AppCompatActivity {
-    private TextView detailItemGr, detailItemAm, detailItemCa, tvEdit, tvbtnDelete;
+    private TextView detailItemGr, detailItemAm, detailItemCa, tvEdit, tvbtnDelete,Note;
     private ImageView detailImgicon;
     LinearLayout textViewBack;
     private Expense expense;
@@ -48,7 +49,7 @@ public class DetailExpense extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+
         setContentView(R.layout.activity_detail_expense);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -64,6 +65,7 @@ public class DetailExpense extends AppCompatActivity {
             Intent intent = new Intent(DetailExpense.this, MainActivity.class);
             intent.putExtra("DetailExpense", "DetailExpense");
             startActivity(intent);
+            overridePendingTransition(0, R.anim.exit_to_right);
             finish();
 
         });
@@ -89,6 +91,10 @@ public class DetailExpense extends AppCompatActivity {
         int iconResId = getResources().getIdentifier(expense.getIcon(), "drawable", getPackageName());
         // Set icon vào ImageView
         detailImgicon.setImageResource(iconResId);
+
+        Note=findViewById(R.id.Note);
+        Note.setText(expense.getNote());
+
 
         detailItemCa = findViewById(R.id.tv_calendar);
         detailItemCa.setText(expense.getCalendar());

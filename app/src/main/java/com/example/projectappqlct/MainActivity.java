@@ -1,7 +1,6 @@
 package com.example.projectappqlct;
 
 
-import static android.content.ContentValues.TAG;
 import static com.example.projectappqlct.Helper.NotificationHelper.sendNotificationToUser;
 
 import android.app.DatePickerDialog;
@@ -27,12 +26,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.fragment.app.FragmentStatePagerAdapter;;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -40,17 +37,16 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.text.TextWatcher;
 
-import com.example.projectappqlct.Helper.NotificationHelper;
-import com.example.projectappqlct.Login.LoginActivity;
+import com.example.projectappqlct.Adapter.OptionAdapter;
+import com.example.projectappqlct.Authentication.LoginActivity;
 import com.example.projectappqlct.Model.Expense;
 import com.example.projectappqlct.Model.Option;
 import com.example.projectappqlct.Model.Notification;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.example.projectappqlct.ViewPagerAdapter.BudgetViewPagerAdapter;
+import com.example.projectappqlct.ViewPagerAdapter.ViewPagerAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -68,10 +64,8 @@ import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity {
-
     private ViewPager viewPager;
     private BottomNavigationView bottomNavigationView;
-
     private EditText editTextAmount, editTextDate;
     private Dialog dialog1, dialog2, dialog3, dialog4, dialog5;
     private Button btnSelectedOption, buttonSelect, buttonSelectNote;
@@ -114,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(0);
 
 
         // Kiểm tra Intent để xác định Fragment cần hiển thị
@@ -122,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         if (intent != null && intent.hasExtra("showFragment")) {
             String fragmentToShow = intent.getStringExtra("showFragment");
             if ("profile".equals(fragmentToShow)) {
-                viewPager.setCurrentItem(4); // 4 là chỉ số của ProfileFragment
+                viewPager.setCurrentItem(3); // 4 là chỉ số của ProfileFragment
                 bottomNavigationView.getMenu().findItem(R.id.menu_profile).setChecked(true);
             }
         }
@@ -132,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
         if (intent != null && intent.hasExtra("ChangePassword")) {
             String fragmentToShow = intent.getStringExtra("ChangePassword");
             if ("ChangePassword".equals(fragmentToShow)) {
-                viewPager.setCurrentItem(4); // 4 là chỉ số của ProfileFragment
+                viewPager.setCurrentItem(3); // 4 là chỉ số của ProfileFragment
                 bottomNavigationView.getMenu().findItem(R.id.menu_profile).setChecked(true);
             }
         }
@@ -140,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
         if (intent != null && intent.hasExtra("DetailActivity")) {
             String fragmentToShow = intent.getStringExtra("DetailActivity");
             if ("DetailActivity".equals(fragmentToShow)) {
-                viewPager.setCurrentItem(3); // 3 là chỉ số của BudgetFragment
+                viewPager.setCurrentItem(2); // 3 là chỉ số của BudgetFragment
                 bottomNavigationView.getMenu().findItem(R.id.menu_budget).setChecked(true);
             }
         }
@@ -169,13 +164,11 @@ public class MainActivity extends AppCompatActivity {
                     case 1:
                         bottomNavigationView.getMenu().findItem(R.id.menu_history).setChecked(true);
                         break;
+
                     case 2:
-                        bottomNavigationView.getMenu().findItem(R.id.menu_create).setChecked(true);
-                        break;
-                    case 3:
                         bottomNavigationView.getMenu().findItem(R.id.menu_budget).setChecked(true);
                         break;
-                    case 4:
+                    case 3:
                         bottomNavigationView.getMenu().findItem(R.id.menu_profile).setChecked(true);
                 }
             }
@@ -201,10 +194,10 @@ public class MainActivity extends AppCompatActivity {
                     showDialog1();
                     return true;
                 } else if (id == R.id.menu_budget) {
-                    viewPager.setCurrentItem(3);
+                    viewPager.setCurrentItem(2);
                     return true;
                 } else if (id == R.id.menu_profile) {
-                    viewPager.setCurrentItem(4);
+                    viewPager.setCurrentItem(3);
                 }
                 return false;
             }
@@ -340,10 +333,11 @@ public class MainActivity extends AppCompatActivity {
                     int AmountInt = Integer.parseInt(Amount);
                     String Calendar = editTextDate.getText().toString().trim().isEmpty() ? editTextDate.getHint().toString().trim() : editTextDate.getText().toString().trim();
                     String Group = buttonSelect.getText().toString().trim();
-                    if (Group.isEmpty()) {
+                    if (Group.isEmpty() || Group.equals("Select Group")) {
                         Toast.makeText(MainActivity.this, "Please enter a valid group", Toast.LENGTH_SHORT).show();
                         return;
                     }
+
 
                     String Note = buttonSelectNote.getText().toString().trim();
                     String Icon = null;
@@ -363,51 +357,50 @@ public class MainActivity extends AppCompatActivity {
                     FirebaseUser user = auth.getCurrentUser();
                     String userString = user.getUid();
 
+
                     // Thêm Expense vào Firestore
                     db.collection("users").document(userString)
                             .collection("Expenses")
                             .add(expense)
-                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                @Override
-                                public void onSuccess(DocumentReference documentReference) {
-                                    String documentId = documentReference.getId(); // Lấy ID của document
+                            .addOnSuccessListener(documentReference -> {
+                                String documentId = documentReference.getId();
+                                documentReference.update("id", documentId)
+                                        .addOnSuccessListener(aVoid -> {
+                                            Log.i("check", "Document ID updated successfully");
 
-                                    // Cập nhật ID vào tài liệu Expense
-                                    documentReference.update("id", documentId)
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    Log.i("check", "Document ID updated successfully");
+                                            // Đóng dialog sau khi thêm thành công
+                                            dialog1.dismiss();
+                                            resetDialogFields();
 
-                                                    Intent intent = getIntent();
-                                                    finish(); // Kết thúc Activity hiện tại
-                                                    startActivity(intent); // Khởi động lại Activity -> trở về trang home
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Log.i("check", "Error updating document ID", e);
-                                                }
-                                            });
+                                            // Kiểm tra vị trí hiện tại của ViewPager và gửi Intent tương ứng
+                                            int currentPage = viewPager.getCurrentItem();
+                                            Intent updateIntent = null;
 
-                                    Log.i("check", "DocumentSnapshot added with ID: " + documentId);
-                                    dialog1.dismiss();
+                                            if (currentPage == 0) {
+                                                // Nếu ViewPager đang ở vị trí 0, gửi Intent cho trang đầu
+                                                updateIntent = new Intent("DATA_UPDATED");
+                                            } else if (currentPage == 1) {
+                                                // Nếu ViewPager đang ở vị trí 1, gửi Intent cho trang 2
+                                                updateIntent = new Intent("EXPENSE_ADDED");
+
+                                            } else if
+                                            (currentPage == 2) {
+                                                updateIntent = new Intent("Load_Buget");
 
 
-                                    resetDialogFields();
-                                    Intent intent = new Intent("DATA_UPDATED");
-                                    LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(intent);
-                                    Toast.makeText(MainActivity.this, "Add expense successful", Toast.LENGTH_SHORT).show();
-                                    checkBudgetLimit(getApplicationContext(), userString, expense.getGroup(), expense.getAmount(), expense.getCalendar());
-                                }
+                                            }
+                                            if (currentPage != 3) {
+                                                // Gửi Intent dựa trên trang hiện tại
+                                                LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(updateIntent);
+                                            }
+
+                                            Toast.makeText(MainActivity.this, "Add expense successful", Toast.LENGTH_SHORT).show();
+                                            checkBudgetLimit(getApplicationContext(), userString, expense.getGroup(), expense.getAmount(), expense.getCalendar());
+                                        })
+                                        .addOnFailureListener(e -> Log.i("check", "Error updating document ID", e));
+
                             })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.i("check", "Error adding document", e);
-                                }
-                            });
+                            .addOnFailureListener(e -> Log.i("check", "Error adding document", e));
 
 
                 });
@@ -422,8 +415,9 @@ public class MainActivity extends AppCompatActivity {
                     dialog2 = createDialog(R.layout.dialog_selectgroup);
                 }
 
-                TextView buttonGrn = dialog2.findViewById(R.id.tv_Grn);
-                buttonGrn.setOnClickListener(v -> {
+                TextView textViewGrn = dialog2.findViewById(R.id.tv_Grn);
+                textViewGrn.setOnClickListener(v -> {
+
                     dialog2.dismiss();  // Đóng dialog 2
                     showDialog3();      // Mở dialog 3
                 });
@@ -785,7 +779,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void checkBudgetLimit(Context context, String userId, String group, int newAmount, String calendarDate) {
+    private void checkBudgetLimit(Context context, String userId, String group,
+                                  int newAmount, String calendarDate) {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -860,7 +855,7 @@ public class MainActivity extends AppCompatActivity {
                                                         Log.i("check", "Notification added with ID: " + documentReference.getId());
 
                                                         // Send local notification to the user
-                                                        NotificationHelper.sendNotificationToUser(context, title, content);
+                                                        sendNotificationToUser(context, title, content);
                                                     });
                                         }
                                         if (totalExpenseThisMonth[0] == groupBudget) { // Use the array's element
@@ -877,7 +872,7 @@ public class MainActivity extends AppCompatActivity {
                                                         Log.i("check", "Notification added with ID: " + documentReference.getId());
 
                                                         // Send local notification to the user
-                                                        NotificationHelper.sendNotificationToUser(context, title, content);
+                                                        sendNotificationToUser(context, title, content);
                                                     });
                                         }
                                     }

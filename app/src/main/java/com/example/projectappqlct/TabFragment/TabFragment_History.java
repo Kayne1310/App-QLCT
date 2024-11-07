@@ -1,6 +1,5 @@
-package com.example.projectappqlct;
+package com.example.projectappqlct.TabFragment;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,19 +10,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
+
+import com.example.projectappqlct.Adapter.ExpenseAdapter;
 import com.example.projectappqlct.Model.Expense;
+import com.example.projectappqlct.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 
@@ -49,7 +49,9 @@ public class TabFragment_History extends Fragment {
     private FirebaseUser user;
     private String userString;
     private String monthYear;
-    private TextView totalBudgetinMonth, totalExpenseinMonth, totalBiMandEiM;// Add this field to store the monthYear
+    private TextView totalBudgetinMonth, totalExpenseinMonth, totalBiMandEiM;
+    private ProgressBar loadingHistory;
+    private RecyclerView recyclerView;// Add this field to store the monthYear
 
     public TabFragment_History() {
         // Required empty public constructor
@@ -112,11 +114,14 @@ public class TabFragment_History extends Fragment {
         totalBudgetinMonth = view.findViewById(R.id.totalBudgetinMonth);
         totalExpenseinMonth = view.findViewById(R.id.totalExpenseinMonth);
         totalBiMandEiM = view.findViewById(R.id.total_BiMandEiM);
-
+        loadingHistory = view.findViewById(R.id.loadingHistory);
         // recycleview budget
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewExpenses);
+         recyclerView = view.findViewById(R.id.recyclerViewExpenses);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(new ExpenseAdapter(getActivity(), expenseList));
+
+        recyclerView.setVisibility(View.GONE);
+        loadingHistory.setVisibility(View.VISIBLE);
 
         loadMonthlyData(monthYear); // Load data based on monthYear
         return view;
@@ -129,6 +134,8 @@ public class TabFragment_History extends Fragment {
 
         if (user == null) {
             Log.e("AuthError", "User is not logged in");
+            // Ẩn ProgressBar nếu không có người dùng
+            loadingHistory.setVisibility(View.GONE);
             return;
         }
 
@@ -175,13 +182,18 @@ public class TabFragment_History extends Fragment {
                                         // Calculate difference and update totalBiMandEiM
                                         double difference = totalBudgetAmount[0] - totalExpenseAmount[0];
                                         totalBiMandEiM.setText(formatCurrency(difference) + " VND");
+
+                                        recyclerView.setVisibility(View.VISIBLE);
                                     } else {
                                         Log.e("ExpenseError", "Error querying expense data", expenseTask.getException());
                                     }
+                                    loadingHistory.setVisibility(View.GONE);
                                 });
                     } else {
                         Log.e("BudgetError", "Error querying budget data", task.getException());
+                        loadingHistory.setVisibility(View.GONE);
                     }
+
                 });
     }
 

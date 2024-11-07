@@ -1,24 +1,17 @@
 package com.example.projectappqlct;
 
-import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.activity.EdgeToEdge;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.RecyclerView;
-import android.os.Bundle;
+
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.projectappqlct.Adapter.FAQAdapter;
 import com.example.projectappqlct.Model.FAQItem;
 
 import java.util.ArrayList;
@@ -58,7 +51,10 @@ public class FAQ extends AppCompatActivity {
         backIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Điều hướng đến ProfileFragment
+                Intent intent = new Intent(FAQ.this, MainActivity.class);
+                intent.putExtra("showFragment", "profile");
+                startActivity(intent);
+                overridePendingTransition(0, R.anim.exit_to_right);
                 finish(); // Đóng Activity hiện tại (FAQActivity)
             }
         });
