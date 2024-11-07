@@ -82,7 +82,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
-                        android:text="My Notificant"
+                        android:text="My Notification"
                         android:textColor="#000000"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -91,7 +91,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="your explain about My Messages"
+                        android:text="about My Notification"
                         android:textColor="#000000"
                         android:textSize="12sp" />
 
@@ -135,7 +135,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="your explain about My Messages"
+                        android:text="about My Chart"
                         android:textColor="#000000"
                         android:textSize="12sp" />
 
@@ -180,7 +180,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="your explain about My Messages"
+                        android:text="about My Profile"
                         android:textColor="#000000"
                         android:textSize="12sp" />
 
@@ -226,7 +226,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="your explain about My Messages"
+                        android:text="about Change Password"
                         android:textColor="#000000"
                         android:textSize="12sp" />
 
@@ -272,7 +272,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="your explain about My Messages"
+                        android:text="about Frequently Asked Questions"
                         android:textColor="#000000"
                         android:textSize="12sp" />
 
@@ -319,7 +319,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="your explain about My Messages"
+                        android:text="about Logout"
                         android:textColor="#000000"
                         android:textSize="12sp"/>
 
